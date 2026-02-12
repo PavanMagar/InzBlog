@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import { ArrowLeft, Calendar, Eye, Clock, BookOpen } from "lucide-react";
+import { ArrowLeft, Calendar, Eye, Clock } from "lucide-react";
 import { motion } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
 import { PublicHeader } from "@/components/PublicHeader";
@@ -102,7 +102,15 @@ export default function PostDetail() {
       />
       <PublicHeader />
 
-      {/* Breadcrumb bar */}
+      {/* Hero thumbnail */}
+      {post.thumbnail_url && (
+        <div className="relative h-56 overflow-hidden sm:h-72 md:h-96">
+          <img src={post.thumbnail_url} alt={post.title} className="h-full w-full object-cover" />
+          <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/30 to-transparent" />
+        </div>
+      )}
+
+      {/* Breadcrumb */}
       <div className="border-b border-border bg-muted/30">
         <div className="container px-6 py-3 md:px-10 lg:px-20 xl:px-28">
           <Link to="/posts" className="inline-flex items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground">
@@ -112,23 +120,19 @@ export default function PostDetail() {
       </div>
 
       <div className="container px-6 py-8 md:px-10 lg:px-20 xl:px-28">
-        {/* Desktop: 2-column — LEFT sidebar, RIGHT content */}
-        <div className="lg:flex lg:flex-row-reverse lg:gap-10 xl:gap-14">
+        {/* Desktop: content LEFT, sidebar RIGHT */}
+        <div className="lg:flex lg:gap-10 xl:gap-14">
 
-          {/* RIGHT: Article content */}
-          <article className="min-w-0 flex-1">
-            {/* Category badges */}
+          {/* Left: Article */}
+          <article className="min-w-0 flex-1 lg:max-w-3xl">
             {post.categories.length > 0 && (
               <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="mb-4 flex flex-wrap gap-2">
                 {post.categories.map((cat) => (
-                  <span key={cat} className="rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
-                    {cat}
-                  </span>
+                  <span key={cat} className="rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">{cat}</span>
                 ))}
               </motion.div>
             )}
 
-            {/* Title */}
             <motion.h1
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
@@ -138,7 +142,6 @@ export default function PostDetail() {
               {post.title}
             </motion.h1>
 
-            {/* Meta row */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -163,7 +166,6 @@ export default function PostDetail() {
               </div>
             </motion.div>
 
-            {/* Article body */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -172,20 +174,18 @@ export default function PostDetail() {
               dangerouslySetInnerHTML={{ __html: post.content || "" }}
             />
 
-            {/* ── Mobile-only sections ── */}
+            {/* Mobile-only sections */}
             <div className="mt-10 space-y-6 lg:hidden">
-              {/* Thumbnail + Share card */}
-              <SharePost title={post.title} slug={post.slug} thumbnailUrl={post.thumbnail_url} />
+              <SharePost title={post.title} slug={post.slug} />
               <CommentSection postId={post.id} />
               <RelatedPosts currentPostId={post.id} categoryNames={post.categories} />
             </div>
           </article>
 
-          {/* LEFT sidebar: desktop only */}
+          {/* Right sidebar: desktop */}
           <aside className="hidden lg:block lg:w-80 xl:w-96">
             <div className="sticky top-24 space-y-6">
-              {/* Thumbnail + Share card */}
-              <SharePost title={post.title} slug={post.slug} thumbnailUrl={post.thumbnail_url} />
+              <SharePost title={post.title} slug={post.slug} />
               <CommentSection postId={post.id} />
               <RelatedPosts currentPostId={post.id} categoryNames={post.categories} />
             </div>
