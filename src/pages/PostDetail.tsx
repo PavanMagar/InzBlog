@@ -1,0 +1,141 @@
+import { useEffect, useState } from "react";
+import { useParams, Link } from "react-router-dom";
+import { ArrowLeft, Calendar } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import { PublicHeader } from "@/components/PublicHeader";
+import { PublicFooter } from "@/components/PublicFooter";
+import { SEOHead } from "@/components/SEOHead";
+
+interface PostData {
+  id: string;
+  title: string;
+  slug: string;
+  excerpt: string | null;
+  content: string | null;
+  thumbnail_url: string | null;
+  published_at: string | null;
+  view_count: number;
+  categories: string[];
+}
+
+export default function PostDetail() {
+  const { slug } = useParams();
+  const [post, setPost] = useState<PostData | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  // Remove .html suffix for DB lookup
+  const cleanSlug = slug?.replace(/\.html$/, "") || "";
+
+  useEffect(() => {
+    const fetchPost = async () => {
+      setLoading(true);
+      const { data } = await supabase
+        .from("posts")
+        .select("*")
+        .eq("slug", cleanSlug)
+        .eq("status", "published")
+        .single();
+
+      if (data) {
+        // Increment view count
+        supabase.from("posts").update({ view_count: data.view_count + 1 }).eq("id", data.id).then();
+
+        const { data: pc } = await supabase
+          .from("post_categories")
+          .select("categories(name)")
+          .eq("post_id", data.id);
+
+        setPost({
+          ...data,
+          categories: pc?.map((p: any) => p.categories?.name).filter(Boolean) ?? [],
+        });
+      }
+      setLoading(false);
+    };
+    if (cleanSlug) fetchPost();
+  }, [cleanSlug]);
+
+  if (loading) {
+    return (
+      <>
+        <PublicHeader />
+        <div className="flex min-h-[60vh] items-center justify-center">
+          <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
+        </div>
+      </>
+    );
+  }
+
+  if (!post) {
+    return (
+      <>
+        <PublicHeader />
+        <div className="container py-20 text-center">
+          <h1 className="mb-4 font-display text-3xl font-bold text-foreground">Article Not Found</h1>
+          <p className="mb-6 text-muted-foreground">The article you're looking for doesn't exist.</p>
+          <Link to="/posts" className="text-primary hover:underline">← Back to articles</Link>
+        </div>
+        <PublicFooter />
+      </>
+    );
+  }
+
+  return (
+    <>
+      <SEOHead
+        title={post.title}
+        description={post.excerpt || undefined}
+        ogImage={post.thumbnail_url || undefined}
+        type="article"
+        publishedAt={post.published_at || undefined}
+      />
+      <PublicHeader />
+
+      <article>
+        {post.thumbnail_url && (
+          <div className="relative h-64 overflow-hidden md:h-96">
+            <img src={post.thumbnail_url} alt={post.title} className="h-full w-full object-cover" />
+            <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent" />
+          </div>
+        )}
+
+        <div className="container max-w-3xl py-10">
+          <Link to="/posts" className="mb-6 inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground">
+            <ArrowLeft className="h-3.5 w-3.5" /> Back to articles
+          </Link>
+
+          {post.categories.length > 0 && (
+            <div className="mb-4 flex flex-wrap gap-2">
+              {post.categories.map((cat) => (
+                <span key={cat} className="rounded-full bg-primary/10 px-3 py-1 text-xs font-medium text-primary">
+                  {cat}
+                </span>
+              ))}
+            </div>
+          )}
+
+          <h1 className="mb-4 font-display text-3xl font-bold leading-tight text-foreground md:text-4xl lg:text-5xl">
+            {post.title}
+          </h1>
+
+          {post.published_at && (
+            <div className="mb-8 flex items-center gap-2 text-sm text-muted-foreground">
+              <Calendar className="h-4 w-4" />
+              <time dateTime={post.published_at}>
+                {new Date(post.published_at).toLocaleDateString("en-US", {
+                  month: "long",
+                  day: "numeric",
+                  year: "numeric",
+                })}
+              </time>
+            </div>
+          )}
+
+          <div className="prose-content text-foreground" dangerouslySetInnerHTML={{ __html: post.content || "" }} />
+        </div>
+      </article>
+
+      <PublicFooter />
+    </>
+  );
+}
