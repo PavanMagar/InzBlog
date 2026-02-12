@@ -109,16 +109,16 @@ export default function PostDetail() {
       <PublicHeader />
 
       {/* Hero header section */}
-      <div className="relative overflow-hidden" style={{ background: "var(--gradient-hero)" }}>
-        {/* Decorative grid */}
-        <div className="absolute inset-0 opacity-[0.04]" style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg width='40' height='40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h40v40H0z' fill='none' stroke='white' stroke-width='0.5'/%3E%3C/svg%3E\")" }} />
+      <div className="relative overflow-hidden border-b border-border bg-background">
+        <div className="absolute -left-32 -top-32 h-80 w-80 rounded-full bg-primary/[0.06] blur-3xl" />
+        <div className="absolute -bottom-32 -right-32 h-80 w-80 rounded-full bg-accent/[0.06] blur-3xl" />
         
-        <div className="relative container px-6 pb-10 pt-10 md:px-10 md:pb-14 md:pt-12 lg:px-20 xl:px-28">
+        <div className="relative container px-4 pb-8 pt-8 sm:px-6 md:px-10 md:pb-12 md:pt-10 lg:px-20 xl:px-28">
           {/* Categories */}
           {post.categories.length > 0 && (
             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="mb-4 flex flex-wrap gap-2">
               {post.categories.map((cat) => (
-                <span key={cat} className="rounded-full border border-primary-foreground/20 bg-primary-foreground/10 px-3 py-1 text-xs font-semibold text-primary-foreground backdrop-blur-sm">
+                <span key={cat} className="rounded-full border border-primary/20 bg-primary/5 px-3 py-1 text-xs font-semibold text-primary">
                   {cat}
                 </span>
               ))}
@@ -130,7 +130,7 @@ export default function PostDetail() {
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.05 }}
-            className="mb-6 max-w-3xl font-display text-2xl font-extrabold leading-tight text-primary-foreground sm:text-3xl md:text-4xl lg:text-[2.75rem] lg:leading-[1.15]"
+            className="mb-6 max-w-3xl font-display text-xl font-extrabold leading-tight text-foreground sm:text-2xl md:text-3xl lg:text-4xl"
           >
             {post.title}
           </motion.h1>
@@ -140,25 +140,25 @@ export default function PostDetail() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.1 }}
-            className="flex flex-wrap items-center gap-3"
+            className="flex flex-wrap items-center gap-2 sm:gap-3"
           >
             {post.published_at && (
-              <div className="flex items-center gap-1.5 rounded-full border border-primary-foreground/15 bg-primary-foreground/10 px-3 py-1.5 text-xs text-primary-foreground/80 backdrop-blur-sm">
+              <div className="flex items-center gap-1.5 rounded-full border border-border bg-card px-3 py-1.5 text-xs text-muted-foreground shadow-[var(--shadow-card)]">
                 <Calendar className="h-3.5 w-3.5" />
                 <time dateTime={post.published_at}>
                   {new Date(post.published_at).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}
                 </time>
               </div>
             )}
-            <div className="flex items-center gap-1.5 rounded-full border border-primary-foreground/15 bg-primary-foreground/10 px-3 py-1.5 text-xs text-primary-foreground/80 backdrop-blur-sm">
+            <div className="flex items-center gap-1.5 rounded-full border border-border bg-card px-3 py-1.5 text-xs text-muted-foreground shadow-[var(--shadow-card)]">
               <Clock className="h-3.5 w-3.5" />
               <span>{readTime} min read</span>
             </div>
-            <div className="flex items-center gap-1.5 rounded-full border border-primary-foreground/15 bg-primary-foreground/10 px-3 py-1.5 text-xs text-primary-foreground/80 backdrop-blur-sm">
+            <div className="flex items-center gap-1.5 rounded-full border border-border bg-card px-3 py-1.5 text-xs text-muted-foreground shadow-[var(--shadow-card)]">
               <Eye className="h-3.5 w-3.5" />
               <span>{post.view_count.toLocaleString()} views</span>
             </div>
-            <div className="flex items-center gap-1.5 rounded-full border border-primary-foreground/15 bg-primary-foreground/10 px-3 py-1.5 text-xs text-primary-foreground/80 backdrop-blur-sm">
+            <div className="flex items-center gap-1.5 rounded-full border border-border bg-card px-3 py-1.5 text-xs text-muted-foreground shadow-[var(--shadow-card)]">
               <BookOpen className="h-3.5 w-3.5" />
               <span>{words.toLocaleString()} words</span>
             </div>
@@ -166,18 +166,18 @@ export default function PostDetail() {
         </div>
       </div>
 
-      <div className="container px-6 py-8 md:px-10 lg:px-20 xl:px-28">
+      <div className="container px-4 py-6 sm:px-6 md:px-10 md:py-8 lg:px-20 xl:px-28">
         {/* Desktop: content LEFT, sidebar RIGHT */}
         <div className="lg:flex lg:gap-10 xl:gap-14">
 
           {/* Left: Article */}
-          <article className="min-w-0 flex-1 lg:max-w-3xl">
+          <article className="min-w-0 flex-1 overflow-hidden lg:max-w-3xl">
 
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.15 }}
-              className="prose-content text-foreground"
+              className="prose-content max-w-none text-foreground [&_img]:max-w-full [&_pre]:max-w-full [&_pre]:overflow-x-auto [&_table]:max-w-full [&_table]:overflow-x-auto"
               dangerouslySetInnerHTML={{ __html: post.content || "" }}
             />
 
