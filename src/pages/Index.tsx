@@ -92,7 +92,7 @@ export default function Index() {
               </div>
             </motion.div>
           </div>
-          <div className="absolute inset-0 opacity-20" style={{ backgroundImage: "radial-gradient(circle at 80% 20%, hsl(250, 85%, 60% / 0.4) 0%, transparent 50%), radial-gradient(circle at 20% 80%, hsl(330, 80%, 60% / 0.3) 0%, transparent 50%)" }} />
+          <div className="absolute inset-0 opacity-20" style={{ backgroundImage: "radial-gradient(circle at 80% 20%, hsl(230, 75%, 58% / 0.4) 0%, transparent 50%), radial-gradient(circle at 20% 80%, hsl(265, 70%, 62% / 0.3) 0%, transparent 50%)" }} />
         </section>
 
         {/* Recent Posts */}
