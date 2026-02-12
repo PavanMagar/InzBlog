@@ -5,6 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { PublicHeader } from "@/components/PublicHeader";
 import { PublicFooter } from "@/components/PublicFooter";
 import { SEOHead } from "@/components/SEOHead";
+import { CommentSection } from "@/components/CommentSection";
 
 interface PostData {
   id: string;
@@ -139,6 +140,8 @@ export default function PostDetail() {
           <div className="prose-content text-foreground" dangerouslySetInnerHTML={{ __html: post.content || "" }} />
         </div>
       </article>
+
+      <CommentSection postId={post.id} />
 
       <PublicFooter />
     </>
