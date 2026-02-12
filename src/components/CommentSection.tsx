@@ -57,7 +57,7 @@ function CommentForm({ postId, parentId, onSuccess, onCancel, placeholder }: {
     e.preventDefault();
     if (!name.trim() || !email.trim() || !content.trim()) return;
 
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const emailRegex = /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/;
     if (!emailRegex.test(email.trim())) {
       toast.error("Please enter a valid email address");
       return;
@@ -87,28 +87,15 @@ function CommentForm({ postId, parentId, onSuccess, onCancel, placeholder }: {
 
   return (
     <motion.form
-      initial={{ opacity: 0, y: -10 }}
+      initial={{ opacity: 0, y: -8 }}
       animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -10 }}
+      exit={{ opacity: 0, y: -8 }}
       onSubmit={handleSubmit}
       className="space-y-3"
     >
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-        <Input
-          placeholder="Your name *"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          required
-          maxLength={100}
-        />
-        <Input
-          placeholder="Your email *"
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-          maxLength={255}
-        />
+        <Input placeholder="Your name *" value={name} onChange={(e) => setName(e.target.value)} required maxLength={100} className="bg-background" />
+        <Input placeholder="Your email *" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required maxLength={255} className="bg-background" />
       </div>
       <Textarea
         placeholder={placeholder || "Write your comment..."}
@@ -117,6 +104,7 @@ function CommentForm({ postId, parentId, onSuccess, onCancel, placeholder }: {
         required
         maxLength={2000}
         rows={3}
+        className="bg-background"
       />
       <div className="flex items-center gap-2">
         <Button type="submit" disabled={submitting} size="sm" className="gap-1.5">
@@ -124,9 +112,7 @@ function CommentForm({ postId, parentId, onSuccess, onCancel, placeholder }: {
           {submitting ? "Posting..." : parentId ? "Reply" : "Post Comment"}
         </Button>
         {onCancel && (
-          <Button type="button" variant="ghost" size="sm" onClick={onCancel}>
-            Cancel
-          </Button>
+          <Button type="button" variant="ghost" size="sm" onClick={onCancel}>Cancel</Button>
         )}
       </div>
     </motion.form>
@@ -147,20 +133,13 @@ function SingleComment({ comment, postId, onRefresh, depth = 0 }: {
   const visitorId = getVisitorId();
 
   useEffect(() => {
-    supabase
-      .from("comment_likes")
-      .select("id")
-      .eq("comment_id", comment.id)
-      .eq("visitor_id", visitorId)
-      .then(({ data }) => {
-        if (data && data.length > 0) setLiked(true);
-      });
+    supabase.from("comment_likes").select("id").eq("comment_id", comment.id).eq("visitor_id", visitorId)
+      .then(({ data }) => { if (data && data.length > 0) setLiked(true); });
   }, [comment.id, visitorId]);
 
   const handleLike = async () => {
     setAnimateLike(true);
     setTimeout(() => setAnimateLike(false), 600);
-
     if (liked) {
       setLiked(false);
       setLocalLikes((p) => Math.max(0, p - 1));
@@ -178,75 +157,57 @@ function SingleComment({ comment, postId, onRefresh, depth = 0 }: {
   const maxDepth = 4;
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      className={`${depth > 0 ? "ml-4 border-l-2 border-border pl-4 sm:ml-6 sm:pl-5" : ""}`}
-    >
-      <div className="group rounded-xl p-3 transition-colors hover:bg-muted/30">
-        <div className="mb-1.5 flex items-center gap-2">
+    <div className={`${depth > 0 ? "ml-4 border-l-2 border-border/60 pl-4 sm:ml-5 sm:pl-4" : ""}`}>
+      <div className="group rounded-xl p-3 transition-colors hover:bg-muted/20">
+        <div className="mb-2 flex items-start gap-2.5">
           <div
-            className="flex h-8 w-8 items-center justify-center rounded-full text-xs font-bold text-primary-foreground"
-            style={{ background: comment.is_admin_reply ? "var(--gradient-primary)" : `hsl(${(comment.author_name.charCodeAt(0) * 47) % 360}, 55%, 55%)` }}
+            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-xs font-bold text-primary-foreground"
+            style={{ background: comment.is_admin_reply ? "var(--gradient-primary)" : `hsl(${(comment.author_name.charCodeAt(0) * 47) % 360}, 50%, 50%)` }}
           >
             {comment.is_admin_reply ? "A" : comment.author_name.charAt(0).toUpperCase()}
           </div>
-          <div className="flex-1">
+          <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2">
               <span className="text-sm font-semibold text-foreground">{comment.author_name}</span>
               {comment.is_admin_reply && (
-                <span className="rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-semibold text-primary">Admin</span>
+                <span className="rounded-full px-2 py-0.5 text-[10px] font-semibold text-primary-foreground" style={{ background: "var(--gradient-primary)" }}>
+                  Admin
+                </span>
+              )}
+              <span className="text-[11px] text-muted-foreground">· {timeAgo(comment.created_at)}</span>
+            </div>
+            <p className="mt-1 whitespace-pre-wrap text-sm leading-relaxed text-foreground/85">{comment.content}</p>
+
+            <div className="mt-2 flex items-center gap-3">
+              <button onClick={handleLike} className={`flex items-center gap-1 text-xs transition-colors ${liked ? "text-red-500" : "text-muted-foreground hover:text-red-500"}`}>
+                <motion.div animate={animateLike ? { scale: [1, 1.4, 1] } : {}} transition={{ duration: 0.3 }}>
+                  <Heart className={`h-3.5 w-3.5 ${liked ? "fill-red-500" : ""}`} />
+                </motion.div>
+                {localLikes > 0 && <span>{localLikes}</span>}
+              </button>
+              {depth < maxDepth && (
+                <button onClick={() => setShowReplyForm(!showReplyForm)} className="flex items-center gap-1 text-xs text-muted-foreground transition-colors hover:text-primary">
+                  <Reply className="h-3.5 w-3.5" /> Reply
+                </button>
+              )}
+              {replies.length > 0 && (
+                <button onClick={() => setShowReplies(!showReplies)} className="flex items-center gap-1 text-xs text-muted-foreground transition-colors hover:text-foreground">
+                  {showReplies ? <ChevronUp className="h-3.5 w-3.5" /> : <ChevronDown className="h-3.5 w-3.5" />}
+                  {replies.length} {replies.length === 1 ? "reply" : "replies"}
+                </button>
               )}
             </div>
-            <span className="text-xs text-muted-foreground">{timeAgo(comment.created_at)}</span>
           </div>
-        </div>
-
-        <p className="mb-2 whitespace-pre-wrap text-sm leading-relaxed text-foreground/90">{comment.content}</p>
-
-        <div className="flex items-center gap-3">
-          <button
-            onClick={handleLike}
-            className={`flex items-center gap-1 text-xs transition-colors ${liked ? "text-red-500" : "text-muted-foreground hover:text-red-500"}`}
-          >
-            <motion.div animate={animateLike ? { scale: [1, 1.4, 1] } : {}} transition={{ duration: 0.3 }}>
-              <Heart className={`h-3.5 w-3.5 ${liked ? "fill-red-500" : ""}`} />
-            </motion.div>
-            {localLikes > 0 && <span>{localLikes}</span>}
-          </button>
-
-          {depth < maxDepth && (
-            <button
-              onClick={() => setShowReplyForm(!showReplyForm)}
-              className="flex items-center gap-1 text-xs text-muted-foreground transition-colors hover:text-primary"
-            >
-              <Reply className="h-3.5 w-3.5" />
-              Reply
-            </button>
-          )}
-
-          {replies.length > 0 && (
-            <button
-              onClick={() => setShowReplies(!showReplies)}
-              className="flex items-center gap-1 text-xs text-muted-foreground transition-colors hover:text-foreground"
-            >
-              {showReplies ? <ChevronUp className="h-3.5 w-3.5" /> : <ChevronDown className="h-3.5 w-3.5" />}
-              {replies.length} {replies.length === 1 ? "reply" : "replies"}
-            </button>
-          )}
         </div>
       </div>
 
       <AnimatePresence>
         {showReplyForm && (
-          <div className="ml-4 mt-2 sm:ml-6">
+          <div className="ml-4 mt-1 sm:ml-5">
             <CommentForm
               postId={postId}
               parentId={comment.id}
-              onSuccess={() => {
-                setShowReplyForm(false);
-                onRefresh();
-              }}
+              onSuccess={() => { setShowReplyForm(false); onRefresh(); }}
               onCancel={() => setShowReplyForm(false)}
               placeholder={`Reply to ${comment.author_name}...`}
             />
@@ -256,20 +217,14 @@ function SingleComment({ comment, postId, onRefresh, depth = 0 }: {
 
       <AnimatePresence>
         {showReplies && replies.length > 0 && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="mt-1 space-y-1">
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="mt-0.5 space-y-0.5">
             {replies.map((reply) => (
-              <SingleComment
-                key={reply.id}
-                comment={reply}
-                postId={postId}
-                onRefresh={onRefresh}
-                depth={depth + 1}
-              />
+              <SingleComment key={reply.id} comment={reply} postId={postId} onRefresh={onRefresh} depth={depth + 1} />
             ))}
           </motion.div>
         )}
       </AnimatePresence>
-    </motion.div>
+    </div>
   );
 }
 
@@ -289,7 +244,6 @@ export function CommentSection({ postId }: { postId: string }) {
     if (data) {
       const map = new Map<string, Comment>();
       const roots: Comment[] = [];
-
       data.forEach((c: any) => map.set(c.id, { ...c, replies: [] }));
       data.forEach((c: any) => {
         const comment = map.get(c.id)!;
@@ -299,7 +253,6 @@ export function CommentSection({ postId }: { postId: string }) {
           roots.push(comment);
         }
       });
-
       setComments(roots);
     }
     setLoading(false);
@@ -307,20 +260,12 @@ export function CommentSection({ postId }: { postId: string }) {
 
   useEffect(() => {
     fetchComments();
-
     const channel = supabase
       .channel(`comments-${postId}`)
-      .on("postgres_changes", { event: "*", schema: "public", table: "comments", filter: `post_id=eq.${postId}` }, () => {
-        fetchComments();
-      })
-      .on("postgres_changes", { event: "*", schema: "public", table: "comment_likes" }, () => {
-        fetchComments();
-      })
+      .on("postgres_changes", { event: "*", schema: "public", table: "comments", filter: `post_id=eq.${postId}` }, () => fetchComments())
+      .on("postgres_changes", { event: "*", schema: "public", table: "comment_likes" }, () => fetchComments())
       .subscribe();
-
-    return () => {
-      supabase.removeChannel(channel);
-    };
+    return () => { supabase.removeChannel(channel); };
   }, [fetchComments]);
 
   const totalComments = comments.reduce((sum, c) => sum + 1 + (c.replies?.length || 0), 0);
@@ -328,34 +273,35 @@ export function CommentSection({ postId }: { postId: string }) {
   const hasMore = comments.length > 2 && !showAll;
 
   return (
-    <section>
-      <div className="rounded-2xl border border-border bg-card p-4 shadow-[var(--shadow-card)] sm:p-5">
+    <motion.section
+      initial={{ opacity: 0, y: 12 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 0.05 }}
+    >
+      <div className="rounded-2xl border border-border bg-card p-5 shadow-[var(--shadow-card)]">
         <div className="mb-4 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <MessageCircle className="h-5 w-5 text-primary" />
-            <h2 className="font-display text-lg font-bold text-foreground">
-              Comments {totalComments > 0 && `(${totalComments})`}
-            </h2>
+            <div className="flex h-7 w-7 items-center justify-center rounded-lg" style={{ background: "var(--gradient-primary)" }}>
+              <MessageCircle className="h-3.5 w-3.5 text-primary-foreground" />
+            </div>
+            <h3 className="font-display text-sm font-bold text-foreground">
+              Discussion {totalComments > 0 && <span className="ml-1 text-muted-foreground font-normal">({totalComments})</span>}
+            </h3>
           </div>
           <Button
             size="sm"
             variant={showForm ? "outline" : "default"}
-            className="gap-1.5"
+            className="gap-1.5 text-xs"
             onClick={() => setShowForm(!showForm)}
           >
             <Plus className="h-3.5 w-3.5" />
-            {showForm ? "Close" : "Add Comment"}
+            {showForm ? "Close" : "Comment"}
           </Button>
         </div>
 
         <AnimatePresence>
           {showForm && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              exit={{ opacity: 0, height: 0 }}
-              className="overflow-hidden"
-            >
+            <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }} className="overflow-hidden">
               <div className="mb-4 rounded-xl border border-border bg-muted/20 p-4">
                 <CommentForm postId={postId} onSuccess={() => { fetchComments(); setShowForm(false); }} onCancel={() => setShowForm(false)} />
               </div>
@@ -364,18 +310,18 @@ export function CommentSection({ postId }: { postId: string }) {
         </AnimatePresence>
 
         {loading ? (
-          <div className="mt-6 flex justify-center">
-            <div className="h-6 w-6 animate-spin rounded-full border-3 border-primary border-t-transparent" />
+          <div className="flex justify-center py-6">
+            <div className="h-5 w-5 animate-spin rounded-full border-2 border-primary border-t-transparent" />
           </div>
         ) : comments.length > 0 ? (
-          <div className="space-y-1">
+          <div className="space-y-0.5">
             {hasMore && (
               <button
                 onClick={() => setShowAll(true)}
-                className="mb-3 flex w-full items-center justify-center gap-1.5 rounded-xl border border-border bg-muted/30 py-2.5 text-xs font-medium text-muted-foreground transition-colors hover:bg-muted/50 hover:text-foreground"
+                className="mb-3 flex w-full items-center justify-center gap-1.5 rounded-xl border border-dashed border-border py-2.5 text-xs font-medium text-muted-foreground transition-colors hover:border-primary/30 hover:text-foreground"
               >
                 <ChevronDown className="h-3.5 w-3.5" />
-                Load {comments.length - 2} more comment{comments.length - 2 > 1 ? "s" : ""}
+                Load {comments.length - 2} older comment{comments.length - 2 > 1 ? "s" : ""}
               </button>
             )}
             {visibleComments.map((comment) => (
@@ -383,9 +329,12 @@ export function CommentSection({ postId }: { postId: string }) {
             ))}
           </div>
         ) : (
-          <p className="mt-4 text-center text-sm text-muted-foreground">No comments yet. Be the first to share your thoughts!</p>
+          <div className="py-6 text-center">
+            <MessageCircle className="mx-auto mb-2 h-8 w-8 text-muted-foreground/20" />
+            <p className="text-sm text-muted-foreground">No comments yet. Start the discussion!</p>
+          </div>
         )}
       </div>
-    </section>
+    </motion.section>
   );
 }
