@@ -1,11 +1,10 @@
 import { Link } from "react-router-dom";
-import { PenLine, Search, Menu, X } from "lucide-react";
+import { PenLine, Search } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 export function PublicHeader() {
   const [searchOpen, setSearchOpen] = useState(false);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [query, setQuery] = useState("");
   const navigate = useNavigate();
 
@@ -19,12 +18,10 @@ export function PublicHeader() {
   };
 
   return (
-    <header className="sticky top-0 z-50 border-b border-border/50 bg-card/70 backdrop-blur-xl">
+    <header className="sticky top-0 z-50 border-b border-border bg-card/80 backdrop-blur-md">
       <div className="container flex h-16 items-center justify-between">
-        <Link to="/" className="flex items-center gap-2.5">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg" style={{ background: "var(--gradient-primary)" }}>
-            <PenLine className="h-4 w-4 text-primary-foreground" />
-          </div>
+        <Link to="/" className="flex items-center gap-2">
+          <PenLine className="h-6 w-6 text-primary" />
           <span className="font-display text-xl font-bold text-foreground">Inkwell</span>
         </Link>
 
@@ -37,7 +34,7 @@ export function PublicHeader() {
           </Link>
         </nav>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-3">
           {searchOpen ? (
             <form onSubmit={handleSearch} className="flex items-center">
               <input
@@ -45,7 +42,7 @@ export function PublicHeader() {
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder="Search articles..."
-                className="h-9 w-40 rounded-lg border border-input bg-background px-3 text-sm outline-none focus:ring-2 focus:ring-ring sm:w-48"
+                className="h-9 w-48 rounded-lg border border-input bg-background px-3 text-sm outline-none focus:ring-2 focus:ring-ring"
                 onBlur={() => !query && setSearchOpen(false)}
               />
             </form>
@@ -60,46 +57,8 @@ export function PublicHeader() {
           >
             Admin
           </Link>
-
-          {/* Mobile menu toggle */}
-          <button
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="rounded-lg p-2 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground md:hidden"
-            aria-label="Toggle menu"
-          >
-            {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-          </button>
         </div>
       </div>
-
-      {/* Mobile menu */}
-      {mobileMenuOpen && (
-        <div className="animate-slide-down border-t border-border/50 bg-card/95 backdrop-blur-xl md:hidden">
-          <nav className="container flex flex-col gap-1 py-4">
-            <Link
-              to="/"
-              onClick={() => setMobileMenuOpen(false)}
-              className="rounded-lg px-4 py-3 text-sm font-medium text-foreground transition-colors hover:bg-muted"
-            >
-              Home
-            </Link>
-            <Link
-              to="/posts"
-              onClick={() => setMobileMenuOpen(false)}
-              className="rounded-lg px-4 py-3 text-sm font-medium text-foreground transition-colors hover:bg-muted"
-            >
-              Articles
-            </Link>
-            <Link
-              to="/admin/login"
-              onClick={() => setMobileMenuOpen(false)}
-              className="rounded-lg px-4 py-3 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted"
-            >
-              Admin
-            </Link>
-          </nav>
-        </div>
-      )}
     </header>
   );
 }

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { FileText, FolderOpen, Eye } from "lucide-react";
+import { FileText, FolderOpen, Eye, TrendingUp } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { AdminSidebar } from "@/components/AdminSidebar";
 
@@ -28,45 +28,37 @@ export default function AdminDashboard() {
   }, []);
 
   const statCards = [
-    { label: "Total Posts", value: stats.totalPosts, icon: FileText },
-    { label: "Categories", value: stats.totalCategories, icon: FolderOpen },
-    { label: "Total Views", value: stats.totalViews, icon: Eye },
+    { label: "Total Posts", value: stats.totalPosts, icon: FileText, color: "text-primary" },
+    { label: "Categories", value: stats.totalCategories, icon: FolderOpen, color: "text-primary" },
+    { label: "Total Views", value: stats.totalViews, icon: Eye, color: "text-primary" },
   ];
 
   return (
     <div className="flex min-h-screen">
       <AdminSidebar />
       <div className="flex-1 overflow-auto bg-background">
-        <div className="border-b border-border bg-card px-6 py-6 md:px-8">
+        <div className="border-b border-border bg-card px-8 py-6">
           <h1 className="font-display text-2xl font-bold text-foreground">Dashboard</h1>
           <p className="text-sm text-muted-foreground">Welcome back! Here's an overview of your blog.</p>
         </div>
 
-        <div className="p-4 md:p-8">
+        <div className="p-8">
           {/* Stats */}
-          <div className="mb-8 grid gap-4 grid-cols-1 sm:grid-cols-3">
-            {statCards.map((s, i) => (
-              <div
-                key={s.label}
-                className="relative overflow-hidden rounded-2xl border border-border bg-card p-6 shadow-[var(--shadow-card)]"
-              >
-                <div className="absolute -right-6 -top-6 h-24 w-24 rounded-full bg-primary/5" />
-                <div className="relative">
-                  <div className="mb-3 flex items-center justify-between">
-                    <span className="text-sm font-medium text-muted-foreground">{s.label}</span>
-                    <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary/10">
-                      <s.icon className="h-4 w-4 text-primary" />
-                    </div>
-                  </div>
-                  <p className="font-display text-3xl font-bold text-card-foreground">{s.value}</p>
+          <div className="mb-8 grid gap-4 sm:grid-cols-3">
+            {statCards.map((s) => (
+              <div key={s.label} className="rounded-xl border border-border bg-card p-6 shadow-[var(--shadow-card)]">
+                <div className="mb-3 flex items-center justify-between">
+                  <span className="text-sm font-medium text-muted-foreground">{s.label}</span>
+                  <s.icon className={`h-5 w-5 ${s.color}`} />
                 </div>
+                <p className="font-display text-3xl font-bold text-card-foreground">{s.value}</p>
               </div>
             ))}
           </div>
 
           {/* Recent Posts */}
-          <div className="rounded-2xl border border-border bg-card shadow-[var(--shadow-card)]">
-            <div className="flex items-center justify-between border-b border-border px-5 py-4 md:px-6">
+          <div className="rounded-xl border border-border bg-card shadow-[var(--shadow-card)]">
+            <div className="flex items-center justify-between border-b border-border px-6 py-4">
               <h2 className="font-display text-lg font-semibold text-card-foreground">Recent Posts</h2>
               <Link to="/admin/posts" className="text-sm font-medium text-primary hover:underline">View all</Link>
             </div>
@@ -75,18 +67,18 @@ export default function AdminDashboard() {
                 <p className="px-6 py-8 text-center text-muted-foreground">No posts yet. Create your first post!</p>
               ) : (
                 recentPosts.map((post) => (
-                  <div key={post.id} className="flex flex-col gap-2 px-5 py-3 sm:flex-row sm:items-center sm:justify-between md:px-6">
-                    <div className="min-w-0">
-                      <Link to={`/admin/posts/${post.id}`} className="text-sm font-medium text-card-foreground hover:text-primary truncate block">
+                  <div key={post.id} className="flex items-center justify-between px-6 py-3">
+                    <div>
+                      <Link to={`/admin/posts/${post.id}`} className="text-sm font-medium text-card-foreground hover:text-primary">
                         {post.title}
                       </Link>
                       <p className="text-xs text-muted-foreground">
                         {new Date(post.created_at).toLocaleDateString()}
                       </p>
                     </div>
-                    <div className="flex items-center gap-3 shrink-0">
+                    <div className="flex items-center gap-3">
                       <span className={`rounded-full px-2 py-0.5 text-xs font-medium ${
-                        post.status === "published" ? "bg-primary/10 text-primary" : "bg-muted text-muted-foreground"
+                        post.status === "published" ? "bg-green-100 text-green-700" : "bg-yellow-100 text-yellow-700"
                       }`}>
                         {post.status}
                       </span>
