@@ -328,7 +328,8 @@ export function CommentSection({ postId }: { postId: string }) {
   const hasMore = comments.length > 2 && !showAll;
 
   return (
-    <div className="p-5 sm:p-6">
+    <section className="container max-w-3xl px-4 pb-12">
+      <div className="rounded-2xl border border-border bg-card p-5 shadow-[var(--shadow-card)] sm:p-6">
         <div className="mb-4 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <MessageCircle className="h-5 w-5 text-primary" />
@@ -384,6 +385,7 @@ export function CommentSection({ postId }: { postId: string }) {
         ) : (
           <p className="mt-4 text-center text-sm text-muted-foreground">No comments yet. Be the first to share your thoughts!</p>
         )}
-    </div>
+      </div>
+    </section>
   );
 }
