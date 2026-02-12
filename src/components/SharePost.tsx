@@ -6,10 +6,9 @@ import { toast } from "sonner";
 interface SharePostProps {
   title: string;
   slug: string;
-  thumbnailUrl?: string | null;
 }
 
-export function SharePost({ title, slug, thumbnailUrl }: SharePostProps) {
+export function SharePost({ title, slug }: SharePostProps) {
   const [copied, setCopied] = useState(false);
   const url = `${window.location.origin}/posts/${slug}.html`;
   const text = encodeURIComponent(title);
@@ -40,13 +39,6 @@ export function SharePost({ title, slug, thumbnailUrl }: SharePostProps) {
       animate={{ opacity: 1, y: 0 }}
       className="overflow-hidden rounded-2xl border border-border bg-card shadow-[var(--shadow-card)]"
     >
-      {/* Integrated thumbnail */}
-      {thumbnailUrl && (
-        <div className="relative aspect-[16/9] overflow-hidden">
-          <img src={thumbnailUrl} alt="" className="h-full w-full object-cover" loading="lazy" />
-          <div className="absolute inset-0 bg-gradient-to-t from-card via-transparent to-transparent" />
-        </div>
-      )}
 
       <div className="p-5">
         <div className="mb-3 flex items-center gap-2">
