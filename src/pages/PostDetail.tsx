@@ -6,6 +6,8 @@ import { PublicHeader } from "@/components/PublicHeader";
 import { PublicFooter } from "@/components/PublicFooter";
 import { SEOHead } from "@/components/SEOHead";
 import { CommentSection } from "@/components/CommentSection";
+import { SharePost } from "@/components/SharePost";
+import { RelatedPosts } from "@/components/RelatedPosts";
 
 interface PostData {
   id: string;
@@ -91,57 +93,84 @@ export default function PostDetail() {
       />
       <PublicHeader />
 
-      <article>
-        {post.thumbnail_url && (
-          <div className="relative h-56 overflow-hidden sm:h-72 md:h-96">
-            <img src={post.thumbnail_url} alt={post.title} className="h-full w-full object-cover" />
-            <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/30 to-transparent" />
-          </div>
-        )}
-
-        <div className="container max-w-3xl px-4 py-8 md:py-12">
-          <Link to="/posts" className="mb-6 inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground">
-            <ArrowLeft className="h-3.5 w-3.5" /> Back to articles
-          </Link>
-
-          {post.categories.length > 0 && (
-            <div className="mb-4 flex flex-wrap gap-2">
-              {post.categories.map((cat) => (
-                <span key={cat} className="rounded-full bg-primary/10 px-3 py-1 text-xs font-medium text-primary">
-                  {cat}
-                </span>
-              ))}
-            </div>
-          )}
-
-          <h1 className="mb-4 font-display text-2xl font-bold leading-tight text-foreground sm:text-3xl md:text-4xl lg:text-5xl">
-            {post.title}
-          </h1>
-
-          {post.published_at && (
-            <div className="mb-8 flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
-              <div className="flex items-center gap-1.5">
-                <Calendar className="h-4 w-4" />
-                <time dateTime={post.published_at}>
-                  {new Date(post.published_at).toLocaleDateString("en-US", {
-                    month: "long",
-                    day: "numeric",
-                    year: "numeric",
-                  })}
-                </time>
-              </div>
-              <div className="flex items-center gap-1.5">
-                <Eye className="h-4 w-4" />
-                <span>{post.view_count} views</span>
-              </div>
-            </div>
-          )}
-
-          <div className="prose-content text-foreground" dangerouslySetInnerHTML={{ __html: post.content || "" }} />
+      {/* Hero image */}
+      {post.thumbnail_url && (
+        <div className="relative h-56 overflow-hidden sm:h-72 md:h-96">
+          <img src={post.thumbnail_url} alt={post.title} className="h-full w-full object-cover" />
+          <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/30 to-transparent" />
         </div>
-      </article>
+      )}
 
-      <CommentSection postId={post.id} />
+      <div className="container px-4 py-8 md:py-12 lg:px-8">
+        {/* Desktop: 2-column layout */}
+        <div className="lg:flex lg:gap-10 xl:gap-14">
+          {/* Left: Article content */}
+          <article className="min-w-0 flex-1 lg:max-w-3xl">
+            <Link to="/posts" className="mb-6 inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground">
+              <ArrowLeft className="h-3.5 w-3.5" /> Back to articles
+            </Link>
+
+            {post.categories.length > 0 && (
+              <div className="mb-4 flex flex-wrap gap-2">
+                {post.categories.map((cat) => (
+                  <span key={cat} className="rounded-full bg-primary/10 px-3 py-1 text-xs font-medium text-primary">
+                    {cat}
+                  </span>
+                ))}
+              </div>
+            )}
+
+            <h1 className="mb-4 font-display text-2xl font-bold leading-tight text-foreground sm:text-3xl md:text-4xl lg:text-5xl">
+              {post.title}
+            </h1>
+
+            {post.published_at && (
+              <div className="mb-8 flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
+                <div className="flex items-center gap-1.5">
+                  <Calendar className="h-4 w-4" />
+                  <time dateTime={post.published_at}>
+                    {new Date(post.published_at).toLocaleDateString("en-US", {
+                      month: "long",
+                      day: "numeric",
+                      year: "numeric",
+                    })}
+                  </time>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <Eye className="h-4 w-4" />
+                  <span>{post.view_count} views</span>
+                </div>
+              </div>
+            )}
+
+            <div className="prose-content text-foreground" dangerouslySetInnerHTML={{ __html: post.content || "" }} />
+
+            {/* Share (visible on mobile, hidden on desktop) */}
+            <div className="mt-8 lg:hidden">
+              <SharePost title={post.title} slug={post.slug} />
+            </div>
+
+            {/* Comment section for mobile */}
+            <div className="mt-8 lg:hidden">
+              <CommentSection postId={post.id} />
+            </div>
+
+            {/* Related posts for mobile */}
+            <div className="mt-8 lg:hidden">
+              <RelatedPosts currentPostId={post.id} categoryNames={post.categories} />
+            </div>
+          </article>
+
+          {/* Right sidebar: desktop only */}
+          <aside className="hidden lg:block lg:w-80 xl:w-96">
+            <div className="sticky top-24 space-y-6">
+              <SharePost title={post.title} slug={post.slug} />
+              <CommentSection postId={post.id} />
+              <RelatedPosts currentPostId={post.id} categoryNames={post.categories} />
+            </div>
+          </aside>
+        </div>
+      </div>
 
       <PublicFooter />
     </>

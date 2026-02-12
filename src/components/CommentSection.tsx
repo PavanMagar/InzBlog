@@ -328,8 +328,8 @@ export function CommentSection({ postId }: { postId: string }) {
   const hasMore = comments.length > 2 && !showAll;
 
   return (
-    <section className="container max-w-3xl px-4 pb-12">
-      <div className="rounded-2xl border border-border bg-card p-5 shadow-[var(--shadow-card)] sm:p-6">
+    <section>
+      <div className="rounded-2xl border border-border bg-card p-4 shadow-[var(--shadow-card)] sm:p-5">
         <div className="mb-4 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <MessageCircle className="h-5 w-5 text-primary" />
