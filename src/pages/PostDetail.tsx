@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import { ArrowLeft, Calendar, Eye, Clock } from "lucide-react";
+import { Calendar, Eye, Clock, BookOpen } from "lucide-react";
 import { motion } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
 import { PublicHeader } from "@/components/PublicHeader";
@@ -26,6 +26,11 @@ function estimateReadTime(html: string | null): number {
   if (!html) return 1;
   const text = html.replace(/<[^>]*>/g, "");
   return Math.max(1, Math.ceil(text.split(/\s+/).length / 200));
+}
+
+function wordCount(html: string | null): number {
+  if (!html) return 0;
+  return html.replace(/<[^>]*>/g, "").split(/\s+/).filter(Boolean).length;
 }
 
 export default function PostDetail() {
@@ -90,6 +95,7 @@ export default function PostDetail() {
   }
 
   const readTime = estimateReadTime(post.content);
+  const words = wordCount(post.content);
 
   return (
     <>
@@ -102,13 +108,61 @@ export default function PostDetail() {
       />
       <PublicHeader />
 
+      {/* Hero header section */}
+      <div className="relative overflow-hidden" style={{ background: "var(--gradient-hero)" }}>
+        {/* Decorative grid */}
+        <div className="absolute inset-0 opacity-[0.04]" style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg width='40' height='40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h40v40H0z' fill='none' stroke='white' stroke-width='0.5'/%3E%3C/svg%3E\")" }} />
+        
+        <div className="relative container px-6 pb-10 pt-10 md:px-10 md:pb-14 md:pt-12 lg:px-20 xl:px-28">
+          {/* Categories */}
+          {post.categories.length > 0 && (
+            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="mb-4 flex flex-wrap gap-2">
+              {post.categories.map((cat) => (
+                <span key={cat} className="rounded-full border border-primary-foreground/20 bg-primary-foreground/10 px-3 py-1 text-xs font-semibold text-primary-foreground backdrop-blur-sm">
+                  {cat}
+                </span>
+              ))}
+            </motion.div>
+          )}
 
-      {/* Breadcrumb */}
-      <div className="border-b border-border bg-muted/30">
-        <div className="container px-6 py-3 md:px-10 lg:px-20 xl:px-28">
-          <Link to="/posts" className="inline-flex items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground">
-            <ArrowLeft className="h-3.5 w-3.5" /> Back to articles
-          </Link>
+          {/* Title */}
+          <motion.h1
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.05 }}
+            className="mb-6 max-w-3xl font-display text-2xl font-extrabold leading-tight text-primary-foreground sm:text-3xl md:text-4xl lg:text-[2.75rem] lg:leading-[1.15]"
+          >
+            {post.title}
+          </motion.h1>
+
+          {/* Metadata pills */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.1 }}
+            className="flex flex-wrap items-center gap-3"
+          >
+            {post.published_at && (
+              <div className="flex items-center gap-1.5 rounded-full border border-primary-foreground/15 bg-primary-foreground/10 px-3 py-1.5 text-xs text-primary-foreground/80 backdrop-blur-sm">
+                <Calendar className="h-3.5 w-3.5" />
+                <time dateTime={post.published_at}>
+                  {new Date(post.published_at).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}
+                </time>
+              </div>
+            )}
+            <div className="flex items-center gap-1.5 rounded-full border border-primary-foreground/15 bg-primary-foreground/10 px-3 py-1.5 text-xs text-primary-foreground/80 backdrop-blur-sm">
+              <Clock className="h-3.5 w-3.5" />
+              <span>{readTime} min read</span>
+            </div>
+            <div className="flex items-center gap-1.5 rounded-full border border-primary-foreground/15 bg-primary-foreground/10 px-3 py-1.5 text-xs text-primary-foreground/80 backdrop-blur-sm">
+              <Eye className="h-3.5 w-3.5" />
+              <span>{post.view_count.toLocaleString()} views</span>
+            </div>
+            <div className="flex items-center gap-1.5 rounded-full border border-primary-foreground/15 bg-primary-foreground/10 px-3 py-1.5 text-xs text-primary-foreground/80 backdrop-blur-sm">
+              <BookOpen className="h-3.5 w-3.5" />
+              <span>{words.toLocaleString()} words</span>
+            </div>
+          </motion.div>
         </div>
       </div>
 
@@ -118,46 +172,6 @@ export default function PostDetail() {
 
           {/* Left: Article */}
           <article className="min-w-0 flex-1 lg:max-w-3xl">
-            {post.categories.length > 0 && (
-              <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="mb-4 flex flex-wrap gap-2">
-                {post.categories.map((cat) => (
-                  <span key={cat} className="rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">{cat}</span>
-                ))}
-              </motion.div>
-            )}
-
-            <motion.h1
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.05 }}
-              className="mb-5 font-display text-2xl font-extrabold leading-tight text-foreground sm:text-3xl md:text-4xl lg:text-[2.75rem] lg:leading-[1.15]"
-            >
-              {post.title}
-            </motion.h1>
-
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.1 }}
-              className="mb-8 flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-muted-foreground"
-            >
-              {post.published_at && (
-                <div className="flex items-center gap-1.5">
-                  <Calendar className="h-4 w-4" />
-                  <time dateTime={post.published_at}>
-                    {new Date(post.published_at).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}
-                  </time>
-                </div>
-              )}
-              <div className="flex items-center gap-1.5">
-                <Clock className="h-4 w-4" />
-                <span>{readTime} min read</span>
-              </div>
-              <div className="flex items-center gap-1.5">
-                <Eye className="h-4 w-4" />
-                <span>{post.view_count.toLocaleString()} views</span>
-              </div>
-            </motion.div>
 
             <motion.div
               initial={{ opacity: 0 }}
