@@ -101,7 +101,7 @@ export default function PostDetail() {
         </div>
       )}
 
-      <div className="container px-4 py-8 md:py-12 lg:px-8">
+      <div className="container px-6 py-8 md:px-12 md:py-12 lg:px-20 xl:px-28">
         {/* Desktop: 2-column layout */}
         <div className="lg:flex lg:gap-10 xl:gap-14">
           {/* Left: Article content */}
