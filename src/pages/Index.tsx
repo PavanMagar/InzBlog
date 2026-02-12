@@ -117,7 +117,7 @@ export default function Index() {
           <div className="absolute -left-32 -top-32 h-96 w-96 rounded-full bg-primary/10 blur-3xl" />
           <div className="absolute -bottom-32 -right-32 h-96 w-96 rounded-full bg-accent/10 blur-3xl" />
 
-          <div className="container relative z-10 px-4 py-16 sm:py-24 md:py-32 lg:px-8">
+          <div className="container relative z-10 px-6 py-16 sm:py-24 md:py-32 md:px-10 lg:px-16">
             <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
               <motion.div
                 initial={{ opacity: 0, y: 30 }}
@@ -192,7 +192,7 @@ export default function Index() {
 
         {/* Latest Articles */}
         {recentPosts.length > 0 && (
-          <section className="container px-4 py-14 md:py-20 lg:px-8">
+          <section className="container px-6 py-14 md:px-10 md:py-20 lg:px-16">
             <div className="mb-10 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
               <div>
                 <h2 className="font-display text-2xl font-bold text-foreground sm:text-3xl">Latest Articles</h2>
@@ -224,42 +224,76 @@ export default function Index() {
 
         {/* Explore Topics */}
         {categories.length > 0 && (
-          <section className="border-t border-border" style={{ background: "var(--gradient-subtle)" }}>
-            <div className="container px-4 py-14 md:py-20 lg:px-8">
-              <div className="mb-10 text-center">
-                <h2 className="font-display text-2xl font-bold text-foreground sm:text-3xl">Explore Topics</h2>
-                <p className="mt-2 text-sm text-muted-foreground">Browse articles by technology and category</p>
+          <section className="relative overflow-hidden border-t border-border">
+            <div className="absolute inset-0" style={{ background: "var(--gradient-subtle)" }} />
+            <div className="absolute -right-40 top-0 h-80 w-80 rounded-full bg-primary/5 blur-3xl" />
+            <div className="absolute -left-40 bottom-0 h-80 w-80 rounded-full bg-accent/5 blur-3xl" />
+
+            <div className="container relative z-10 px-6 py-16 md:px-10 md:py-24 lg:px-16">
+              <div className="mb-12 flex flex-col items-center text-center">
+                <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-4 py-1.5">
+                  <i className="fa-solid fa-compass text-xs text-primary"></i>
+                  <span className="text-xs font-semibold uppercase tracking-wider text-primary">Browse by Topic</span>
+                </div>
+                <h2 className="font-display text-2xl font-bold text-foreground sm:text-3xl md:text-4xl">Explore Topics</h2>
+                <p className="mt-3 max-w-md text-sm leading-relaxed text-muted-foreground">
+                  Dive into curated collections of articles organized by technology and category
+                </p>
               </div>
-              <div className="mx-auto grid max-w-4xl gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                {visibleTopics.map((cat, i) => (
-                  <motion.div
-                    key={cat.id}
-                    initial={{ opacity: 0, y: 15 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.3, delay: i * 0.04 }}
-                  >
-                    <Link
-                      to={`/posts?category=${encodeURIComponent(cat.slug)}`}
-                      className={`group flex items-center gap-4 rounded-2xl border bg-gradient-to-br p-4 transition-all hover:shadow-[var(--shadow-elevated)] hover:-translate-y-0.5 ${topicColors[i % topicColors.length]}`}
+
+              <div className="mx-auto grid max-w-5xl gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                {visibleTopics.map((cat, i) => {
+                  const colorSets = [
+                    { bg: "hsl(217, 91%, 60%)", light: "hsl(217, 91%, 60% / 0.1)", border: "hsl(217, 91%, 60% / 0.2)" },
+                    { bg: "hsl(271, 81%, 56%)", light: "hsl(271, 81%, 56% / 0.1)", border: "hsl(271, 81%, 56% / 0.2)" },
+                    { bg: "hsl(160, 84%, 39%)", light: "hsl(160, 84%, 39% / 0.1)", border: "hsl(160, 84%, 39% / 0.2)" },
+                    { bg: "hsl(25, 95%, 53%)", light: "hsl(25, 95%, 53% / 0.1)", border: "hsl(25, 95%, 53% / 0.2)" },
+                    { bg: "hsl(346, 77%, 50%)", light: "hsl(346, 77%, 50% / 0.1)", border: "hsl(346, 77%, 50% / 0.2)" },
+                    { bg: "hsl(189, 94%, 43%)", light: "hsl(189, 94%, 43% / 0.1)", border: "hsl(189, 94%, 43% / 0.2)" },
+                  ];
+                  const c = colorSets[i % colorSets.length];
+                  return (
+                    <motion.div
+                      key={cat.id}
+                      initial={{ opacity: 0, y: 15 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.3, delay: i * 0.04 }}
                     >
-                      <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-card/80 text-lg text-foreground shadow-sm">
-                        <i className={getTopicIcon(cat.name)}></i>
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <h3 className="font-display text-sm font-semibold text-foreground">{cat.name}</h3>
-                      </div>
-                      <ChevronRight className="h-4 w-4 shrink-0 text-muted-foreground transition-transform group-hover:translate-x-0.5" />
-                    </Link>
-                  </motion.div>
-                ))}
+                      <Link
+                        to={`/posts?category=${encodeURIComponent(cat.slug)}`}
+                        className="group relative flex items-center gap-4 overflow-hidden rounded-2xl border bg-card p-5 transition-all duration-300 hover:shadow-[var(--shadow-elevated)] hover:-translate-y-1"
+                        style={{ borderColor: c.border }}
+                      >
+                        <div
+                          className="absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+                          style={{ background: `linear-gradient(135deg, ${c.light}, transparent)` }}
+                        />
+                        <div
+                          className="relative z-10 flex h-12 w-12 shrink-0 items-center justify-center rounded-xl text-lg transition-transform duration-300 group-hover:scale-110"
+                          style={{ background: c.light, color: c.bg }}
+                        >
+                          <i className={getTopicIcon(cat.name)}></i>
+                        </div>
+                        <div className="relative z-10 flex-1 min-w-0">
+                          <h3 className="font-display text-sm font-bold text-foreground">{cat.name}</h3>
+                          <p className="mt-0.5 text-xs text-muted-foreground">Explore articles →</p>
+                        </div>
+                      </Link>
+                    </motion.div>
+                  );
+                })}
               </div>
+
               {categories.length > TOPICS_INITIAL && !showAllTopics && (
-                <div className="mt-8 flex justify-center">
+                <div className="mt-10 flex justify-center">
                   <button
                     onClick={() => setShowAllTopics(true)}
-                    className="inline-flex items-center gap-1.5 rounded-xl border border-border bg-card px-5 py-2.5 text-sm font-medium text-foreground shadow-sm transition-all hover:shadow-[var(--shadow-card)]"
+                    className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-6 py-3 text-sm font-medium text-foreground shadow-[var(--shadow-card)] transition-all hover:shadow-[var(--shadow-elevated)] hover:-translate-y-0.5"
                   >
-                    Load More Topics <ChevronRight className="h-3.5 w-3.5" />
+                    Show All Topics
+                    <span className="flex h-5 w-5 items-center justify-center rounded-full bg-primary/10 text-xs text-primary">
+                      {categories.length - TOPICS_INITIAL}
+                    </span>
                   </button>
                 </div>
               )}
@@ -268,35 +302,59 @@ export default function Index() {
         )}
 
         {/* Connect With Us */}
-        <section className="border-t border-border">
-          <div className="container px-4 py-14 md:py-20 lg:px-8">
-            <div className="mx-auto max-w-2xl text-center">
-              <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-2xl" style={{ background: "var(--gradient-primary)" }}>
-                <i className="fa-solid fa-satellite-dish text-xl text-white"></i>
-              </div>
-              <h2 className="mb-3 font-display text-2xl font-bold text-foreground sm:text-3xl">Connect With Us</h2>
-              <p className="mb-8 text-sm leading-relaxed text-muted-foreground">
-                Stay updated with the latest tutorials, tech news, and coding resources. Follow us on social media.
-              </p>
-              <div className="flex flex-wrap justify-center gap-3">
+        <section className="relative overflow-hidden border-t border-border" style={{ background: "var(--gradient-hero)" }}>
+          <div className="absolute inset-0 opacity-[0.03]" style={{
+            backgroundImage: "radial-gradient(circle, hsl(217, 91%, 60%) 1px, transparent 1px)",
+            backgroundSize: "24px 24px",
+          }} />
+          <div className="absolute -right-20 top-1/2 h-64 w-64 -translate-y-1/2 rounded-full bg-primary/10 blur-3xl" />
+          <div className="absolute -left-20 top-1/2 h-64 w-64 -translate-y-1/2 rounded-full bg-accent/10 blur-3xl" />
+
+          <div className="container relative z-10 px-6 py-16 md:px-10 md:py-24 lg:px-16">
+            <div className="mx-auto max-w-3xl text-center">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+              >
+                <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-2xl border border-primary-foreground/10 bg-primary-foreground/5 backdrop-blur-sm">
+                  <i className="fa-solid fa-satellite-dish text-2xl text-primary"></i>
+                </div>
+                <h2 className="mb-3 font-display text-2xl font-bold text-primary-foreground sm:text-3xl md:text-4xl">
+                  Let's <span className="gradient-text">Connect</span>
+                </h2>
+                <p className="mx-auto mb-10 max-w-md text-sm leading-relaxed text-primary-foreground/50">
+                  Follow us for the latest tutorials, tech insights, and developer resources. Join our growing community.
+                </p>
+              </motion.div>
+
+              <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-6">
                 {[
-                  { icon: "fa-brands fa-instagram", label: "Instagram", href: "#" },
-                  { icon: "fa-brands fa-x-twitter", label: "X / Twitter", href: "#" },
-                  { icon: "fa-brands fa-github", label: "GitHub", href: "#" },
-                  { icon: "fa-brands fa-linkedin-in", label: "LinkedIn", href: "#" },
-                  { icon: "fa-brands fa-youtube", label: "YouTube", href: "#" },
-                  { icon: "fa-brands fa-telegram", label: "Telegram", href: "#" },
-                ].map((s) => (
-                  <a
+                  { icon: "fa-brands fa-instagram", label: "Instagram", href: "#", color: "hsl(330, 70%, 55%)" },
+                  { icon: "fa-brands fa-x-twitter", label: "Twitter", href: "#", color: "hsl(0, 0%, 80%)" },
+                  { icon: "fa-brands fa-github", label: "GitHub", href: "#", color: "hsl(0, 0%, 75%)" },
+                  { icon: "fa-brands fa-linkedin-in", label: "LinkedIn", href: "#", color: "hsl(210, 80%, 55%)" },
+                  { icon: "fa-brands fa-youtube", label: "YouTube", href: "#", color: "hsl(0, 80%, 55%)" },
+                  { icon: "fa-brands fa-telegram", label: "Telegram", href: "#", color: "hsl(200, 80%, 55%)" },
+                ].map((s, i) => (
+                  <motion.a
                     key={s.label}
                     href={s.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="group flex items-center gap-2.5 rounded-xl border border-border bg-card px-5 py-3 text-sm font-medium text-foreground shadow-[var(--shadow-card)] transition-all hover:shadow-[var(--shadow-elevated)] hover:-translate-y-0.5 hover:border-primary/30"
+                    initial={{ opacity: 0, y: 15 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.3, delay: i * 0.05 }}
+                    className="group flex flex-col items-center gap-2.5 rounded-2xl border border-primary-foreground/10 bg-primary-foreground/5 p-5 backdrop-blur-sm transition-all duration-300 hover:border-primary-foreground/20 hover:bg-primary-foreground/8 hover:-translate-y-1"
                   >
-                    <i className={`${s.icon} text-base text-muted-foreground transition-colors group-hover:text-primary`}></i>
-                    {s.label}
-                  </a>
+                    <div
+                      className="flex h-11 w-11 items-center justify-center rounded-xl transition-transform duration-300 group-hover:scale-110"
+                      style={{ background: `${s.color}20`, color: s.color }}
+                    >
+                      <i className={`${s.icon} text-lg`}></i>
+                    </div>
+                    <span className="text-xs font-medium text-primary-foreground/70 group-hover:text-primary-foreground/90">{s.label}</span>
+                  </motion.a>
                 ))}
               </div>
             </div>

@@ -103,38 +103,47 @@ export default function Posts() {
       <SEOHead title="Articles" description="Browse coding tutorials, programming guides, and tech articles. Search, filter by category, and discover developer resources." />
       <PublicHeader />
 
-      <main className="container px-4 py-8 md:py-12 lg:px-8">
-        {/* Header + Search */}
-        <div className="mb-8">
-          <h1 className="mb-2 font-display text-2xl font-bold text-foreground sm:text-3xl md:text-4xl">Articles</h1>
-          <p className="text-sm text-muted-foreground">Tutorials, guides, and tech resources for developers</p>
+      <main className="container px-6 py-8 md:px-10 md:py-12 lg:px-16">
+        {/* Hero Header */}
+        <div className="relative mb-10 overflow-hidden rounded-2xl border border-border bg-card p-6 shadow-[var(--shadow-card)] sm:p-8 md:p-10">
+          <div className="absolute inset-0 opacity-50" style={{ background: "var(--gradient-subtle)" }} />
+          <div className="absolute -right-20 -top-20 h-48 w-48 rounded-full bg-primary/5 blur-3xl" />
+          <div className="relative z-10">
+            <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-3 py-1">
+              <i className="fa-solid fa-newspaper text-[10px] text-primary"></i>
+              <span className="text-[10px] font-semibold uppercase tracking-wider text-primary">All Articles</span>
+            </div>
+            <h1 className="mb-2 font-display text-2xl font-bold text-foreground sm:text-3xl md:text-4xl">Articles & Tutorials</h1>
+            <p className="max-w-lg text-sm text-muted-foreground">Discover coding tutorials, programming guides, and tech resources for developers</p>
+          </div>
         </div>
 
-        {/* Search + Filter Bar */}
-        <div className="mb-8 space-y-3">
-          <div className="flex gap-2">
+        {/* Search + Categories Bar */}
+        <div className="mb-8 space-y-4">
+          <div className="flex gap-3">
             <div className="relative flex-1">
-              <Search className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <input
                 value={query}
                 onChange={(e) => updateParam("q", e.target.value)}
                 placeholder="Search articles..."
-                className="h-12 w-full rounded-xl border border-input bg-card pl-10 pr-4 text-sm shadow-[var(--shadow-card)] outline-none transition-shadow focus:shadow-[var(--shadow-elevated)] focus:ring-2 focus:ring-ring"
+                className="h-12 w-full rounded-xl border border-input bg-card pl-11 pr-10 text-sm shadow-[var(--shadow-card)] outline-none transition-all focus:shadow-[var(--shadow-elevated)] focus:ring-2 focus:ring-ring"
               />
               {query && (
-                <button onClick={() => updateParam("q", "")} className="absolute right-3 top-1/2 -translate-y-1/2 rounded-md p-0.5 text-muted-foreground hover:text-foreground">
-                  <X className="h-4 w-4" />
+                <button onClick={() => updateParam("q", "")} className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full p-1 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground">
+                  <X className="h-3.5 w-3.5" />
                 </button>
               )}
             </div>
             <button
               onClick={() => setShowFilters(!showFilters)}
-              className={`flex h-12 items-center gap-2 rounded-xl border px-4 text-sm font-medium shadow-[var(--shadow-card)] transition-all ${
-                showFilters || categorySlug ? "border-primary/30 bg-primary/5 text-primary" : "border-input bg-card text-foreground hover:bg-muted"
+              className={`flex h-12 items-center gap-2 rounded-xl border px-4 text-sm font-medium transition-all ${
+                showFilters || categorySlug ? "border-primary/30 bg-primary/5 text-primary shadow-[var(--shadow-card)]" : "border-input bg-card text-foreground shadow-[var(--shadow-card)] hover:bg-muted"
               }`}
             >
               <SlidersHorizontal className="h-4 w-4" />
               <span className="hidden sm:inline">Filters</span>
+              {categorySlug && <span className="flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[10px] text-primary-foreground">1</span>}
             </button>
           </div>
 
@@ -147,51 +156,55 @@ export default function Posts() {
                 exit={{ opacity: 0, height: 0 }}
                 className="overflow-hidden"
               >
-                <div className="flex flex-wrap gap-2 rounded-xl border border-border bg-card p-4 shadow-[var(--shadow-card)]">
-                  <button
-                    onClick={() => updateParam("category", "")}
-                    className={`rounded-full px-3.5 py-1.5 text-xs font-medium transition-all ${
-                      !categorySlug
-                        ? "text-primary-foreground shadow-sm"
-                        : "border border-border bg-background text-foreground hover:bg-muted"
-                    }`}
-                    style={!categorySlug ? { background: "var(--gradient-primary)" } : undefined}
-                  >
-                    All
-                  </button>
-                  {categories.map((c) => (
+                <div className="rounded-xl border border-border bg-card p-4 shadow-[var(--shadow-card)]">
+                  <p className="mb-3 text-xs font-medium uppercase tracking-wider text-muted-foreground">Categories</p>
+                  <div className="flex flex-wrap gap-2">
                     <button
-                      key={c.id}
-                      onClick={() => updateParam("category", c.slug === categorySlug ? "" : c.slug)}
-                      className={`rounded-full px-3.5 py-1.5 text-xs font-medium transition-all ${
-                        c.slug === categorySlug
+                      onClick={() => updateParam("category", "")}
+                      className={`rounded-full px-4 py-2 text-xs font-medium transition-all ${
+                        !categorySlug
                           ? "text-primary-foreground shadow-sm"
                           : "border border-border bg-background text-foreground hover:bg-muted"
                       }`}
-                      style={c.slug === categorySlug ? { background: "var(--gradient-primary)" } : undefined}
+                      style={!categorySlug ? { background: "var(--gradient-primary)" } : undefined}
                     >
-                      {c.name}
+                      All
                     </button>
-                  ))}
+                    {categories.map((c) => (
+                      <button
+                        key={c.id}
+                        onClick={() => updateParam("category", c.slug === categorySlug ? "" : c.slug)}
+                        className={`rounded-full px-4 py-2 text-xs font-medium transition-all ${
+                          c.slug === categorySlug
+                            ? "text-primary-foreground shadow-sm"
+                            : "border border-border bg-background text-foreground hover:bg-muted"
+                        }`}
+                        style={c.slug === categorySlug ? { background: "var(--gradient-primary)" } : undefined}
+                      >
+                        {c.name}
+                      </button>
+                    ))}
+                  </div>
                 </div>
               </motion.div>
             )}
           </AnimatePresence>
 
-          {/* Active filter badge */}
+          {/* Active filter badges */}
           {(activeCategory || query) && (
             <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
-              <span>Showing results for:</span>
+              <span className="font-medium">Active filters:</span>
               {query && (
-                <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-2.5 py-1 font-medium text-primary">
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-primary/10 px-3 py-1.5 font-medium text-primary">
+                  <Search className="h-3 w-3" />
                   "{query}"
-                  <button onClick={() => updateParam("q", "")}><X className="h-3 w-3" /></button>
+                  <button onClick={() => updateParam("q", "")} className="ml-0.5 rounded-full p-0.5 hover:bg-primary/20"><X className="h-3 w-3" /></button>
                 </span>
               )}
               {activeCategory && (
-                <span className="inline-flex items-center gap-1 rounded-full bg-accent/10 px-2.5 py-1 font-medium text-accent">
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-accent/10 px-3 py-1.5 font-medium text-accent">
                   {activeCategory.name}
-                  <button onClick={() => updateParam("category", "")}><X className="h-3 w-3" /></button>
+                  <button onClick={() => updateParam("category", "")} className="ml-0.5 rounded-full p-0.5 hover:bg-accent/20"><X className="h-3 w-3" /></button>
                 </span>
               )}
             </div>
