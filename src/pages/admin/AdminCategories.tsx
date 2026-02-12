@@ -51,24 +51,25 @@ export default function AdminCategories() {
     <div className="flex min-h-screen">
       <AdminSidebar />
       <div className="flex-1 overflow-auto bg-background">
-        <div className="border-b border-border bg-card px-8 py-6">
+        <div className="border-b border-border bg-card px-6 py-6 md:px-8">
           <h1 className="font-display text-2xl font-bold text-foreground">Categories</h1>
           <p className="text-sm text-muted-foreground">Manage your blog categories</p>
         </div>
 
-        <div className="p-8">
+        <div className="p-4 md:p-8">
           {/* Add new */}
-          <div className="mb-8 flex gap-3">
+          <div className="mb-8 flex flex-col gap-3 sm:flex-row">
             <input
               value={newName}
               onChange={(e) => setNewName(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && addCategory()}
               placeholder="New category name..."
-              className="h-10 flex-1 rounded-lg border border-input bg-background px-3 text-sm outline-none focus:ring-2 focus:ring-ring"
+              className="h-11 flex-1 rounded-xl border border-input bg-background px-3 text-sm outline-none focus:ring-2 focus:ring-ring"
             />
             <button
               onClick={addCategory}
-              className="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground hover:opacity-90"
+              className="inline-flex items-center justify-center gap-2 rounded-xl px-5 py-2.5 text-sm font-medium text-primary-foreground hover:opacity-90"
+              style={{ background: "var(--gradient-primary)" }}
             >
               <Plus className="h-4 w-4" /> Add
             </button>
@@ -84,35 +85,35 @@ export default function AdminCategories() {
           ) : (
             <div className="space-y-2">
               {categories.map((cat) => (
-                <div key={cat.id} className="flex items-center justify-between rounded-lg border border-border bg-card px-5 py-3 shadow-[var(--shadow-card)]">
+                <div key={cat.id} className="flex items-center justify-between rounded-2xl border border-border bg-card px-5 py-3.5 shadow-[var(--shadow-card)]">
                   {editId === cat.id ? (
                     <div className="flex flex-1 items-center gap-2">
                       <input
                         value={editName}
                         onChange={(e) => setEditName(e.target.value)}
                         onKeyDown={(e) => e.key === "Enter" && updateCategory()}
-                        className="h-8 flex-1 rounded border border-input bg-background px-2 text-sm outline-none"
+                        className="h-9 flex-1 rounded-xl border border-input bg-background px-3 text-sm outline-none"
                         autoFocus
                       />
-                      <button onClick={updateCategory} className="rounded p-1 text-primary hover:bg-muted"><Check className="h-4 w-4" /></button>
-                      <button onClick={() => setEditId(null)} className="rounded p-1 text-muted-foreground hover:bg-muted"><X className="h-4 w-4" /></button>
+                      <button onClick={updateCategory} className="rounded-lg p-2 text-primary hover:bg-muted"><Check className="h-4 w-4" /></button>
+                      <button onClick={() => setEditId(null)} className="rounded-lg p-2 text-muted-foreground hover:bg-muted"><X className="h-4 w-4" /></button>
                     </div>
                   ) : (
                     <>
-                      <div>
+                      <div className="min-w-0">
                         <span className="text-sm font-medium text-card-foreground">{cat.name}</span>
                         <span className="ml-2 text-xs text-muted-foreground">/{cat.slug}</span>
                       </div>
-                      <div className="flex items-center gap-1">
+                      <div className="flex items-center gap-1 shrink-0">
                         <button
                           onClick={() => { setEditId(cat.id); setEditName(cat.name); }}
-                          className="rounded p-1.5 text-muted-foreground hover:bg-muted hover:text-foreground"
+                          className="rounded-lg p-2 text-muted-foreground hover:bg-muted hover:text-foreground"
                         >
                           <Pencil className="h-4 w-4" />
                         </button>
                         <button
                           onClick={() => deleteCategory(cat.id, cat.name)}
-                          className="rounded p-1.5 text-muted-foreground hover:bg-destructive/10 hover:text-destructive"
+                          className="rounded-lg p-2 text-muted-foreground hover:bg-destructive/10 hover:text-destructive"
                         >
                           <Trash2 className="h-4 w-4" />
                         </button>

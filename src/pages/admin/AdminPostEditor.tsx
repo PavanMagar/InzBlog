@@ -95,7 +95,6 @@ export default function AdminPostEditor() {
       postId = data.id;
     }
 
-    // Update categories
     await supabase.from("post_categories").delete().eq("post_id", postId!);
     if (selectedCategories.length > 0) {
       await supabase.from("post_categories").insert(
@@ -123,22 +122,22 @@ export default function AdminPostEditor() {
     <div className="flex min-h-screen">
       <AdminSidebar />
       <div className="flex-1 overflow-auto bg-background">
-        <div className="border-b border-border bg-card px-8 py-6">
+        <div className="border-b border-border bg-card px-6 py-6 md:px-8">
           <h1 className="font-display text-2xl font-bold text-foreground">
             {isEditing ? "Edit Post" : "Create New Post"}
           </h1>
         </div>
 
-        <div className="p-8">
-          <div className="grid gap-8 lg:grid-cols-[1fr_320px]">
+        <div className="p-4 md:p-8">
+          <div className="grid gap-6 lg:grid-cols-[1fr_300px] lg:gap-8">
             {/* Main content */}
-            <div className="space-y-6">
+            <div className="space-y-5">
               <div>
                 <label className="mb-1.5 block text-sm font-medium text-foreground">Title</label>
                 <input
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
-                  className="h-11 w-full rounded-lg border border-input bg-background px-3 text-base font-medium outline-none focus:ring-2 focus:ring-ring"
+                  className="h-11 w-full rounded-xl border border-input bg-background px-3 text-base font-medium outline-none focus:ring-2 focus:ring-ring"
                   placeholder="Enter post title..."
                 />
               </div>
@@ -148,7 +147,7 @@ export default function AdminPostEditor() {
                 <input
                   value={slug}
                   onChange={(e) => setSlug(e.target.value)}
-                  className="h-10 w-full rounded-lg border border-input bg-background px-3 text-sm outline-none focus:ring-2 focus:ring-ring"
+                  className="h-10 w-full rounded-xl border border-input bg-background px-3 text-sm outline-none focus:ring-2 focus:ring-ring"
                   placeholder="post-url-slug"
                 />
               </div>
@@ -159,7 +158,7 @@ export default function AdminPostEditor() {
                   value={excerpt}
                   onChange={(e) => setExcerpt(e.target.value)}
                   rows={2}
-                  className="w-full rounded-lg border border-input bg-background p-3 text-sm outline-none focus:ring-2 focus:ring-ring"
+                  className="w-full rounded-xl border border-input bg-background p-3 text-sm outline-none focus:ring-2 focus:ring-ring"
                   placeholder="Short description..."
                 />
               </div>
@@ -171,41 +170,42 @@ export default function AdminPostEditor() {
             </div>
 
             {/* Sidebar */}
-            <div className="space-y-6">
-              <div className="rounded-xl border border-border bg-card p-5 shadow-[var(--shadow-card)]">
+            <div className="space-y-5">
+              <div className="rounded-2xl border border-border bg-card p-5 shadow-[var(--shadow-card)]">
                 <h3 className="mb-4 text-sm font-semibold text-card-foreground">Publish</h3>
-                <div className="flex gap-2">
+                <div className="flex flex-col gap-2 sm:flex-row">
                   <button
                     onClick={() => handleSave("draft")}
                     disabled={saving}
-                    className="flex-1 rounded-lg border border-border bg-background px-4 py-2.5 text-sm font-medium text-foreground hover:bg-muted disabled:opacity-50"
+                    className="flex-1 rounded-xl border border-border bg-background px-4 py-2.5 text-sm font-medium text-foreground hover:bg-muted disabled:opacity-50"
                   >
                     Save Draft
                   </button>
                   <button
                     onClick={() => handleSave("published")}
                     disabled={saving}
-                    className="flex-1 rounded-lg bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground hover:opacity-90 disabled:opacity-50"
+                    className="flex-1 rounded-xl px-4 py-2.5 text-sm font-medium text-primary-foreground hover:opacity-90 disabled:opacity-50"
+                    style={{ background: "var(--gradient-primary)" }}
                   >
                     {isEditing && status === "published" ? "Update" : "Publish"}
                   </button>
                 </div>
               </div>
 
-              <div className="rounded-xl border border-border bg-card p-5 shadow-[var(--shadow-card)]">
+              <div className="rounded-2xl border border-border bg-card p-5 shadow-[var(--shadow-card)]">
                 <h3 className="mb-3 text-sm font-semibold text-card-foreground">Thumbnail URL</h3>
                 <input
                   value={thumbnailUrl}
                   onChange={(e) => setThumbnailUrl(e.target.value)}
-                  className="h-9 w-full rounded-lg border border-input bg-background px-3 text-sm outline-none focus:ring-2 focus:ring-ring"
+                  className="h-10 w-full rounded-xl border border-input bg-background px-3 text-sm outline-none focus:ring-2 focus:ring-ring"
                   placeholder="https://..."
                 />
                 {thumbnailUrl && (
-                  <img src={thumbnailUrl} alt="Thumbnail" className="mt-3 rounded-lg" onError={(e) => (e.currentTarget.style.display = "none")} />
+                  <img src={thumbnailUrl} alt="Thumbnail" className="mt-3 rounded-xl" onError={(e) => (e.currentTarget.style.display = "none")} />
                 )}
               </div>
 
-              <div className="rounded-xl border border-border bg-card p-5 shadow-[var(--shadow-card)]">
+              <div className="rounded-2xl border border-border bg-card p-5 shadow-[var(--shadow-card)]">
                 <h3 className="mb-3 text-sm font-semibold text-card-foreground">Categories</h3>
                 {categories.length === 0 ? (
                   <p className="text-xs text-muted-foreground">No categories yet.</p>
