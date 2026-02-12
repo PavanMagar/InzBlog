@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import { ArrowLeft, Calendar, Eye } from "lucide-react";
+import { ArrowLeft, Calendar, Eye, Clock, BookOpen } from "lucide-react";
+import { motion } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
 import { PublicHeader } from "@/components/PublicHeader";
 import { PublicFooter } from "@/components/PublicFooter";
@@ -19,6 +20,12 @@ interface PostData {
   published_at: string | null;
   view_count: number;
   categories: string[];
+}
+
+function estimateReadTime(html: string | null): number {
+  if (!html) return 1;
+  const text = html.replace(/<[^>]*>/g, "");
+  return Math.max(1, Math.ceil(text.split(/\s+/).length / 200));
 }
 
 export default function PostDetail() {
@@ -82,6 +89,8 @@ export default function PostDetail() {
     );
   }
 
+  const readTime = estimateReadTime(post.content);
+
   return (
     <>
       <SEOHead
@@ -93,78 +102,90 @@ export default function PostDetail() {
       />
       <PublicHeader />
 
-      {/* Hero image */}
-      {post.thumbnail_url && (
-        <div className="relative h-56 overflow-hidden sm:h-72 md:h-96">
-          <img src={post.thumbnail_url} alt={post.title} className="h-full w-full object-cover" />
-          <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/30 to-transparent" />
+      {/* Breadcrumb bar */}
+      <div className="border-b border-border bg-muted/30">
+        <div className="container px-6 py-3 md:px-10 lg:px-20 xl:px-28">
+          <Link to="/posts" className="inline-flex items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground">
+            <ArrowLeft className="h-3.5 w-3.5" /> Back to articles
+          </Link>
         </div>
-      )}
+      </div>
 
-      <div className="container px-6 py-8 md:px-12 md:py-12 lg:px-20 xl:px-28">
-        {/* Desktop: 2-column layout */}
-        <div className="lg:flex lg:gap-10 xl:gap-14">
-          {/* Left: Article content */}
-          <article className="min-w-0 flex-1 lg:max-w-3xl">
-            <Link to="/posts" className="mb-6 inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground">
-              <ArrowLeft className="h-3.5 w-3.5" /> Back to articles
-            </Link>
+      <div className="container px-6 py-8 md:px-10 lg:px-20 xl:px-28">
+        {/* Desktop: 2-column — LEFT sidebar, RIGHT content */}
+        <div className="lg:flex lg:flex-row-reverse lg:gap-10 xl:gap-14">
 
+          {/* RIGHT: Article content */}
+          <article className="min-w-0 flex-1">
+            {/* Category badges */}
             {post.categories.length > 0 && (
-              <div className="mb-4 flex flex-wrap gap-2">
+              <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="mb-4 flex flex-wrap gap-2">
                 {post.categories.map((cat) => (
-                  <span key={cat} className="rounded-full bg-primary/10 px-3 py-1 text-xs font-medium text-primary">
+                  <span key={cat} className="rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
                     {cat}
                   </span>
                 ))}
-              </div>
+              </motion.div>
             )}
 
-            <h1 className="mb-4 font-display text-2xl font-bold leading-tight text-foreground sm:text-3xl md:text-4xl lg:text-5xl">
+            {/* Title */}
+            <motion.h1
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.05 }}
+              className="mb-5 font-display text-2xl font-extrabold leading-tight text-foreground sm:text-3xl md:text-4xl lg:text-[2.75rem] lg:leading-[1.15]"
+            >
               {post.title}
-            </h1>
+            </motion.h1>
 
-            {post.published_at && (
-              <div className="mb-8 flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
+            {/* Meta row */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.1 }}
+              className="mb-8 flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-muted-foreground"
+            >
+              {post.published_at && (
                 <div className="flex items-center gap-1.5">
                   <Calendar className="h-4 w-4" />
                   <time dateTime={post.published_at}>
-                    {new Date(post.published_at).toLocaleDateString("en-US", {
-                      month: "long",
-                      day: "numeric",
-                      year: "numeric",
-                    })}
+                    {new Date(post.published_at).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}
                   </time>
                 </div>
-                <div className="flex items-center gap-1.5">
-                  <Eye className="h-4 w-4" />
-                  <span>{post.view_count} views</span>
-                </div>
+              )}
+              <div className="flex items-center gap-1.5">
+                <Clock className="h-4 w-4" />
+                <span>{readTime} min read</span>
               </div>
-            )}
+              <div className="flex items-center gap-1.5">
+                <Eye className="h-4 w-4" />
+                <span>{post.view_count.toLocaleString()} views</span>
+              </div>
+            </motion.div>
 
-            <div className="prose-content text-foreground" dangerouslySetInnerHTML={{ __html: post.content || "" }} />
+            {/* Article body */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.15 }}
+              className="prose-content text-foreground"
+              dangerouslySetInnerHTML={{ __html: post.content || "" }}
+            />
 
-            {/* Share (visible on mobile, hidden on desktop) */}
-            <div className="mt-8 lg:hidden">
-              <SharePost title={post.title} slug={post.slug} />
-            </div>
-
-            {/* Comment section for mobile */}
-            <div className="mt-8 lg:hidden">
+            {/* ── Mobile-only sections ── */}
+            <div className="mt-10 space-y-6 lg:hidden">
+              {/* Thumbnail + Share card */}
+              <SharePost title={post.title} slug={post.slug} thumbnailUrl={post.thumbnail_url} />
               <CommentSection postId={post.id} />
-            </div>
-
-            {/* Related posts for mobile */}
-            <div className="mt-8 lg:hidden">
               <RelatedPosts currentPostId={post.id} categoryNames={post.categories} />
             </div>
           </article>
 
-          {/* Right sidebar: desktop only */}
+          {/* LEFT sidebar: desktop only */}
           <aside className="hidden lg:block lg:w-80 xl:w-96">
             <div className="sticky top-24 space-y-6">
-              <SharePost title={post.title} slug={post.slug} />
+              {/* Thumbnail + Share card */}
+              <SharePost title={post.title} slug={post.slug} thumbnailUrl={post.thumbnail_url} />
               <CommentSection postId={post.id} />
               <RelatedPosts currentPostId={post.id} categoryNames={post.categories} />
             </div>
