@@ -102,13 +102,6 @@ export default function PostDetail() {
       />
       <PublicHeader />
 
-      {/* Hero thumbnail */}
-      {post.thumbnail_url && (
-        <div className="relative h-56 overflow-hidden sm:h-72 md:h-96">
-          <img src={post.thumbnail_url} alt={post.title} className="h-full w-full object-cover" />
-          <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/30 to-transparent" />
-        </div>
-      )}
 
       {/* Breadcrumb */}
       <div className="border-b border-border bg-muted/30">
