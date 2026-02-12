@@ -107,36 +107,34 @@ export default function Index() {
 
       <main>
         {/* Hero */}
-        <section className="relative overflow-hidden" style={{ background: "var(--gradient-hero)" }}>
-          {/* Animated grid background */}
-          <div className="absolute inset-0 opacity-[0.04]" style={{
-            backgroundImage: "linear-gradient(hsl(217, 91%, 60%) 1px, transparent 1px), linear-gradient(90deg, hsl(217, 91%, 60%) 1px, transparent 1px)",
-            backgroundSize: "60px 60px",
+        <section className="relative overflow-hidden border-b border-border bg-background">
+          <div className="absolute -left-40 -top-40 h-[500px] w-[500px] rounded-full bg-primary/[0.06] blur-3xl" />
+          <div className="absolute -bottom-40 -right-40 h-[500px] w-[500px] rounded-full bg-accent/[0.06] blur-3xl" />
+          <div className="absolute inset-0 opacity-[0.03]" style={{
+            backgroundImage: "radial-gradient(circle, hsl(var(--primary)) 1px, transparent 1px)",
+            backgroundSize: "32px 32px",
           }} />
-          {/* Floating orbs */}
-          <div className="absolute -left-32 -top-32 h-96 w-96 rounded-full bg-primary/10 blur-3xl" />
-          <div className="absolute -bottom-32 -right-32 h-96 w-96 rounded-full bg-accent/10 blur-3xl" />
 
-          <div className="container relative z-10 px-6 py-16 sm:py-24 md:py-32 md:px-10 lg:px-16">
+          <div className="container relative z-10 px-6 py-14 sm:py-20 md:py-28 md:px-10 lg:px-16">
             <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
               <motion.div
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.7 }}
               >
-                <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-primary-foreground/10 bg-primary-foreground/5 px-4 py-1.5">
+                <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-4 py-1.5">
                   <span className="relative flex h-2 w-2">
-                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75"></span>
-                    <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-400"></span>
+                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-500 opacity-75"></span>
+                    <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500"></span>
                   </span>
-                  <span className="text-xs font-medium tracking-wide text-primary-foreground/70">DEVELOPER KNOWLEDGE HUB</span>
+                  <span className="text-xs font-medium tracking-wide text-muted-foreground">DEVELOPER KNOWLEDGE HUB</span>
                 </div>
 
-                <h1 className="mb-6 font-display text-3xl font-bold leading-[1.1] text-primary-foreground sm:text-4xl md:text-5xl lg:text-6xl">
+                <h1 className="mb-6 font-display text-3xl font-bold leading-[1.1] text-foreground sm:text-4xl md:text-5xl lg:text-6xl">
                   Code. Learn.{" "}
                   <span className="gradient-text">Build.</span>
                 </h1>
-                <p className="mb-8 max-w-lg text-base leading-relaxed text-primary-foreground/55 sm:text-lg">
+                <p className="mb-8 max-w-lg text-sm leading-relaxed text-muted-foreground sm:text-base">
                   Explore in-depth coding tutorials, programming guides, and tech resources. Written by developers, for developers.
                 </p>
                 <div className="flex flex-col gap-3 sm:flex-row">
@@ -149,7 +147,7 @@ export default function Index() {
                   </Link>
                   <Link
                     to="/posts?category="
-                    className="inline-flex items-center justify-center gap-2 rounded-xl border border-primary-foreground/15 bg-primary-foreground/5 px-6 py-3.5 font-medium text-primary-foreground/80 transition-all hover:bg-primary-foreground/10"
+                    className="inline-flex items-center justify-center gap-2 rounded-xl border border-border bg-card px-6 py-3.5 font-medium text-foreground transition-all hover:bg-muted"
                   >
                     Explore Topics
                   </Link>
@@ -175,13 +173,13 @@ export default function Index() {
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.5, delay: 0.3 + i * 0.1 }}
-                      className="rounded-2xl border border-primary-foreground/10 bg-primary-foreground/5 p-5 backdrop-blur-sm transition-all hover:border-primary-foreground/20 hover:bg-primary-foreground/8"
+                      className="rounded-2xl border border-border bg-card p-5 shadow-[var(--shadow-card)] transition-all hover:shadow-[var(--shadow-elevated)] hover:-translate-y-1"
                     >
-                      <div className="mb-3 flex h-11 w-11 items-center justify-center rounded-xl text-primary" style={{ background: "var(--gradient-subtle)" }}>
+                      <div className="mb-3 flex h-11 w-11 items-center justify-center rounded-xl bg-primary/10 text-primary">
                         {item.icon}
                       </div>
-                      <h3 className="mb-1 font-display text-sm font-semibold text-primary-foreground">{item.title}</h3>
-                      <p className="text-xs text-primary-foreground/50">{item.desc}</p>
+                      <h3 className="mb-1 font-display text-sm font-semibold text-foreground">{item.title}</h3>
+                      <p className="text-xs text-muted-foreground">{item.desc}</p>
                     </motion.div>
                   ))}
                 </div>
@@ -302,13 +300,9 @@ export default function Index() {
         )}
 
         {/* Connect With Us */}
-        <section className="relative overflow-hidden border-t border-border" style={{ background: "var(--gradient-hero)" }}>
-          <div className="absolute inset-0 opacity-[0.03]" style={{
-            backgroundImage: "radial-gradient(circle, hsl(217, 91%, 60%) 1px, transparent 1px)",
-            backgroundSize: "24px 24px",
-          }} />
-          <div className="absolute -right-20 top-1/2 h-64 w-64 -translate-y-1/2 rounded-full bg-primary/10 blur-3xl" />
-          <div className="absolute -left-20 top-1/2 h-64 w-64 -translate-y-1/2 rounded-full bg-accent/10 blur-3xl" />
+        <section className="relative overflow-hidden border-t border-border bg-background">
+          <div className="absolute -right-20 top-1/2 h-64 w-64 -translate-y-1/2 rounded-full bg-primary/[0.06] blur-3xl" />
+          <div className="absolute -left-20 top-1/2 h-64 w-64 -translate-y-1/2 rounded-full bg-accent/[0.06] blur-3xl" />
 
           <div className="container relative z-10 px-6 py-16 md:px-10 md:py-24 lg:px-16">
             <div className="mx-auto max-w-3xl text-center">
@@ -317,13 +311,13 @@ export default function Index() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
               >
-                <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-2xl border border-primary-foreground/10 bg-primary-foreground/5 backdrop-blur-sm">
+                <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-2xl border border-primary/20 bg-primary/5">
                   <i className="fa-solid fa-satellite-dish text-2xl text-primary"></i>
                 </div>
-                <h2 className="mb-3 font-display text-2xl font-bold text-primary-foreground sm:text-3xl md:text-4xl">
+                <h2 className="mb-3 font-display text-2xl font-bold text-foreground sm:text-3xl md:text-4xl">
                   Let's <span className="gradient-text">Connect</span>
                 </h2>
-                <p className="mx-auto mb-10 max-w-md text-sm leading-relaxed text-primary-foreground/50">
+                <p className="mx-auto mb-10 max-w-md text-sm leading-relaxed text-muted-foreground">
                   Follow us for the latest tutorials, tech insights, and developer resources. Join our growing community.
                 </p>
               </motion.div>
@@ -331,8 +325,8 @@ export default function Index() {
               <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-6">
                 {[
                   { icon: "fa-brands fa-instagram", label: "Instagram", href: "#", color: "hsl(330, 70%, 55%)" },
-                  { icon: "fa-brands fa-x-twitter", label: "Twitter", href: "#", color: "hsl(0, 0%, 80%)" },
-                  { icon: "fa-brands fa-github", label: "GitHub", href: "#", color: "hsl(0, 0%, 75%)" },
+                  { icon: "fa-brands fa-x-twitter", label: "Twitter", href: "#", color: "hsl(0, 0%, 50%)" },
+                  { icon: "fa-brands fa-github", label: "GitHub", href: "#", color: "hsl(0, 0%, 40%)" },
                   { icon: "fa-brands fa-linkedin-in", label: "LinkedIn", href: "#", color: "hsl(210, 80%, 55%)" },
                   { icon: "fa-brands fa-youtube", label: "YouTube", href: "#", color: "hsl(0, 80%, 55%)" },
                   { icon: "fa-brands fa-telegram", label: "Telegram", href: "#", color: "hsl(200, 80%, 55%)" },
@@ -345,15 +339,15 @@ export default function Index() {
                     initial={{ opacity: 0, y: 15 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.3, delay: i * 0.05 }}
-                    className="group flex flex-col items-center gap-2.5 rounded-2xl border border-primary-foreground/10 bg-primary-foreground/5 p-5 backdrop-blur-sm transition-all duration-300 hover:border-primary-foreground/20 hover:bg-primary-foreground/8 hover:-translate-y-1"
+                    className="group flex flex-col items-center gap-2.5 rounded-2xl border border-border bg-card p-5 shadow-[var(--shadow-card)] transition-all duration-300 hover:shadow-[var(--shadow-elevated)] hover:-translate-y-1"
                   >
                     <div
                       className="flex h-11 w-11 items-center justify-center rounded-xl transition-transform duration-300 group-hover:scale-110"
-                      style={{ background: `${s.color}20`, color: s.color }}
+                      style={{ background: `${s.color}15`, color: s.color }}
                     >
                       <i className={`${s.icon} text-lg`}></i>
                     </div>
-                    <span className="text-xs font-medium text-primary-foreground/70 group-hover:text-primary-foreground/90">{s.label}</span>
+                    <span className="text-xs font-medium text-muted-foreground group-hover:text-foreground">{s.label}</span>
                   </motion.a>
                 ))}
               </div>
