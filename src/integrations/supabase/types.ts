@@ -38,6 +38,86 @@ export type Database = {
         }
         Relationships: []
       }
+      comment_likes: {
+        Row: {
+          comment_id: string
+          created_at: string
+          id: string
+          visitor_id: string
+        }
+        Insert: {
+          comment_id: string
+          created_at?: string
+          id?: string
+          visitor_id: string
+        }
+        Update: {
+          comment_id?: string
+          created_at?: string
+          id?: string
+          visitor_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "comment_likes_comment_id_fkey"
+            columns: ["comment_id"]
+            isOneToOne: false
+            referencedRelation: "comments"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      comments: {
+        Row: {
+          author_email: string
+          author_name: string
+          content: string
+          created_at: string
+          id: string
+          is_admin_reply: boolean
+          likes_count: number
+          parent_id: string | null
+          post_id: string
+        }
+        Insert: {
+          author_email: string
+          author_name: string
+          content: string
+          created_at?: string
+          id?: string
+          is_admin_reply?: boolean
+          likes_count?: number
+          parent_id?: string | null
+          post_id: string
+        }
+        Update: {
+          author_email?: string
+          author_name?: string
+          content?: string
+          created_at?: string
+          id?: string
+          is_admin_reply?: boolean
+          likes_count?: number
+          parent_id?: string | null
+          post_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "comments_parent_id_fkey"
+            columns: ["parent_id"]
+            isOneToOne: false
+            referencedRelation: "comments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "comments_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "posts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       post_categories: {
         Row: {
           category_id: string
