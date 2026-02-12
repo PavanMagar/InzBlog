@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { Search, SlidersHorizontal } from "lucide-react";
+import { Search } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { PublicHeader } from "@/components/PublicHeader";
 import { PublicFooter } from "@/components/PublicFooter";
@@ -58,7 +58,6 @@ export default function Posts() {
       setTotal(count || 0);
 
       if (postsData) {
-        // Get category filter id if needed
         let filterCategoryId: string | null = null;
         if (categorySlug) {
           const cat = categories.find((c) => c.slug === categorySlug);
@@ -105,25 +104,25 @@ export default function Posts() {
       <SEOHead title="Articles" description="Browse all articles on Inkwell. Search, filter by category, and discover great content." />
       <PublicHeader />
 
-      <main className="container py-10">
-        <h1 className="mb-8 font-display text-3xl font-bold text-foreground md:text-4xl">Articles</h1>
+      <main className="container px-4 py-8 md:py-12">
+        <h1 className="mb-6 font-display text-2xl font-bold text-foreground sm:text-3xl md:mb-8 md:text-4xl">Articles</h1>
 
         {/* Filters */}
-        <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-center">
+        <div className="mb-8 flex flex-col gap-3 sm:flex-row sm:items-center">
           <div className="relative flex-1">
             <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             <input
               value={query}
               onChange={(e) => updateParam("q", e.target.value)}
               placeholder="Search articles..."
-              className="h-10 w-full rounded-lg border border-input bg-background pl-10 pr-4 text-sm outline-none focus:ring-2 focus:ring-ring"
+              className="h-11 w-full rounded-xl border border-input bg-background pl-10 pr-4 text-sm outline-none focus:ring-2 focus:ring-ring"
             />
           </div>
-          <div className="flex gap-3">
+          <div className="flex gap-2">
             <select
               value={categorySlug}
               onChange={(e) => updateParam("category", e.target.value)}
-              className="h-10 rounded-lg border border-input bg-background px-3 text-sm outline-none focus:ring-2 focus:ring-ring"
+              className="h-11 flex-1 rounded-xl border border-input bg-background px-3 text-sm outline-none focus:ring-2 focus:ring-ring sm:flex-none"
             >
               <option value="">All Categories</option>
               {categories.map((c) => (
@@ -133,7 +132,7 @@ export default function Posts() {
             <select
               value={sort}
               onChange={(e) => updateParam("sort", e.target.value)}
-              className="h-10 rounded-lg border border-input bg-background px-3 text-sm outline-none focus:ring-2 focus:ring-ring"
+              className="h-11 rounded-xl border border-input bg-background px-3 text-sm outline-none focus:ring-2 focus:ring-ring"
             >
               <option value="latest">Latest</option>
               <option value="oldest">Oldest</option>
@@ -161,9 +160,12 @@ export default function Posts() {
                   <button
                     key={p}
                     onClick={() => updateParam("page", String(p))}
-                    className={`h-10 w-10 rounded-lg text-sm font-medium transition-colors ${
-                      p === page ? "bg-primary text-primary-foreground" : "border border-border bg-card text-foreground hover:bg-muted"
+                    className={`h-10 w-10 rounded-xl text-sm font-medium transition-all ${
+                      p === page
+                        ? "text-primary-foreground shadow-[var(--shadow-glow)]"
+                        : "border border-border bg-card text-foreground hover:bg-muted"
                     }`}
+                    style={p === page ? { background: "var(--gradient-primary)" } : undefined}
                   >
                     {p}
                   </button>
@@ -173,6 +175,7 @@ export default function Posts() {
           </>
         ) : (
           <div className="py-20 text-center">
+            <i className="fa-solid fa-magnifying-glass mb-4 text-4xl text-muted-foreground/30"></i>
             <p className="text-lg text-muted-foreground">No articles found.</p>
           </div>
         )}
