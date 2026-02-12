@@ -109,11 +109,6 @@ export default function Index() {
         {/* Hero */}
         <section className="relative overflow-hidden border-b border-border bg-background">
           <div className="absolute -left-40 -top-40 h-[500px] w-[500px] rounded-full bg-primary/[0.06] blur-3xl" />
-          <div className="absolute -bottom-40 -right-40 h-[500px] w-[500px] rounded-full bg-accent/[0.06] blur-3xl" />
-          <div className="absolute inset-0 opacity-[0.03]" style={{
-            backgroundImage: "radial-gradient(circle, hsl(var(--primary)) 1px, transparent 1px)",
-            backgroundSize: "32px 32px",
-          }} />
 
           <div className="container relative z-10 px-6 py-14 sm:py-20 md:py-28 md:px-10 lg:px-16">
             <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
