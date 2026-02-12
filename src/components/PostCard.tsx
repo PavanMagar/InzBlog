@@ -9,9 +9,40 @@ interface PostCardProps {
   thumbnailUrl?: string | null;
   publishedAt?: string | null;
   categories?: string[];
+  compact?: boolean;
 }
 
-export function PostCard({ title, slug, excerpt, thumbnailUrl, publishedAt, categories }: PostCardProps) {
+export function PostCard({ title, slug, excerpt, thumbnailUrl, publishedAt, categories, compact }: PostCardProps) {
+  if (compact) {
+    return (
+      <Link
+        to={`/posts/${slug}.html`}
+        className="group flex gap-3 rounded-xl border border-border/60 bg-card p-3 shadow-[var(--shadow-card)] transition-all hover:shadow-[var(--shadow-elevated)] hover:-translate-y-0.5"
+      >
+        {thumbnailUrl ? (
+          <img src={thumbnailUrl} alt={title} className="h-16 w-20 shrink-0 rounded-lg object-cover" loading="lazy" />
+        ) : (
+          <div className="flex h-16 w-20 shrink-0 items-center justify-center rounded-lg" style={{ background: "var(--gradient-subtle)" }}>
+            <i className="fa-solid fa-newspaper text-sm text-muted-foreground/30"></i>
+          </div>
+        )}
+        <div className="flex-1 min-w-0">
+          <h4 className="mb-1 line-clamp-2 text-sm font-semibold leading-tight text-card-foreground transition-colors group-hover:text-primary">
+            {title}
+          </h4>
+          {publishedAt && (
+            <div className="flex items-center gap-1 text-[11px] text-muted-foreground">
+              <Calendar className="h-3 w-3" />
+              <time dateTime={publishedAt}>
+                {new Date(publishedAt).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
+              </time>
+            </div>
+          )}
+        </div>
+      </Link>
+    );
+  }
+
   return (
     <motion.article
       initial={{ opacity: 0, y: 20 }}
