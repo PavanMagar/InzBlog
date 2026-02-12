@@ -17,10 +17,10 @@ export function PostCard({ title, slug, excerpt, thumbnailUrl, publishedAt, cate
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
-      className="group overflow-hidden rounded-xl border border-border bg-card shadow-[var(--shadow-card)] transition-shadow duration-300 hover:shadow-[var(--shadow-elevated)]"
+      className="group overflow-hidden rounded-2xl border border-border/60 bg-card shadow-[var(--shadow-card)] transition-all duration-300 hover:shadow-[var(--shadow-elevated)] hover:-translate-y-1"
     >
       <Link to={`/posts/${slug}.html`}>
-        {thumbnailUrl && (
+        {thumbnailUrl ? (
           <div className="aspect-[16/9] overflow-hidden">
             <img
               src={thumbnailUrl}
@@ -28,6 +28,10 @@ export function PostCard({ title, slug, excerpt, thumbnailUrl, publishedAt, cate
               className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
               loading="lazy"
             />
+          </div>
+        ) : (
+          <div className="aspect-[16/9] flex items-center justify-center" style={{ background: "var(--gradient-subtle)" }}>
+            <i className="fa-solid fa-newspaper text-3xl text-muted-foreground/30"></i>
           </div>
         )}
         <div className="p-5">
@@ -44,7 +48,7 @@ export function PostCard({ title, slug, excerpt, thumbnailUrl, publishedAt, cate
             {title}
           </h3>
           {excerpt && (
-            <p className="mb-3 line-clamp-2 text-sm text-muted-foreground">{excerpt}</p>
+            <p className="mb-3 line-clamp-2 text-sm leading-relaxed text-muted-foreground">{excerpt}</p>
           )}
           {publishedAt && (
             <div className="flex items-center gap-1.5 text-xs text-muted-foreground">

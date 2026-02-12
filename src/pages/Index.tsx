@@ -61,40 +61,49 @@ export default function Index() {
       <main>
         {/* Hero */}
         <section className="relative overflow-hidden" style={{ background: "var(--gradient-hero)" }}>
-          <div className="container relative z-10 py-24 md:py-32">
+          <div className="container relative z-10 px-4 py-20 sm:py-28 md:py-36">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7 }}
               className="max-w-2xl"
             >
-              <h1 className="mb-6 font-display text-4xl font-bold leading-tight text-primary-foreground md:text-5xl lg:text-6xl">
-                Stories worth <span className="text-primary">reading.</span>
+              <span className="mb-4 inline-block rounded-full border border-primary-foreground/20 px-4 py-1.5 text-xs font-medium tracking-wide text-primary-foreground/80">
+                <i className="fa-solid fa-sparkles mr-1.5"></i>MODERN BLOGGING PLATFORM
+              </span>
+              <h1 className="mb-6 font-display text-3xl font-bold leading-tight text-primary-foreground sm:text-4xl md:text-5xl lg:text-6xl">
+                Stories worth{" "}
+                <span className="gradient-text" style={{ background: "var(--gradient-primary)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
+                  reading.
+                </span>
               </h1>
-              <p className="mb-8 text-lg leading-relaxed text-primary-foreground/70">
+              <p className="mb-8 max-w-lg text-base leading-relaxed text-primary-foreground/60 sm:text-lg">
                 Discover thoughtful articles on technology, design, culture, and more.
                 Written with care, curated for curious minds.
               </p>
-              <Link
-                to="/posts"
-                className="inline-flex items-center gap-2 rounded-lg bg-primary px-6 py-3 font-medium text-primary-foreground transition-all hover:opacity-90"
-              >
-                Browse Articles <ArrowRight className="h-4 w-4" />
-              </Link>
+              <div className="flex flex-col gap-3 sm:flex-row">
+                <Link
+                  to="/posts"
+                  className="inline-flex items-center justify-center gap-2 rounded-xl px-6 py-3 font-medium text-primary-foreground transition-all hover:opacity-90"
+                  style={{ background: "var(--gradient-primary)" }}
+                >
+                  Browse Articles <ArrowRight className="h-4 w-4" />
+                </Link>
+              </div>
             </motion.div>
           </div>
-          <div className="absolute inset-0 bg-gradient-to-r from-transparent to-primary/5" />
+          <div className="absolute inset-0 opacity-20" style={{ backgroundImage: "radial-gradient(circle at 80% 20%, hsl(250, 85%, 60% / 0.4) 0%, transparent 50%), radial-gradient(circle at 20% 80%, hsl(330, 80%, 60% / 0.3) 0%, transparent 50%)" }} />
         </section>
 
         {/* Recent Posts */}
         {recentPosts.length > 0 && (
-          <section className="container py-16 md:py-20">
-            <div className="mb-10 flex items-end justify-between">
+          <section className="container px-4 py-14 md:py-20">
+            <div className="mb-10 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
               <div>
-                <h2 className="font-display text-3xl font-bold text-foreground">Latest Articles</h2>
-                <p className="mt-2 text-muted-foreground">Fresh perspectives and ideas</p>
+                <h2 className="font-display text-2xl font-bold text-foreground sm:text-3xl">Latest Articles</h2>
+                <p className="mt-2 text-sm text-muted-foreground">Fresh perspectives and ideas</p>
               </div>
-              <Link to="/posts" className="hidden items-center gap-1 text-sm font-medium text-primary hover:underline md:flex">
+              <Link to="/posts" className="inline-flex items-center gap-1 text-sm font-medium text-primary hover:underline">
                 View all <ArrowRight className="h-3.5 w-3.5" />
               </Link>
             </div>
@@ -108,15 +117,15 @@ export default function Index() {
 
         {/* Categories */}
         {categories.length > 0 && (
-          <section className="border-t border-border bg-muted/50">
-            <div className="container py-16">
+          <section className="border-t border-border" style={{ background: "var(--gradient-subtle)" }}>
+            <div className="container px-4 py-14">
               <h2 className="mb-8 text-center font-display text-2xl font-bold text-foreground">Explore Topics</h2>
               <div className="flex flex-wrap justify-center gap-3">
                 {categories.map((cat) => (
                   <Link
                     key={cat.id}
                     to={`/posts?category=${encodeURIComponent(cat.slug)}`}
-                    className="rounded-full border border-border bg-card px-5 py-2 text-sm font-medium text-foreground shadow-[var(--shadow-card)] transition-all hover:border-primary hover:text-primary"
+                    className="rounded-full border border-border bg-card px-5 py-2.5 text-sm font-medium text-foreground shadow-[var(--shadow-card)] transition-all hover:border-primary hover:text-primary hover:shadow-[var(--shadow-elevated)]"
                   >
                     {cat.name}
                   </Link>
@@ -128,8 +137,11 @@ export default function Index() {
 
         {/* Empty state */}
         {recentPosts.length === 0 && (
-          <section className="container py-24 text-center">
-            <h2 className="mb-4 font-display text-2xl font-bold text-foreground">No articles yet</h2>
+          <section className="container px-4 py-24 text-center">
+            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl" style={{ background: "var(--gradient-subtle)" }}>
+              <i className="fa-solid fa-pen-nib text-2xl text-primary"></i>
+            </div>
+            <h2 className="mb-3 mt-6 font-display text-2xl font-bold text-foreground">No articles yet</h2>
             <p className="text-muted-foreground">Content is coming soon. Stay tuned!</p>
           </section>
         )}

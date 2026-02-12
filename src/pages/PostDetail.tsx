@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import { ArrowLeft, Calendar } from "lucide-react";
+import { ArrowLeft, Calendar, Eye } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { PublicHeader } from "@/components/PublicHeader";
 import { PublicFooter } from "@/components/PublicFooter";
@@ -23,7 +23,6 @@ export default function PostDetail() {
   const [post, setPost] = useState<PostData | null>(null);
   const [loading, setLoading] = useState(true);
 
-  // Remove .html suffix for DB lookup
   const cleanSlug = slug?.replace(/\.html$/, "") || "";
 
   useEffect(() => {
@@ -37,7 +36,6 @@ export default function PostDetail() {
         .single();
 
       if (data) {
-        // Increment view count
         supabase.from("posts").update({ view_count: data.view_count + 1 }).eq("id", data.id).then();
 
         const { data: pc } = await supabase
@@ -70,8 +68,9 @@ export default function PostDetail() {
     return (
       <>
         <PublicHeader />
-        <div className="container py-20 text-center">
-          <h1 className="mb-4 font-display text-3xl font-bold text-foreground">Article Not Found</h1>
+        <div className="container px-4 py-20 text-center">
+          <i className="fa-solid fa-file-circle-question mb-4 text-5xl text-muted-foreground/30"></i>
+          <h1 className="mb-3 font-display text-3xl font-bold text-foreground">Article Not Found</h1>
           <p className="mb-6 text-muted-foreground">The article you're looking for doesn't exist.</p>
           <Link to="/posts" className="text-primary hover:underline">← Back to articles</Link>
         </div>
@@ -93,14 +92,14 @@ export default function PostDetail() {
 
       <article>
         {post.thumbnail_url && (
-          <div className="relative h-64 overflow-hidden md:h-96">
+          <div className="relative h-56 overflow-hidden sm:h-72 md:h-96">
             <img src={post.thumbnail_url} alt={post.title} className="h-full w-full object-cover" />
-            <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/30 to-transparent" />
           </div>
         )}
 
-        <div className="container max-w-3xl py-10">
-          <Link to="/posts" className="mb-6 inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground">
+        <div className="container max-w-3xl px-4 py-8 md:py-12">
+          <Link to="/posts" className="mb-6 inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground">
             <ArrowLeft className="h-3.5 w-3.5" /> Back to articles
           </Link>
 
@@ -114,20 +113,26 @@ export default function PostDetail() {
             </div>
           )}
 
-          <h1 className="mb-4 font-display text-3xl font-bold leading-tight text-foreground md:text-4xl lg:text-5xl">
+          <h1 className="mb-4 font-display text-2xl font-bold leading-tight text-foreground sm:text-3xl md:text-4xl lg:text-5xl">
             {post.title}
           </h1>
 
           {post.published_at && (
-            <div className="mb-8 flex items-center gap-2 text-sm text-muted-foreground">
-              <Calendar className="h-4 w-4" />
-              <time dateTime={post.published_at}>
-                {new Date(post.published_at).toLocaleDateString("en-US", {
-                  month: "long",
-                  day: "numeric",
-                  year: "numeric",
-                })}
-              </time>
+            <div className="mb-8 flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
+              <div className="flex items-center gap-1.5">
+                <Calendar className="h-4 w-4" />
+                <time dateTime={post.published_at}>
+                  {new Date(post.published_at).toLocaleDateString("en-US", {
+                    month: "long",
+                    day: "numeric",
+                    year: "numeric",
+                  })}
+                </time>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <Eye className="h-4 w-4" />
+                <span>{post.view_count} views</span>
+              </div>
             </div>
           )}
 

@@ -35,7 +35,8 @@ export function RichTextEditor({ content, onChange }: RichTextEditorProps) {
       type="button"
       onClick={onClick}
       title={title}
-      className={`rounded p-1.5 transition-colors ${active ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:bg-muted hover:text-foreground"}`}
+      className={`rounded-lg p-2 transition-colors ${active ? "text-primary-foreground" : "text-muted-foreground hover:bg-muted hover:text-foreground"}`}
+      style={active ? { background: "var(--gradient-primary)" } : undefined}
     >
       {children}
     </button>
@@ -52,8 +53,8 @@ export function RichTextEditor({ content, onChange }: RichTextEditorProps) {
   };
 
   return (
-    <div className="tiptap-editor rounded-lg border border-input bg-background">
-      <div className="flex flex-wrap gap-0.5 border-b border-input p-2">
+    <div className="tiptap-editor overflow-hidden rounded-xl border border-input bg-background">
+      <div className="flex flex-wrap gap-0.5 border-b border-input p-1.5 sm:p-2">
         <ToolBtn onClick={() => editor.chain().focus().toggleBold().run()} active={editor.isActive("bold")} title="Bold">
           <Bold className="h-4 w-4" />
         </ToolBtn>
@@ -66,7 +67,7 @@ export function RichTextEditor({ content, onChange }: RichTextEditorProps) {
         <ToolBtn onClick={() => editor.chain().focus().toggleStrike().run()} active={editor.isActive("strike")} title="Strikethrough">
           <Strikethrough className="h-4 w-4" />
         </ToolBtn>
-        <div className="mx-1 w-px bg-border" />
+        <div className="mx-0.5 w-px bg-border sm:mx-1" />
         <ToolBtn onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()} active={editor.isActive("heading", { level: 1 })} title="Heading 1">
           <Heading1 className="h-4 w-4" />
         </ToolBtn>
@@ -76,7 +77,7 @@ export function RichTextEditor({ content, onChange }: RichTextEditorProps) {
         <ToolBtn onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()} active={editor.isActive("heading", { level: 3 })} title="Heading 3">
           <Heading3 className="h-4 w-4" />
         </ToolBtn>
-        <div className="mx-1 w-px bg-border" />
+        <div className="mx-0.5 w-px bg-border sm:mx-1" />
         <ToolBtn onClick={() => editor.chain().focus().toggleBulletList().run()} active={editor.isActive("bulletList")} title="Bullet List">
           <List className="h-4 w-4" />
         </ToolBtn>
@@ -89,14 +90,14 @@ export function RichTextEditor({ content, onChange }: RichTextEditorProps) {
         <ToolBtn onClick={() => editor.chain().focus().toggleCodeBlock().run()} active={editor.isActive("codeBlock")} title="Code Block">
           <Code className="h-4 w-4" />
         </ToolBtn>
-        <div className="mx-1 w-px bg-border" />
+        <div className="mx-0.5 w-px bg-border sm:mx-1" />
         <ToolBtn onClick={addImage} title="Insert Image">
           <ImageIcon className="h-4 w-4" />
         </ToolBtn>
         <ToolBtn onClick={addLink} title="Insert Link">
           <LinkIcon className="h-4 w-4" />
         </ToolBtn>
-        <div className="mx-1 w-px bg-border" />
+        <div className="mx-0.5 w-px bg-border sm:mx-1" />
         <ToolBtn onClick={() => editor.chain().focus().undo().run()} title="Undo">
           <Undo className="h-4 w-4" />
         </ToolBtn>

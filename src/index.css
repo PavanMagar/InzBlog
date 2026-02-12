@@ -2,29 +2,27 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
-
 @layer base {
   :root {
-    --background: 40 20% 98%;
-    --foreground: 220 20% 12%;
+    --background: 220 20% 97%;
+    --foreground: 225 25% 10%;
 
     --card: 0 0% 100%;
-    --card-foreground: 220 20% 12%;
+    --card-foreground: 225 25% 10%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 220 20% 12%;
+    --popover-foreground: 225 25% 10%;
 
-    --primary: 16 80% 55%;
+    --primary: 250 85% 60%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 220 14% 94%;
-    --secondary-foreground: 220 20% 12%;
+    --secondary: 220 20% 94%;
+    --secondary-foreground: 225 25% 10%;
 
-    --muted: 40 15% 95%;
+    --muted: 220 15% 95%;
     --muted-foreground: 220 10% 46%;
 
-    --accent: 16 80% 55%;
+    --accent: 330 80% 60%;
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 72% 51%;
@@ -32,51 +30,48 @@
 
     --border: 220 14% 90%;
     --input: 220 14% 90%;
-    --ring: 16 80% 55%;
+    --ring: 250 85% 60%;
 
     --radius: 0.75rem;
 
-    --gradient-warm: linear-gradient(135deg, hsl(16, 80%, 55%), hsl(35, 90%, 60%));
-    --gradient-hero: linear-gradient(160deg, hsl(220, 20%, 12%) 0%, hsl(220, 30%, 20%) 50%, hsl(16, 60%, 30%) 100%);
-    --gradient-card: linear-gradient(180deg, hsl(0, 0%, 100%) 0%, hsl(40, 20%, 97%) 100%);
-    --shadow-card: 0 1px 3px 0 hsl(220 20% 12% / 0.06), 0 1px 2px -1px hsl(220 20% 12% / 0.06);
-    --shadow-elevated: 0 10px 25px -5px hsl(220 20% 12% / 0.08), 0 8px 10px -6px hsl(220 20% 12% / 0.04);
-    --shadow-glow: 0 0 30px hsl(16 80% 55% / 0.15);
+    --gradient-primary: linear-gradient(135deg, hsl(250, 85%, 60%), hsl(330, 80%, 60%));
+    --gradient-hero: linear-gradient(160deg, hsl(225, 30%, 8%) 0%, hsl(250, 40%, 18%) 50%, hsl(330, 50%, 25%) 100%);
+    --gradient-card: linear-gradient(145deg, hsl(0, 0%, 100%) 0%, hsl(250, 30%, 98%) 100%);
+    --gradient-subtle: linear-gradient(135deg, hsl(250, 85%, 60% / 0.05), hsl(330, 80%, 60% / 0.05));
+    --shadow-card: 0 1px 3px 0 hsl(225 25% 10% / 0.04), 0 1px 2px -1px hsl(225 25% 10% / 0.04);
+    --shadow-elevated: 0 10px 40px -10px hsl(250 85% 60% / 0.12), 0 8px 16px -8px hsl(225 25% 10% / 0.06);
+    --shadow-glow: 0 0 40px hsl(250 85% 60% / 0.15);
 
-    --font-display: 'Playfair Display', Georgia, serif;
-    --font-body: 'Inter', system-ui, sans-serif;
-    --font-mono: 'JetBrains Mono', monospace;
-
-    --sidebar-background: 220 20% 12%;
-    --sidebar-foreground: 220 14% 90%;
-    --sidebar-primary: 16 80% 55%;
+    --sidebar-background: 225 30% 8%;
+    --sidebar-foreground: 220 20% 85%;
+    --sidebar-primary: 250 85% 65%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 220 20% 18%;
-    --sidebar-accent-foreground: 220 14% 90%;
-    --sidebar-border: 220 20% 20%;
-    --sidebar-ring: 16 80% 55%;
+    --sidebar-accent: 225 25% 14%;
+    --sidebar-accent-foreground: 220 20% 90%;
+    --sidebar-border: 225 25% 16%;
+    --sidebar-ring: 250 85% 60%;
   }
 
   .dark {
-    --background: 220 20% 8%;
-    --foreground: 220 14% 90%;
-    --card: 220 20% 12%;
-    --card-foreground: 220 14% 90%;
-    --popover: 220 20% 12%;
-    --popover-foreground: 220 14% 90%;
-    --primary: 16 80% 55%;
+    --background: 225 30% 6%;
+    --foreground: 220 20% 92%;
+    --card: 225 25% 10%;
+    --card-foreground: 220 20% 92%;
+    --popover: 225 25% 10%;
+    --popover-foreground: 220 20% 92%;
+    --primary: 250 85% 65%;
     --primary-foreground: 0 0% 100%;
-    --secondary: 220 20% 16%;
-    --secondary-foreground: 220 14% 90%;
-    --muted: 220 20% 16%;
+    --secondary: 225 20% 14%;
+    --secondary-foreground: 220 20% 92%;
+    --muted: 225 20% 14%;
     --muted-foreground: 220 10% 55%;
-    --accent: 220 20% 16%;
-    --accent-foreground: 220 14% 90%;
+    --accent: 330 80% 60%;
+    --accent-foreground: 0 0% 100%;
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 100%;
-    --border: 220 20% 18%;
-    --input: 220 20% 18%;
-    --ring: 16 80% 55%;
+    --border: 225 20% 16%;
+    --input: 225 20% 16%;
+    --ring: 250 85% 65%;
   }
 }
 
@@ -85,26 +80,26 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground;
-    font-family: var(--font-body);
+    @apply bg-background text-foreground antialiased;
+    font-family: 'DM Sans', system-ui, sans-serif;
   }
   h1, h2, h3, h4, h5, h6 {
-    font-family: var(--font-display);
+    font-family: 'Lexend', system-ui, sans-serif;
   }
 }
 
 @layer components {
-  .prose-content h1 { @apply text-3xl font-bold mb-4 mt-8; font-family: var(--font-display); }
-  .prose-content h2 { @apply text-2xl font-bold mb-3 mt-6; font-family: var(--font-display); }
-  .prose-content h3 { @apply text-xl font-semibold mb-2 mt-5; font-family: var(--font-display); }
-  .prose-content h4 { @apply text-lg font-semibold mb-2 mt-4; font-family: var(--font-display); }
+  .prose-content h1 { @apply text-3xl font-bold mb-4 mt-8; font-family: 'Lexend', sans-serif; }
+  .prose-content h2 { @apply text-2xl font-bold mb-3 mt-6; font-family: 'Lexend', sans-serif; }
+  .prose-content h3 { @apply text-xl font-semibold mb-2 mt-5; font-family: 'Lexend', sans-serif; }
+  .prose-content h4 { @apply text-lg font-semibold mb-2 mt-4; font-family: 'Lexend', sans-serif; }
   .prose-content p { @apply mb-4 leading-relaxed; }
   .prose-content ul { @apply list-disc pl-6 mb-4; }
   .prose-content ol { @apply list-decimal pl-6 mb-4; }
   .prose-content li { @apply mb-1; }
   .prose-content blockquote { @apply border-l-4 border-primary pl-4 italic my-4 text-muted-foreground; }
-  .prose-content pre { @apply bg-secondary rounded-lg p-4 mb-4 overflow-x-auto; font-family: var(--font-mono); }
-  .prose-content code { @apply bg-secondary px-1.5 py-0.5 rounded text-sm; font-family: var(--font-mono); }
+  .prose-content pre { @apply bg-secondary rounded-lg p-4 mb-4 overflow-x-auto; font-family: 'Space Grotesk', monospace; }
+  .prose-content code { @apply bg-secondary px-1.5 py-0.5 rounded text-sm; font-family: 'Space Grotesk', monospace; }
   .prose-content a { @apply text-primary underline hover:no-underline; }
   .prose-content img { @apply rounded-lg my-4 max-w-full; }
   .prose-content strong { @apply font-semibold; }
@@ -114,14 +109,21 @@
     @apply min-h-[400px] outline-none p-4;
   }
   .tiptap-editor .ProseMirror p { @apply mb-3; }
-  .tiptap-editor .ProseMirror h1 { @apply text-3xl font-bold mb-4; font-family: var(--font-display); }
-  .tiptap-editor .ProseMirror h2 { @apply text-2xl font-bold mb-3; font-family: var(--font-display); }
-  .tiptap-editor .ProseMirror h3 { @apply text-xl font-semibold mb-2; font-family: var(--font-display); }
+  .tiptap-editor .ProseMirror h1 { @apply text-3xl font-bold mb-4; font-family: 'Lexend', sans-serif; }
+  .tiptap-editor .ProseMirror h2 { @apply text-2xl font-bold mb-3; font-family: 'Lexend', sans-serif; }
+  .tiptap-editor .ProseMirror h3 { @apply text-xl font-semibold mb-2; font-family: 'Lexend', sans-serif; }
   .tiptap-editor .ProseMirror ul { @apply list-disc pl-6 mb-3; }
   .tiptap-editor .ProseMirror ol { @apply list-decimal pl-6 mb-3; }
   .tiptap-editor .ProseMirror blockquote { @apply border-l-4 border-primary pl-4 italic my-3 text-muted-foreground; }
-  .tiptap-editor .ProseMirror pre { @apply bg-secondary rounded-lg p-4 mb-3; font-family: var(--font-mono); }
-  .tiptap-editor .ProseMirror code { @apply bg-secondary px-1 py-0.5 rounded text-sm; font-family: var(--font-mono); }
+  .tiptap-editor .ProseMirror pre { @apply bg-secondary rounded-lg p-4 mb-3; font-family: 'Space Grotesk', monospace; }
+  .tiptap-editor .ProseMirror code { @apply bg-secondary px-1 py-0.5 rounded text-sm; font-family: 'Space Grotesk', monospace; }
   .tiptap-editor .ProseMirror a { @apply text-primary underline; }
   .tiptap-editor .ProseMirror img { @apply rounded-lg my-3 max-w-full; }
+
+  .gradient-text {
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
 }
