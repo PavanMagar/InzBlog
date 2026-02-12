@@ -30,10 +30,14 @@ export default function AdminLogin() {
   return (
     <>
       <SEOHead title="Admin Login" />
-      <div className="flex min-h-screen items-center justify-center" style={{ background: "var(--gradient-hero)" }}>
-        <div className="w-full max-w-sm rounded-2xl bg-card p-8 shadow-[var(--shadow-elevated)]">
+      <div className="relative flex min-h-screen items-center justify-center overflow-hidden px-4" style={{ background: "var(--gradient-hero)" }}>
+        {/* Decorative blobs */}
+        <div className="absolute -left-40 -top-40 h-80 w-80 rounded-full bg-primary/15 blur-3xl" />
+        <div className="absolute -bottom-40 -right-40 h-80 w-80 rounded-full bg-secondary/15 blur-3xl" />
+
+        <div className="relative w-full max-w-sm rounded-2xl border border-border/20 bg-card/95 p-8 shadow-[var(--shadow-elevated)] backdrop-blur-sm">
           <div className="mb-8 flex flex-col items-center">
-            <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-xl bg-primary">
+            <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-xl" style={{ background: "var(--gradient-primary)" }}>
               <PenLine className="h-6 w-6 text-primary-foreground" />
             </div>
             <h1 className="font-display text-2xl font-bold text-card-foreground">Admin Login</h1>
@@ -48,7 +52,7 @@ export default function AdminLogin() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="h-10 w-full rounded-lg border border-input bg-background px-3 text-sm outline-none focus:ring-2 focus:ring-ring"
+                className="h-11 w-full rounded-xl border border-input bg-background px-3 text-sm outline-none focus:ring-2 focus:ring-ring"
                 placeholder="admin@example.com"
               />
             </div>
@@ -61,7 +65,7 @@ export default function AdminLogin() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
-                  className="h-10 w-full rounded-lg border border-input bg-background px-3 pr-10 text-sm outline-none focus:ring-2 focus:ring-ring"
+                  className="h-11 w-full rounded-xl border border-input bg-background px-3 pr-10 text-sm outline-none focus:ring-2 focus:ring-ring"
                   placeholder="Enter password"
                 />
                 <button
@@ -75,13 +79,14 @@ export default function AdminLogin() {
             </div>
 
             {error && (
-              <p className="rounded-lg bg-destructive/10 px-3 py-2 text-sm text-destructive">{error}</p>
+              <p className="rounded-xl bg-destructive/10 px-3 py-2 text-sm text-destructive">{error}</p>
             )}
 
             <button
               type="submit"
               disabled={loading}
-              className="h-10 w-full rounded-lg bg-primary font-medium text-primary-foreground transition-opacity hover:opacity-90 disabled:opacity-50"
+              className="h-11 w-full rounded-xl font-medium text-primary-foreground transition-opacity hover:opacity-90 disabled:opacity-50"
+              style={{ background: "var(--gradient-primary)" }}
             >
               {loading ? "Signing in..." : "Sign In"}
             </button>

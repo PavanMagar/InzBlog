@@ -23,7 +23,6 @@ export default function PostDetail() {
   const [post, setPost] = useState<PostData | null>(null);
   const [loading, setLoading] = useState(true);
 
-  // Remove .html suffix for DB lookup
   const cleanSlug = slug?.replace(/\.html$/, "") || "";
 
   useEffect(() => {
@@ -37,7 +36,6 @@ export default function PostDetail() {
         .single();
 
       if (data) {
-        // Increment view count
         supabase.from("posts").update({ view_count: data.view_count + 1 }).eq("id", data.id).then();
 
         const { data: pc } = await supabase
@@ -93,13 +91,13 @@ export default function PostDetail() {
 
       <article>
         {post.thumbnail_url && (
-          <div className="relative h-64 overflow-hidden md:h-96">
+          <div className="relative h-56 overflow-hidden sm:h-64 md:h-96">
             <img src={post.thumbnail_url} alt={post.title} className="h-full w-full object-cover" />
-            <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/30 to-transparent" />
           </div>
         )}
 
-        <div className="container max-w-3xl py-10">
+        <div className="container max-w-3xl py-8 md:py-10">
           <Link to="/posts" className="mb-6 inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground">
             <ArrowLeft className="h-3.5 w-3.5" /> Back to articles
           </Link>
