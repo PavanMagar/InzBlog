@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { MessageCircle, Heart, Reply, Send, ChevronDown, ChevronUp } from "lucide-react";
+import { MessageCircle, Heart, Reply, Send, ChevronDown, ChevronUp, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -146,7 +146,6 @@ function SingleComment({ comment, postId, onRefresh, depth = 0 }: {
   const [localLikes, setLocalLikes] = useState(comment.likes_count);
   const visitorId = getVisitorId();
 
-  // Check if already liked
   useEffect(() => {
     supabase
       .from("comment_likes")
@@ -277,6 +276,8 @@ function SingleComment({ comment, postId, onRefresh, depth = 0 }: {
 export function CommentSection({ postId }: { postId: string }) {
   const [comments, setComments] = useState<Comment[]>([]);
   const [loading, setLoading] = useState(true);
+  const [showForm, setShowForm] = useState(false);
+  const [showAll, setShowAll] = useState(false);
 
   const fetchComments = useCallback(async () => {
     const { data } = await supabase
@@ -286,7 +287,6 @@ export function CommentSection({ postId }: { postId: string }) {
       .order("created_at", { ascending: true });
 
     if (data) {
-      // Build tree
       const map = new Map<string, Comment>();
       const roots: Comment[] = [];
 
@@ -308,7 +308,6 @@ export function CommentSection({ postId }: { postId: string }) {
   useEffect(() => {
     fetchComments();
 
-    // Realtime subscription
     const channel = supabase
       .channel(`comments-${postId}`)
       .on("postgres_changes", { event: "*", schema: "public", table: "comments", filter: `post_id=eq.${postId}` }, () => {
@@ -325,31 +324,66 @@ export function CommentSection({ postId }: { postId: string }) {
   }, [fetchComments]);
 
   const totalComments = comments.reduce((sum, c) => sum + 1 + (c.replies?.length || 0), 0);
+  const visibleComments = showAll ? comments : comments.slice(-2);
+  const hasMore = comments.length > 2 && !showAll;
 
   return (
     <section className="container max-w-3xl px-4 pb-12">
       <div className="rounded-2xl border border-border bg-card p-5 shadow-[var(--shadow-card)] sm:p-6">
-        <div className="mb-6 flex items-center gap-2">
-          <MessageCircle className="h-5 w-5 text-primary" />
-          <h2 className="font-display text-lg font-bold text-foreground">
-            Comments {totalComments > 0 && `(${totalComments})`}
-          </h2>
+        <div className="mb-4 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <MessageCircle className="h-5 w-5 text-primary" />
+            <h2 className="font-display text-lg font-bold text-foreground">
+              Comments {totalComments > 0 && `(${totalComments})`}
+            </h2>
+          </div>
+          <Button
+            size="sm"
+            variant={showForm ? "outline" : "default"}
+            className="gap-1.5"
+            onClick={() => setShowForm(!showForm)}
+          >
+            <Plus className="h-3.5 w-3.5" />
+            {showForm ? "Close" : "Add Comment"}
+          </Button>
         </div>
 
-        <CommentForm postId={postId} onSuccess={fetchComments} />
+        <AnimatePresence>
+          {showForm && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              className="overflow-hidden"
+            >
+              <div className="mb-4 rounded-xl border border-border bg-muted/20 p-4">
+                <CommentForm postId={postId} onSuccess={() => { fetchComments(); setShowForm(false); }} onCancel={() => setShowForm(false)} />
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         {loading ? (
-          <div className="mt-8 flex justify-center">
+          <div className="mt-6 flex justify-center">
             <div className="h-6 w-6 animate-spin rounded-full border-3 border-primary border-t-transparent" />
           </div>
         ) : comments.length > 0 ? (
-          <div className="mt-6 space-y-1">
-            {comments.map((comment) => (
+          <div className="space-y-1">
+            {hasMore && (
+              <button
+                onClick={() => setShowAll(true)}
+                className="mb-3 flex w-full items-center justify-center gap-1.5 rounded-xl border border-border bg-muted/30 py-2.5 text-xs font-medium text-muted-foreground transition-colors hover:bg-muted/50 hover:text-foreground"
+              >
+                <ChevronDown className="h-3.5 w-3.5" />
+                Load {comments.length - 2} more comment{comments.length - 2 > 1 ? "s" : ""}
+              </button>
+            )}
+            {visibleComments.map((comment) => (
               <SingleComment key={comment.id} comment={comment} postId={postId} onRefresh={fetchComments} />
             ))}
           </div>
         ) : (
-          <p className="mt-8 text-center text-sm text-muted-foreground">No comments yet. Be the first to share your thoughts!</p>
+          <p className="mt-4 text-center text-sm text-muted-foreground">No comments yet. Be the first to share your thoughts!</p>
         )}
       </div>
     </section>
