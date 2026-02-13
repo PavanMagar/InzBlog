@@ -26,7 +26,7 @@ export function AdminSidebar() {
           <div className="flex h-8 w-8 items-center justify-center rounded-lg" style={{ background: "var(--gradient-primary)" }}>
             <i className="fa-solid fa-feather-pointed text-xs text-white"></i>
           </div>
-          <span className="font-display text-lg font-bold text-sidebar-foreground">InvizHer</span>
+          <span className="font-display text-lg font-bold text-sidebar-foreground">Inkwell</span>
         </Link>
         <button onClick={() => setOpen(false)} className="rounded p-1 text-sidebar-foreground/60 hover:text-sidebar-foreground lg:hidden">
           <X className="h-5 w-5" />

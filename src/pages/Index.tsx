@@ -103,7 +103,7 @@ export default function Index() {
 
   return (
     <>
-      <SEOHead title="Home" description="InvizHer — A modern platform for coding tutorials, programming resources, tech articles and developer knowledge." />
+      <SEOHead title="Home" description="Inkwell — A modern platform for coding tutorials, programming resources, tech articles and developer knowledge." />
       <PublicHeader />
 
       <main className="pt-16">
@@ -162,11 +162,11 @@ export default function Index() {
                       <div className="h-3 w-3 rounded-full bg-yellow-400" />
                       <div className="h-3 w-3 rounded-full bg-green-400" />
                     </div>
-                    <span className="font-mono text-xs text-white/40">invizher.sh</span>
+                    <span className="font-mono text-xs text-white/40">inkwell.sh</span>
                   </div>
                   <div className="p-6 font-mono text-sm leading-relaxed">
-                    <p className="text-green-400">→ ~ invizher</p>
-                    <p className="mt-3 text-white/70">Welcome to InvizHer Blog Platform</p>
+                    <p className="text-green-400">→ ~ inkwell</p>
+                    <p className="mt-3 text-white/70">Welcome to Inkwell Blog Platform</p>
                     <p className="mt-1 text-white/40">Discover tutorials, guides & resources...</p>
                     <p className="mt-4 text-white/50">Enter your search query...</p>
                     <p className="mt-2 text-white/30">Press <span className="rounded border border-white/20 px-1.5 py-0.5 text-xs text-white/60">Enter</span> to search</p>
@@ -288,7 +288,7 @@ export default function Index() {
 
               <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
                 {[
-                  { icon: "fa-brands fa-instagram", label: "Instagram", handle: "@invizher", href: "#", gradient: "linear-gradient(135deg, hsl(330, 80%, 55%), hsl(280, 70%, 55%), hsl(30, 90%, 55%))" },
+                  { icon: "fa-brands fa-instagram", label: "Instagram", handle: "@inkwell", href: "#", gradient: "linear-gradient(135deg, hsl(330, 80%, 55%), hsl(280, 70%, 55%), hsl(30, 90%, 55%))" },
                   { icon: "fa-brands fa-telegram", label: "Telegram", handle: "Join Channel", href: "#", gradient: "linear-gradient(135deg, hsl(200, 75%, 50%), hsl(210, 80%, 60%))" },
                   { icon: "fa-brands fa-github", label: "GitHub", handle: "Star & Fork", href: "#", gradient: "linear-gradient(135deg, hsl(220, 15%, 25%), hsl(220, 20%, 40%))" },
                   { icon: "fa-brands fa-youtube", label: "YouTube", handle: "Subscribe", href: "#", gradient: "linear-gradient(135deg, hsl(0, 80%, 50%), hsl(350, 85%, 45%))" },

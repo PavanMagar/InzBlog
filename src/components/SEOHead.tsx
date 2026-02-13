@@ -10,7 +10,7 @@ interface SEOHeadProps {
 }
 
 export function SEOHead({ title, description, ogImage, canonicalUrl, type = "website", publishedAt }: SEOHeadProps) {
-  const fullTitle = `${title} | InvizHer`;
+  const fullTitle = `${title} | Inkwell`;
   const desc = description || "A modern blogging platform for sharing ideas and stories.";
 
   return (

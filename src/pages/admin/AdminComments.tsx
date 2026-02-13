@@ -85,7 +85,7 @@ export default function AdminComments() {
       post_id: postId,
       parent_id: commentId,
       author_name: "Admin",
-      author_email: "admin@invizher.blog",
+      author_email: "admin@inkwell.blog",
       content: replyContent.trim(),
       is_admin_reply: true,
     });
