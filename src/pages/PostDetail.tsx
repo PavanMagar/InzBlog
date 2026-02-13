@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import { Eye } from "lucide-react";
+import { Eye, ArrowLeft } from "lucide-react";
 import { motion } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
 import { PublicHeader } from "@/components/PublicHeader";
@@ -108,46 +108,54 @@ export default function PostDetail() {
 
         <div className="mx-auto max-w-7xl px-5 sm:px-8">
           <motion.div
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.35 }}
-            className="py-8 md:py-12"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.4 }}
+            className="flex flex-col items-center text-center py-10 md:py-16"
           >
-            <div className="flex flex-wrap items-center gap-3 mb-5">
-              <Link to="/posts" className="text-sm text-muted-foreground hover:text-primary transition-colors">Articles</Link>
-              {post.categories.length > 0 && (
-                <>
-                  <span className="text-muted-foreground/40">/</span>
-                  {post.categories.map((cat, i) => (
-                    <span key={cat}>
-                      <span className="text-sm font-medium text-primary">{cat}</span>
-                      {i < post.categories.length - 1 && <span className="text-muted-foreground/40 ml-3">/</span>}
-                    </span>
-                  ))}
-                </>
-              )}
-            </div>
+            <Link
+              to="/posts"
+              className="group mb-6 inline-flex items-center gap-1.5 rounded-full border border-border bg-card px-4 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:border-primary/30 hover:text-primary"
+            >
+              <ArrowLeft className="h-3 w-3 transition-transform group-hover:-translate-x-0.5" />
+              All articles
+            </Link>
 
-            <h1 className="mb-6 max-w-3xl font-display text-3xl font-bold leading-tight text-foreground sm:text-4xl md:text-[2.75rem]">
+            {post.categories.length > 0 && (
+              <div className="mb-5 flex flex-wrap justify-center gap-2">
+                {post.categories.map((cat) => (
+                  <span
+                    key={cat}
+                    className="inline-block rounded-md px-3 py-1 text-xs font-semibold uppercase tracking-wider text-primary-foreground"
+                    style={{ background: "var(--gradient-primary)" }}
+                  >
+                    {cat}
+                  </span>
+                ))}
+              </div>
+            )}
+
+            <h1 className="mb-6 max-w-3xl font-display text-3xl font-bold leading-tight text-foreground sm:text-4xl md:text-5xl">
               {post.title}
             </h1>
 
-            <div className="flex items-center gap-3">
-              <div className="h-px flex-1 max-w-[60px] bg-primary/40" />
-              <div className="flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
-                <time dateTime={postDate}>
-                  {new Date(postDate).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
-                </time>
-                <span className="text-muted-foreground/30">•</span>
-                <div className="flex items-center gap-1.5">
-                  <Eye className="h-3.5 w-3.5" />
-                  <span>{post.view_count.toLocaleString()}</span>
-                </div>
-              </div>
+            {post.excerpt && (
+              <p className="mb-6 max-w-2xl text-base text-muted-foreground sm:text-lg leading-relaxed">
+                {post.excerpt}
+              </p>
+            )}
+
+            <div className="flex items-center gap-2 rounded-full border border-border/60 bg-muted/50 px-5 py-2 text-sm text-muted-foreground">
+              <time dateTime={postDate}>
+                {new Date(postDate).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}
+              </time>
+              <span className="text-border">·</span>
+              <span className="flex items-center gap-1">
+                <Eye className="h-3.5 w-3.5" />
+                {post.view_count.toLocaleString()}
+              </span>
             </div>
           </motion.div>
-
-          <div className="h-px w-full bg-border/60" />
         </div>
       </div>
 
