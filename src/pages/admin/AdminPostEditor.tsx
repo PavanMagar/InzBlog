@@ -8,6 +8,7 @@ import { toast } from "sonner";
 import { Plus, Upload, X, Image as ImageIcon, MessageCircle } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
+import { Layers } from "lucide-react";
 
 function slugify(text: string) {
   return text
@@ -39,6 +40,7 @@ export default function AdminPostEditor() {
   const [newCategoryName, setNewCategoryName] = useState("");
   const [showNewCategory, setShowNewCategory] = useState(false);
   const [commentsEnabled, setCommentsEnabled] = useState(true);
+  const [isProject, setIsProject] = useState(false);
 
   useEffect(() => {
     supabase.from("categories").select("id, name").order("name").then(({ data }) => {
@@ -58,6 +60,7 @@ export default function AdminPostEditor() {
         setContent(post.content || "");
         setStatus(post.status);
         setCommentsEnabled(post.comments_enabled ?? true);
+        setIsProject((post as any).is_project ?? false);
       }
       const { data: pc } = await supabase.from("post_categories").select("category_id").eq("post_id", id);
       if (pc) setSelectedCategories(pc.map((p) => p.category_id));
@@ -141,6 +144,7 @@ export default function AdminPostEditor() {
       status: publishStatus,
       author_id: user?.id,
       comments_enabled: commentsEnabled,
+      is_project: isProject,
     };
 
     let postId = id;
@@ -318,6 +322,26 @@ export default function AdminPostEditor() {
                     ))}
                   </div>
                 )}
+              </div>
+
+              {/* Project Toggle */}
+              <div className="rounded-2xl border border-border bg-card p-5 shadow-[var(--shadow-card)]">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <Layers className="h-4 w-4 text-primary" />
+                    <Label htmlFor="project-toggle" className="text-sm font-semibold text-card-foreground cursor-pointer">
+                      Mark as Project
+                    </Label>
+                  </div>
+                  <Switch
+                    id="project-toggle"
+                    checked={isProject}
+                    onCheckedChange={setIsProject}
+                  />
+                </div>
+                <p className="mt-2 text-xs text-muted-foreground">
+                  {isProject ? "This post will also appear in the Projects section." : "This post will only appear in Articles."}
+                </p>
               </div>
 
               {/* Comments Toggle */}

@@ -9,6 +9,7 @@ import { ProtectedRoute } from "@/components/ProtectedRoute";
 
 import Index from "./pages/Index";
 import Posts from "./pages/Posts";
+import Projects from "./pages/Projects";
 import PostDetail from "./pages/PostDetail";
 import FAQ from "./pages/FAQ";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
@@ -41,6 +42,7 @@ const App = () => (
               {/* Public */}
               <Route path="/" element={<Index />} />
               <Route path="/posts" element={<Posts />} />
+              <Route path="/projects" element={<Projects />} />
               <Route path="/posts/:slug" element={<PostDetail />} />
               <Route path="/faq" element={<FAQ />} />
               <Route path="/privacy-policy" element={<PrivacyPolicy />} />
