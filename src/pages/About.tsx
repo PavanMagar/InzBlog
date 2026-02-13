@@ -89,9 +89,15 @@ export default function About() {
                 Built by developers,{" "}<span className="gradient-text">for developers</span>
               </h2>
               <div className="mt-5 space-y-4 text-sm leading-relaxed text-muted-foreground sm:text-base">
-                <p>Inkwell was born from a simple idea: quality programming content should be accessible to everyone. As developers ourselves, we understand the frustration of searching for clear, practical tutorials.</p>
-                <p>Our mission is to create a platform where beginners can learn the fundamentals and experienced developers can discover advanced techniques — all in one place, all for free.</p>
-                <p>Every article is carefully crafted with real-world examples, working code snippets, and clear explanations. We believe that the best way to learn is by doing, and our content reflects that philosophy.</p>
+                <p>
+                  Inkwell was born from a simple idea: quality programming content should be accessible to everyone. As developers ourselves, we understand the frustration of searching for clear, practical tutorials.
+                </p>
+                <p>
+                  Our mission is to create a platform where beginners can learn the fundamentals and experienced developers can discover advanced techniques — all in one place, all for free.
+                </p>
+                <p>
+                  Every article is carefully crafted with real-world examples, working code snippets, and clear explanations. We believe that the best way to learn is by doing, and our content reflects that philosophy.
+                </p>
               </div>
             </motion.div>
 

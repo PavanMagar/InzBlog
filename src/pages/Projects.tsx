@@ -7,7 +7,6 @@ import { PublicHeader } from "@/components/PublicHeader";
 import { PublicFooter } from "@/components/PublicFooter";
 import { ProjectCard } from "@/components/ProjectCard";
 import { SEOHead } from "@/components/SEOHead";
-import { ProjectCardSkeleton } from "@/components/skeletons/ProjectCardSkeleton";
 
 interface PostWithCategories {
   id: string;
@@ -202,10 +201,8 @@ export default function Projects() {
 
         {/* Projects Grid */}
         {loading ? (
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {Array.from({ length: 6 }).map((_, i) => (
-              <ProjectCardSkeleton key={i} />
-            ))}
+          <div className="flex justify-center py-20">
+            <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
           </div>
         ) : visiblePosts.length > 0 ? (
           <>

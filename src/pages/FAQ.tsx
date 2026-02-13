@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { ArrowRight, HelpCircle, BookOpen, Shield, Users } from "lucide-react";
+import { ArrowRight, HelpCircle, BookOpen, Shield, CreditCard, Users } from "lucide-react";
 import { Link } from "react-router-dom";
 import { PublicHeader } from "@/components/PublicHeader";
 import { PublicFooter } from "@/components/PublicFooter";

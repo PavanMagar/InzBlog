@@ -7,7 +7,6 @@ import { PublicHeader } from "@/components/PublicHeader";
 import { PublicFooter } from "@/components/PublicFooter";
 import { PostCard } from "@/components/PostCard";
 import { SEOHead } from "@/components/SEOHead";
-import { PostCardSkeleton } from "@/components/skeletons/PostCardSkeleton";
 
 interface PostWithCategories {
   id: string;
@@ -108,6 +107,7 @@ export default function Posts() {
       <PublicHeader />
 
       <main className="container px-4 py-8 pt-24 sm:px-6 md:py-12 md:pt-28">
+        {/* Page title — gradient style matching reference */}
         <div className="mb-10 text-center">
           <h1 className="font-display text-3xl font-extrabold sm:text-4xl md:text-5xl">
             <span className="gradient-text">Articles & Tutorials</span>
@@ -146,6 +146,7 @@ export default function Posts() {
             </button>
           </div>
 
+          {/* Category Chips */}
           <AnimatePresence>
             {showFilters && (
               <motion.div
@@ -200,6 +201,7 @@ export default function Posts() {
             )}
           </AnimatePresence>
 
+          {/* Active filter badges */}
           {(activeCategory || query) && (
             <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
               <span className="font-medium">Active filters:</span>
@@ -222,10 +224,8 @@ export default function Posts() {
 
         {/* Posts Grid */}
         {loading ? (
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {Array.from({ length: 6 }).map((_, i) => (
-              <PostCardSkeleton key={i} />
-            ))}
+          <div className="flex justify-center py-20">
+            <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
           </div>
         ) : visiblePosts.length > 0 ? (
           <>
