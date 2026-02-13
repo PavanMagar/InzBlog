@@ -54,7 +54,8 @@ export default function Posts() {
       .from("posts")
       .select("id, title, slug, excerpt, thumbnail_url, published_at")
       .eq("status", "published")
-      .order("published_at", { ascending: false });
+      .order("published_at", { ascending: false, nullsFirst: false })
+      .order("created_at", { ascending: false });
 
     if (query) {
       q = q.or(`title.ilike.%${query}%,excerpt.ilike.%${query}%`);

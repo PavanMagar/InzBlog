@@ -55,7 +55,8 @@ export default function Projects() {
       .select("id, title, slug, excerpt, thumbnail_url, published_at")
       .eq("status", "published")
       .eq("is_project", true)
-      .order("published_at", { ascending: false });
+      .order("published_at", { ascending: false, nullsFirst: false })
+      .order("created_at", { ascending: false });
 
     if (query) {
       q = q.or(`title.ilike.%${query}%,excerpt.ilike.%${query}%`);

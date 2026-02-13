@@ -75,7 +75,8 @@ export default function Index() {
         .from("posts")
         .select("id, title, slug, excerpt, thumbnail_url, published_at")
         .eq("status", "published")
-        .order("published_at", { ascending: false })
+        .order("published_at", { ascending: false, nullsFirst: false })
+        .order("created_at", { ascending: false })
         .limit(6);
 
       if (posts) {
@@ -100,7 +101,8 @@ export default function Index() {
         .select("id, title, slug, excerpt, thumbnail_url, published_at")
         .eq("status", "published")
         .eq("is_project", true)
-        .order("published_at", { ascending: false })
+        .order("published_at", { ascending: false, nullsFirst: false })
+        .order("created_at", { ascending: false })
         .limit(3);
 
       if (projects) {
