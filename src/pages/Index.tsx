@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { ArrowRight, Terminal, Sparkles, BookOpen, Zap, Code2 } from "lucide-react";
+import { ArrowRight, Sparkles, BookOpen, Zap, Code2, TrendingUp } from "lucide-react";
 import { motion } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
 import { PublicHeader } from "@/components/PublicHeader";
@@ -51,6 +51,15 @@ function getTopicIcon(name: string) {
   return fallbacks[name.charCodeAt(0) % fallbacks.length];
 }
 
+const fadeUp = {
+  hidden: { opacity: 0, y: 24 },
+  visible: (i: number) => ({
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.5, delay: i * 0.06, ease: "easeOut" as const },
+  }),
+};
+
 export default function Index() {
   const [recentPosts, setRecentPosts] = useState<PostWithCategories[]>([]);
   const [categories, setCategories] = useState<{ id: string; name: string; slug: string }[]>([]);
@@ -89,7 +98,6 @@ export default function Index() {
 
   const visibleTopics = showAllTopics ? categories : categories.slice(0, TOPICS_INITIAL);
 
-  // Time-based greeting
   const hour = new Date().getHours();
   const greeting = hour < 12 ? "Good Morning" : hour < 17 ? "Good Afternoon" : "Good Evening";
 
@@ -99,58 +107,55 @@ export default function Index() {
       <PublicHeader />
 
       <main className="pt-16">
-        {/* Hero */}
-        <section className="relative overflow-hidden bg-background">
-          <div className="container relative px-4 pb-12 pt-12 sm:px-6 sm:pb-16 sm:pt-16 md:pb-24 md:pt-20 lg:pb-28">
-            <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
-              <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.7 }}
-              >
-                {/* Greeting badge */}
-                <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-4 py-2">
+        {/* ───── Hero ───── */}
+        <section className="relative overflow-hidden">
+          {/* Subtle gradient orb */}
+          <div className="pointer-events-none absolute -top-32 left-1/2 -translate-x-1/2 h-[500px] w-[700px] rounded-full opacity-[0.07]" style={{ background: "var(--gradient-primary)", filter: "blur(100px)" }} />
+
+          <div className="relative mx-auto max-w-7xl px-5 pb-16 pt-14 sm:px-8 md:pb-24 md:pt-20 lg:pb-28">
+            <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-20">
+              <motion.div initial="hidden" animate="visible" variants={{ visible: { transition: { staggerChildren: 0.1 } } }}>
+                {/* Greeting */}
+                <motion.div variants={fadeUp} custom={0} className="mb-6 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-4 py-2">
                   <Sparkles className="h-4 w-4 text-primary" />
                   <span className="text-sm font-medium text-foreground">{greeting} Buddy!</span>
                   <span className="text-sm">✨</span>
-                </div>
+                </motion.div>
 
-                <h1 className="mb-6 font-display text-4xl font-extrabold leading-[1.1] text-foreground sm:text-5xl md:text-6xl lg:text-7xl">
-                  Code. Create.{" "}
-                  <br />
+                <motion.h1 variants={fadeUp} custom={1} className="mb-6 font-display text-4xl font-extrabold leading-[1.08] text-foreground sm:text-5xl md:text-6xl lg:text-7xl">
+                  Code. Create.{" "}<br />
                   <span className="gradient-text">Innovate.</span>
-                </h1>
+                </motion.h1>
 
-                <p className="mb-8 max-w-lg text-base leading-relaxed text-muted-foreground sm:text-lg">
+                <motion.p variants={fadeUp} custom={2} className="mb-8 max-w-lg text-base leading-relaxed text-muted-foreground sm:text-lg">
                   Your gateway to programming tutorials, innovative projects, and cutting-edge development resources.
-                </p>
+                </motion.p>
 
-                <div className="flex flex-col gap-3 sm:flex-row">
+                <motion.div variants={fadeUp} custom={3} className="flex flex-col gap-3 sm:flex-row">
                   <Link
                     to="/posts"
-                    className="inline-flex items-center justify-center gap-2 rounded-xl px-7 py-3.5 text-sm font-semibold text-primary-foreground transition-all hover:opacity-90 hover:shadow-lg"
+                    className="inline-flex items-center justify-center gap-2 rounded-xl px-7 py-3.5 text-sm font-semibold text-primary-foreground transition-all hover:opacity-90"
                     style={{ background: "var(--gradient-primary)" }}
                   >
                     Browse Posts <ArrowRight className="h-4 w-4" />
                   </Link>
                   <Link
                     to="/posts?category="
-                    className="inline-flex items-center justify-center gap-2 rounded-xl border border-border bg-background px-7 py-3.5 text-sm font-semibold text-foreground transition-all hover:bg-muted"
+                    className="inline-flex items-center justify-center gap-2 rounded-xl border border-border bg-card px-7 py-3.5 text-sm font-semibold text-foreground transition-all hover:bg-muted"
                   >
                     <BookOpen className="h-4 w-4" /> Categories
                   </Link>
-                </div>
+                </motion.div>
               </motion.div>
 
-              {/* Right — terminal card */}
+              {/* Terminal card */}
               <motion.div
                 initial={{ opacity: 0, x: 40 }}
                 animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.7, delay: 0.2 }}
+                transition={{ duration: 0.7, delay: 0.3 }}
                 className="hidden lg:block"
               >
-                <div className="rounded-2xl border border-border bg-[hsl(225,35%,8%)] p-0 shadow-[var(--shadow-elevated)] overflow-hidden">
-                  {/* Terminal top bar */}
+                <div className="rounded-2xl border border-border bg-[hsl(225,35%,8%)] overflow-hidden">
                   <div className="flex items-center justify-between border-b border-white/10 px-4 py-3">
                     <div className="flex gap-2">
                       <div className="h-3 w-3 rounded-full bg-red-400" />
@@ -159,7 +164,6 @@ export default function Index() {
                     </div>
                     <span className="font-mono text-xs text-white/40">inkwell.sh</span>
                   </div>
-                  {/* Terminal content */}
                   <div className="p-6 font-mono text-sm leading-relaxed">
                     <p className="text-green-400">→ ~ inkwell</p>
                     <p className="mt-3 text-white/70">Welcome to Inkwell Blog Platform</p>
@@ -174,78 +178,91 @@ export default function Index() {
           </div>
         </section>
 
-        {/* Stats row */}
+        {/* ───── Stats ───── */}
         <section className="border-y border-border/40">
-          <div className="container px-4 py-6 sm:px-6">
-            <div className="flex flex-wrap items-center justify-center gap-8 sm:gap-14 md:gap-20">
+          <div className="mx-auto max-w-7xl px-5 py-8 sm:px-8">
+            <div className="grid grid-cols-3 divide-x divide-border/40">
               {[
-                { value: "100+", label: "Articles", color: "text-primary" },
-                { value: "Open", label: "Source", color: "text-accent" },
-                { value: "Fast", label: "Performance", color: "text-primary" },
+                { value: "100+", label: "Articles", icon: BookOpen },
+                { value: "Open", label: "Source", icon: Code2 },
+                { value: "Fast", label: "Performance", icon: TrendingUp },
               ].map((stat) => (
-                <div key={stat.label} className="text-center">
-                  <p className={`font-display text-xl font-extrabold ${stat.color} sm:text-2xl`}>{stat.value}</p>
-                  <p className="text-xs text-muted-foreground">{stat.label}</p>
+                <div key={stat.label} className="flex flex-col items-center gap-1 py-2">
+                  <stat.icon className="h-4 w-4 text-primary mb-1 hidden sm:block" />
+                  <p className="font-display text-lg font-extrabold text-foreground sm:text-2xl">{stat.value}</p>
+                  <p className="text-[11px] text-muted-foreground sm:text-xs">{stat.label}</p>
                 </div>
               ))}
             </div>
           </div>
         </section>
 
-        {/* Latest Articles */}
+        {/* ───── Latest Articles ───── */}
         {recentPosts.length > 0 && (
-          <section className="container px-4 py-14 sm:px-6 md:py-20">
-            <div className="mb-10 text-center">
-              <div className="mx-auto mb-4 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-4 py-1.5">
-                <Zap className="h-3.5 w-3.5 text-primary" />
-                <span className="text-xs font-semibold uppercase tracking-wider text-primary">Fresh Content</span>
+          <section className="mx-auto max-w-7xl px-5 py-16 sm:px-8 md:py-24">
+            <div className="mb-12 flex flex-col items-start gap-4 sm:flex-row sm:items-end sm:justify-between">
+              <div>
+                <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-3.5 py-1.5">
+                  <Zap className="h-3.5 w-3.5 text-primary" />
+                  <span className="text-[11px] font-semibold uppercase tracking-wider text-primary">Fresh Content</span>
+                </div>
+                <h2 className="font-display text-2xl font-bold text-foreground sm:text-3xl md:text-4xl">
+                  Latest <span className="gradient-text">Articles</span>
+                </h2>
+                <p className="mt-2 max-w-md text-sm text-muted-foreground">Fresh perspectives, tutorials, and developer insights.</p>
               </div>
-              <h2 className="font-display text-2xl font-bold text-foreground sm:text-3xl md:text-4xl">
-                Latest <span className="gradient-text">Articles</span>
-              </h2>
-              <p className="mx-auto mt-3 max-w-md text-sm text-muted-foreground">Fresh perspectives, tutorials, and developer insights</p>
+              <Link
+                to="/posts"
+                className="inline-flex items-center gap-2 rounded-xl border border-border bg-card px-5 py-2.5 text-sm font-medium text-foreground transition-all hover:bg-muted hover:-translate-y-0.5 shrink-0"
+              >
+                View All <ArrowRight className="h-3.5 w-3.5" />
+              </Link>
             </div>
+
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {recentPosts.map((post, i) => (
                 <motion.div
                   key={post.id}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.4, delay: i * 0.05 }}
+                  transition={{ duration: 0.4, delay: i * 0.06 }}
                 >
                   <PostCard {...post} publishedAt={post.published_at} thumbnailUrl={post.thumbnail_url} />
                 </motion.div>
               ))}
             </div>
-            <div className="mt-10 flex justify-center">
-              <Link
-                to="/posts"
-                className="inline-flex items-center gap-2 rounded-xl border border-border bg-background px-6 py-3 text-sm font-medium text-foreground transition-all hover:bg-muted hover:-translate-y-0.5"
-              >
-                View All Articles <ArrowRight className="h-4 w-4" />
-              </Link>
-            </div>
           </section>
         )}
 
-        {/* Explore Topics */}
+        {/* ───── Explore Topics ───── */}
         {categories.length > 0 && (
-          <section className="border-t border-border/40">
-            <div className="container px-4 py-16 sm:px-6 md:py-24">
-              <div className="mb-12 text-center">
-                <div className="mx-auto mb-4 inline-flex items-center gap-2 rounded-full border border-accent/20 bg-accent/5 px-4 py-1.5">
-                  <Code2 className="h-3.5 w-3.5 text-accent" />
-                  <span className="text-xs font-semibold uppercase tracking-wider text-accent">Browse by Topic</span>
+          <section className="border-t border-border/40 bg-muted/30">
+            <div className="mx-auto max-w-7xl px-5 py-16 sm:px-8 md:py-24">
+              <div className="mb-12 flex flex-col items-start gap-4 sm:flex-row sm:items-end sm:justify-between">
+                <div>
+                  <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-accent/20 bg-accent/5 px-3.5 py-1.5">
+                    <Code2 className="h-3.5 w-3.5 text-accent" />
+                    <span className="text-[11px] font-semibold uppercase tracking-wider text-accent">Browse by Topic</span>
+                  </div>
+                  <h2 className="font-display text-2xl font-bold text-foreground sm:text-3xl md:text-4xl">
+                    Explore <span className="gradient-text">Topics</span>
+                  </h2>
+                  <p className="mt-2 max-w-md text-sm text-muted-foreground">Dive into curated collections organized by technology.</p>
                 </div>
-                <h2 className="font-display text-2xl font-bold text-foreground sm:text-3xl md:text-4xl">
-                  Explore <span className="gradient-text">Topics</span>
-                </h2>
-                <p className="mx-auto mt-3 max-w-md text-sm text-muted-foreground">
-                  Dive into curated collections organized by technology
-                </p>
+                {categories.length > TOPICS_INITIAL && (
+                  <button
+                    onClick={() => setShowAllTopics(!showAllTopics)}
+                    className="inline-flex items-center gap-2 rounded-xl border border-border bg-card px-5 py-2.5 text-sm font-medium text-foreground transition-all hover:bg-muted hover:-translate-y-0.5 shrink-0"
+                  >
+                    {showAllTopics ? "Show Less" : "Show All"}
+                    <span className="flex h-5 min-w-[20px] items-center justify-center rounded-full bg-primary/10 px-1.5 text-[11px] font-bold text-primary">
+                      {categories.length}
+                    </span>
+                  </button>
+                )}
               </div>
 
-              <div className="mx-auto grid max-w-4xl gap-3 sm:grid-cols-2 lg:grid-cols-3">
+              <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
                 {visibleTopics.map((cat, i) => (
                   <motion.div
                     key={cat.id}
@@ -255,7 +272,7 @@ export default function Index() {
                   >
                     <Link
                       to={`/posts?category=${encodeURIComponent(cat.slug)}`}
-                      className="group flex items-center gap-4 rounded-xl border border-border bg-background p-4 transition-all duration-300 hover:border-primary/30 hover:shadow-[var(--shadow-elevated)] hover:-translate-y-0.5"
+                      className="group flex items-center gap-4 rounded-xl border border-border bg-card p-4 transition-all duration-300 hover:border-primary/20 hover:-translate-y-0.5"
                     >
                       <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary transition-transform duration-300 group-hover:scale-110">
                         <i className={getTopicIcon(cat.name)}></i>
@@ -268,34 +285,16 @@ export default function Index() {
                   </motion.div>
                 ))}
               </div>
-
-              {categories.length > TOPICS_INITIAL && !showAllTopics && (
-                <div className="mt-10 flex justify-center">
-                  <button
-                    onClick={() => setShowAllTopics(true)}
-                    className="inline-flex items-center gap-2 rounded-xl border border-border bg-background px-6 py-3 text-sm font-medium text-foreground transition-all hover:bg-muted hover:-translate-y-0.5"
-                  >
-                    Show All Topics
-                    <span className="flex h-5 w-5 items-center justify-center rounded-full bg-primary/10 text-xs text-primary">
-                      {categories.length - TOPICS_INITIAL}
-                    </span>
-                  </button>
-                </div>
-              )}
             </div>
           </section>
         )}
 
-        {/* Connect With Us */}
+        {/* ───── Let's Connect ───── */}
         <section className="border-t border-border/40">
-          <div className="container px-4 py-16 sm:px-6 md:py-24">
-            <div className="mx-auto max-w-3xl text-center">
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5 }}
-              >
-                <div className="mx-auto mb-6 flex h-14 w-14 items-center justify-center rounded-2xl border border-primary/20 bg-primary/5">
+          <div className="mx-auto max-w-7xl px-5 py-16 sm:px-8 md:py-24">
+            <div className="mx-auto max-w-2xl text-center">
+              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
+                <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-primary/10">
                   <i className="fa-solid fa-satellite-dish text-xl text-primary"></i>
                 </div>
                 <h2 className="mb-3 font-display text-2xl font-bold text-foreground sm:text-3xl md:text-4xl">
@@ -308,27 +307,30 @@ export default function Index() {
 
               <div className="grid grid-cols-3 gap-3 sm:grid-cols-6">
                 {[
-                  { icon: "fa-brands fa-instagram", label: "Instagram", href: "#" },
-                  { icon: "fa-brands fa-x-twitter", label: "Twitter", href: "#" },
-                  { icon: "fa-brands fa-github", label: "GitHub", href: "#" },
-                  { icon: "fa-brands fa-linkedin-in", label: "LinkedIn", href: "#" },
-                  { icon: "fa-brands fa-youtube", label: "YouTube", href: "#" },
-                  { icon: "fa-brands fa-telegram", label: "Telegram", href: "#" },
+                  { icon: "fa-brands fa-instagram", label: "Instagram", href: "#", color: "hsl(330, 70%, 55%)" },
+                  { icon: "fa-brands fa-x-twitter", label: "Twitter", href: "#", color: "hsl(200, 10%, 30%)" },
+                  { icon: "fa-brands fa-github", label: "GitHub", href: "#", color: "hsl(0, 0%, 25%)" },
+                  { icon: "fa-brands fa-linkedin-in", label: "LinkedIn", href: "#", color: "hsl(210, 80%, 45%)" },
+                  { icon: "fa-brands fa-youtube", label: "YouTube", href: "#", color: "hsl(0, 80%, 50%)" },
+                  { icon: "fa-brands fa-telegram", label: "Telegram", href: "#", color: "hsl(200, 70%, 50%)" },
                 ].map((s, i) => (
                   <motion.a
                     key={s.label}
                     href={s.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    initial={{ opacity: 0, y: 15 }}
-                    animate={{ opacity: 1, y: 0 }}
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
                     transition={{ duration: 0.3, delay: i * 0.05 }}
-                    className="group flex flex-col items-center gap-2 rounded-xl border border-border bg-background p-4 transition-all duration-300 hover:border-primary/30 hover:shadow-[var(--shadow-elevated)] hover:-translate-y-1"
+                    className="group flex flex-col items-center gap-2.5 rounded-xl border border-border bg-card p-4 transition-all duration-300 hover:border-primary/20 hover:-translate-y-1"
                   >
-                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary transition-transform duration-300 group-hover:scale-110">
+                    <div
+                      className="flex h-10 w-10 items-center justify-center rounded-xl transition-transform duration-300 group-hover:scale-110"
+                      style={{ backgroundColor: `${s.color}15`, color: s.color }}
+                    >
                       <i className={`${s.icon} text-base`}></i>
                     </div>
-                    <span className="text-xs font-medium text-muted-foreground group-hover:text-foreground">{s.label}</span>
+                    <span className="text-[11px] font-medium text-muted-foreground group-hover:text-foreground">{s.label}</span>
                   </motion.a>
                 ))}
               </div>
