@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import { Calendar, Eye, BookOpen, ArrowLeft, Sparkles } from "lucide-react";
+import { Calendar, Eye, BookOpen, ArrowLeft } from "lucide-react";
 import { motion } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
 import { PublicHeader } from "@/components/PublicHeader";
@@ -108,65 +108,98 @@ export default function PostDetail() {
       <PublicHeader />
 
       {/* ── Article Header ── */}
-      <div className="pt-20 md:pt-24">
+      <div className="pt-20 md:pt-28">
         <div className="mx-auto max-w-7xl px-5 sm:px-8">
           {/* Back link */}
           <motion.div initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }}>
-            <Link to="/posts" className="mb-5 inline-flex items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-primary">
+            <Link to="/posts" className="mb-6 inline-flex items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-primary">
               <ArrowLeft className="h-3.5 w-3.5" /> All Articles
             </Link>
           </motion.div>
 
-          {/* Header card */}
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.04 }}
-            className="relative overflow-hidden rounded-2xl border border-border bg-card p-6 sm:p-8 md:p-10"
-            style={{ boxShadow: "var(--shadow-elevated)" }}
-          >
-            {/* Decorative accent bar */}
-            <div className="absolute inset-x-0 top-0 h-1.5" style={{ background: "var(--gradient-primary)" }} />
+          {/* Conceptual header */}
+          <div className="relative">
+            {/* Large decorative letter watermark */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.05, duration: 0.5 }}
+              className="pointer-events-none absolute -left-4 -top-8 select-none font-display text-[10rem] font-black leading-none sm:-left-6 sm:-top-10 sm:text-[14rem] md:text-[18rem]"
+              style={{
+                background: "var(--gradient-primary)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                opacity: 0.06,
+              }}
+            >
+              {post.title.charAt(0).toUpperCase()}
+            </motion.div>
 
-            {/* Categories */}
+            {/* Categories row */}
             {post.categories.length > 0 && (
-              <div className="mb-4 flex flex-wrap gap-2">
+              <motion.div
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.06 }}
+                className="mb-4 flex flex-wrap gap-2"
+              >
                 {post.categories.map((cat) => (
-                  <span key={cat} className="inline-flex items-center gap-1.5 rounded-md bg-primary/10 px-2.5 py-1 text-xs font-semibold text-primary">
-                    <Sparkles className="h-3 w-3" />
+                  <span
+                    key={cat}
+                    className="inline-flex items-center gap-1.5 rounded-full border border-primary/20 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-primary"
+                    style={{ background: "hsl(var(--primary) / 0.06)" }}
+                  >
+                    <span className="h-1.5 w-1.5 rounded-full bg-primary" />
                     {cat}
                   </span>
                 ))}
-              </div>
+              </motion.div>
             )}
 
             {/* Title */}
-            <h1 className="mb-5 max-w-4xl font-display text-2xl font-extrabold leading-[1.18] text-foreground sm:text-3xl md:text-4xl lg:text-[2.75rem]">
+            <motion.h1
+              initial={{ opacity: 0, y: 14 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1 }}
+              className="relative z-10 mb-6 max-w-4xl font-display text-3xl font-extrabold leading-[1.15] text-foreground sm:text-4xl md:text-5xl lg:text-[3.25rem]"
+            >
               {post.title}
-            </h1>
+            </motion.h1>
 
-            {/* Metadata strip */}
-            <div className="flex flex-wrap items-center gap-x-5 gap-y-2 border-t border-border/60 pt-5 text-sm text-muted-foreground">
+            {/* Metadata chips */}
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.16 }}
+              className="flex flex-wrap gap-3"
+            >
               {post.published_at && (
-                <div className="flex items-center gap-2">
-                  <Calendar className="h-4 w-4 text-primary" />
+                <div className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-4 py-2 text-sm text-muted-foreground shadow-sm">
+                  <Calendar className="h-3.5 w-3.5 text-primary" />
                   <time dateTime={post.published_at}>
                     {new Date(post.published_at).toLocaleDateString("en-US", { weekday: "short", month: "long", day: "numeric", year: "numeric" })}
                   </time>
                 </div>
               )}
-              <span className="hidden text-border sm:inline">|</span>
-              <div className="flex items-center gap-2">
-                <Eye className="h-4 w-4 text-primary" />
+              <div className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-4 py-2 text-sm text-muted-foreground shadow-sm">
+                <Eye className="h-3.5 w-3.5 text-primary" />
                 <span>{post.view_count.toLocaleString()} views</span>
               </div>
-              <span className="hidden text-border sm:inline">|</span>
-              <div className="flex items-center gap-2">
-                <BookOpen className="h-4 w-4 text-primary" />
+              <div className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-4 py-2 text-sm text-muted-foreground shadow-sm">
+                <BookOpen className="h-3.5 w-3.5 text-primary" />
                 <span>{words.toLocaleString()} words</span>
               </div>
-            </div>
-          </motion.div>
+            </motion.div>
+
+            {/* Gradient divider line */}
+            <motion.div
+              initial={{ scaleX: 0 }}
+              animate={{ scaleX: 1 }}
+              transition={{ delay: 0.25, duration: 0.6 }}
+              className="mt-8 h-px origin-left"
+              style={{ background: "var(--gradient-primary)" }}
+            />
+          </div>
         </div>
       </div>
 
