@@ -12,6 +12,7 @@ import Posts from "./pages/Posts";
 import PostDetail from "./pages/PostDetail";
 import FAQ from "./pages/FAQ";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
+import Disclaimer from "./pages/Disclaimer";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
 import AdminLogin from "./pages/admin/AdminLogin";
@@ -43,6 +44,7 @@ const App = () => (
               <Route path="/posts/:slug" element={<PostDetail />} />
               <Route path="/faq" element={<FAQ />} />
               <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+              <Route path="/disclaimer" element={<Disclaimer />} />
               <Route path="/about" element={<About />} />
               <Route path="/contact" element={<Contact />} />
 
