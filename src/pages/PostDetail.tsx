@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import { Eye, ArrowLeft } from "lucide-react";
+import { Eye } from "lucide-react";
 import { motion } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
 import { PublicHeader } from "@/components/PublicHeader";
@@ -111,18 +111,10 @@ export default function PostDetail() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.4 }}
-            className="flex flex-col items-center text-center py-10 md:py-16"
+            className="py-10 md:py-16"
           >
-            <Link
-              to="/posts"
-              className="group mb-6 inline-flex items-center gap-1.5 rounded-full border border-border bg-card px-4 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:border-primary/30 hover:text-primary"
-            >
-              <ArrowLeft className="h-3 w-3 transition-transform group-hover:-translate-x-0.5" />
-              All articles
-            </Link>
-
             {post.categories.length > 0 && (
-              <div className="mb-5 flex flex-wrap justify-center gap-2">
+              <div className="mb-5 flex flex-wrap gap-2">
                 {post.categories.map((cat) => (
                   <span
                     key={cat}
@@ -139,13 +131,7 @@ export default function PostDetail() {
               {post.title}
             </h1>
 
-            {post.excerpt && (
-              <p className="mb-6 max-w-2xl text-base text-muted-foreground sm:text-lg leading-relaxed">
-                {post.excerpt}
-              </p>
-            )}
-
-            <div className="flex items-center gap-2 rounded-full border border-border/60 bg-muted/50 px-5 py-2 text-sm text-muted-foreground">
+            <div className="flex items-center gap-2 rounded-full border border-border/60 bg-muted/50 px-5 py-2 text-sm text-muted-foreground w-fit">
               <time dateTime={postDate}>
                 {new Date(postDate).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}
               </time>
