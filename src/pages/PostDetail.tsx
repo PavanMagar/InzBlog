@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import { Eye } from "lucide-react";
+import { Eye, Calendar, BookOpen } from "lucide-react";
 import { motion } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
 import { PublicHeader } from "@/components/PublicHeader";
@@ -111,7 +111,7 @@ export default function PostDetail() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.4 }}
-            className="py-10 md:py-16"
+            className="py-10 md:py-14"
           >
             {post.categories.length > 0 && (
               <div className="mb-5 flex flex-wrap gap-2">
@@ -127,25 +127,52 @@ export default function PostDetail() {
               </div>
             )}
 
-            <h1 className="mb-6 max-w-3xl font-display text-3xl font-bold leading-tight text-foreground sm:text-4xl md:text-5xl">
+            <h1 className="mb-8 max-w-3xl font-display text-3xl font-bold leading-tight text-foreground sm:text-4xl md:text-5xl">
               {post.title}
             </h1>
 
-            <div className="flex items-center gap-2 rounded-full border border-border/60 bg-muted/50 px-5 py-2 text-sm text-muted-foreground w-fit">
-              <time dateTime={postDate}>
-                {new Date(postDate).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}
-              </time>
-              <span className="text-border">·</span>
-              <span className="flex items-center gap-1">
-                <Eye className="h-3.5 w-3.5" />
-                {post.view_count.toLocaleString()}
-              </span>
+            <div className="flex flex-wrap items-center gap-6">
+              <div className="flex items-center gap-2.5 text-sm text-muted-foreground">
+                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10">
+                  <Calendar className="h-4 w-4 text-primary" />
+                </div>
+                <div>
+                  <p className="text-[11px] uppercase tracking-wider text-muted-foreground/60">Published</p>
+                  <time dateTime={postDate} className="font-medium text-foreground">
+                    {new Date(postDate).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
+                  </time>
+                </div>
+              </div>
+
+              <div className="h-8 w-px bg-border" />
+
+              <div className="flex items-center gap-2.5 text-sm text-muted-foreground">
+                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-accent/10">
+                  <Eye className="h-4 w-4 text-accent" />
+                </div>
+                <div>
+                  <p className="text-[11px] uppercase tracking-wider text-muted-foreground/60">Views</p>
+                  <span className="font-medium text-foreground">{post.view_count.toLocaleString()}</span>
+                </div>
+              </div>
             </div>
           </motion.div>
         </div>
+
+        {/* Divider between header and content */}
+        <div className="relative">
+          <div className="mx-auto max-w-7xl px-5 sm:px-8">
+            <div className="h-px w-full bg-border/60" />
+          </div>
+          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
+            <div className="flex h-9 w-9 items-center justify-center rounded-full border border-border/60 bg-background">
+              <BookOpen className="h-4 w-4 text-primary" />
+            </div>
+          </div>
+        </div>
       </div>
 
-      <div className="mx-auto max-w-7xl px-5 py-8 sm:px-8 md:py-10">
+      <div className="mx-auto max-w-7xl px-5 py-10 sm:px-8 md:py-14">
         <div className="lg:flex lg:gap-10 xl:gap-14">
           <article className="min-w-0 flex-1 overflow-hidden lg:max-w-3xl">
             <motion.div
