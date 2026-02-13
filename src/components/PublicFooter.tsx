@@ -50,7 +50,7 @@ export function PublicFooter() {
             <nav className="flex flex-col gap-2.5">
               <Link to="/faq" className="text-sm transition-colors hover:text-white">FAQ</Link>
               <Link to="/privacy-policy" className="text-sm transition-colors hover:text-white">Privacy Policy</Link>
-              <Link to="/about" className="text-sm transition-colors hover:text-white">About</Link>
+              <Link to="/disclaimer" className="text-sm transition-colors hover:text-white">Disclaimer</Link>
             </nav>
           </div>
 
@@ -58,8 +58,8 @@ export function PublicFooter() {
           <div>
             <h4 className="mb-4 font-display text-sm font-semibold text-white">Support</h4>
             <nav className="flex flex-col gap-2.5">
-              <Link to="/about" className="text-sm transition-colors hover:text-white">About</Link>
-              <Link to="/contact" className="text-sm transition-colors hover:text-white">Contact</Link>
+              <Link to="/about" className="text-sm transition-colors hover:text-white">About Us</Link>
+              <Link to="/contact" className="text-sm transition-colors hover:text-white">Contact Us</Link>
               <Link to="/faq" className="text-sm transition-colors hover:text-white">Help Center</Link>
             </nav>
           </div>
