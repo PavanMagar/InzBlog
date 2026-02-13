@@ -60,7 +60,7 @@ export function PublicHeader() {
               <div className="flex h-9 w-9 items-center justify-center rounded-xl" style={{ background: "var(--gradient-primary)" }}>
                 <i className="fa-solid fa-feather-pointed text-sm text-white"></i>
               </div>
-              <span className="font-display text-xl font-bold gradient-text">Inkwell</span>
+              <span className="font-display text-xl font-bold gradient-text">InvizHer</span>
             </Link>
 
             {/* Desktop nav + fixed-width search */}
