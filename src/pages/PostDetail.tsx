@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import { Calendar, Eye, ArrowLeft, User } from "lucide-react";
+import { Calendar, Eye, ArrowLeft } from "lucide-react";
 import { motion } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
 import { PublicHeader } from "@/components/PublicHeader";
@@ -152,15 +152,8 @@ export default function PostDetail() {
                   {post.title}
                 </h1>
 
-                {/* Author + Date + Views — single row on all screens */}
+                {/* Date + Views — single row */}
                 <div className="flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
-                  <div className="flex items-center gap-2">
-                    <div className="flex h-7 w-7 items-center justify-center rounded-full bg-primary/10">
-                      <User className="h-3.5 w-3.5 text-primary" />
-                    </div>
-                    <span className="font-semibold text-foreground">Admin</span>
-                  </div>
-                  <span className="text-border">·</span>
                   <div className="flex items-center gap-1.5">
                     <Calendar className="h-3.5 w-3.5 text-primary/70" />
                     <time dateTime={postDate}>
