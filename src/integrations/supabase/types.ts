@@ -196,6 +196,48 @@ export type Database = {
         }
         Relationships: []
       }
+      shortened_links: {
+        Row: {
+          admin_id: string | null
+          alias: string | null
+          clicks: number
+          created_at: string
+          id: string
+          link_name: string
+          original_url: string
+          password: string | null
+          post_slug: string
+          token: string
+          updated_at: string
+        }
+        Insert: {
+          admin_id?: string | null
+          alias?: string | null
+          clicks?: number
+          created_at?: string
+          id?: string
+          link_name: string
+          original_url: string
+          password?: string | null
+          post_slug: string
+          token: string
+          updated_at?: string
+        }
+        Update: {
+          admin_id?: string | null
+          alias?: string | null
+          clicks?: number
+          created_at?: string
+          id?: string
+          link_name?: string
+          original_url?: string
+          password?: string | null
+          post_slug?: string
+          token?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string
@@ -229,6 +271,7 @@ export type Database = {
         }
         Returns: boolean
       }
+      increment_link_clicks: { Args: { p_link_id: string }; Returns: undefined }
     }
     Enums: {
       app_role: "admin" | "user"

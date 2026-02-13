@@ -9,6 +9,7 @@ import { SEOHead } from "@/components/SEOHead";
 import { CommentSection } from "@/components/CommentSection";
 import { SharePost } from "@/components/SharePost";
 import { RelatedPosts } from "@/components/RelatedPosts";
+import { LinkShortenerOverlay } from "@/components/LinkShortenerOverlay";
 
 interface PostData {
   id: string;
@@ -104,6 +105,9 @@ export default function PostDetail() {
         publishedAt={post.published_at || undefined}
       />
       <PublicHeader />
+
+      {/* ── Link Shortener Overlay (top) ── */}
+      <LinkShortenerOverlay />
 
       {/* ── Article Header ── */}
       <div className="pt-20 md:pt-28">
