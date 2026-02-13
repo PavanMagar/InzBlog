@@ -20,6 +20,8 @@ interface Comment {
   replies?: Comment[];
 }
 
+const COMMENT_TRUNCATE = 280;
+
 function getVisitorId(): string {
   let id = localStorage.getItem("inkwell_visitor_id");
   if (!id) {
@@ -57,21 +59,22 @@ function CommentForm({ postId, parentId, onSuccess, onCancel, placeholder }: {
     e.preventDefault();
     if (!name.trim() || !email.trim() || !content.trim()) return;
 
-    const emailRegex = /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/;
-    if (!emailRegex.test(email.trim())) {
+    // Simple email validation
+    const trimmedEmail = email.trim();
+    if (!trimmedEmail.includes("@") || !trimmedEmail.includes(".")) {
       toast.error("Please enter a valid email address");
       return;
     }
 
     setSubmitting(true);
     localStorage.setItem("inkwell_comment_name", name.trim());
-    localStorage.setItem("inkwell_comment_email", email.trim());
+    localStorage.setItem("inkwell_comment_email", trimmedEmail);
 
     const { error } = await supabase.from("comments").insert({
       post_id: postId,
       parent_id: parentId || null,
       author_name: name.trim(),
-      author_email: email.trim(),
+      author_email: trimmedEmail,
       content: content.trim(),
     });
 
@@ -126,11 +129,15 @@ function SingleComment({ comment, postId, onRefresh, depth = 0 }: {
   depth?: number;
 }) {
   const [showReplyForm, setShowReplyForm] = useState(false);
-  const [showReplies, setShowReplies] = useState(depth < 2);
+  const [showReplies, setShowReplies] = useState(false);
+  const [expanded, setExpanded] = useState(false);
   const [liked, setLiked] = useState(false);
   const [animateLike, setAnimateLike] = useState(false);
   const [localLikes, setLocalLikes] = useState(comment.likes_count);
   const visitorId = getVisitorId();
+
+  const isTruncated = comment.content.length > COMMENT_TRUNCATE;
+  const displayContent = isTruncated && !expanded ? comment.content.slice(0, COMMENT_TRUNCATE) + "..." : comment.content;
 
   useEffect(() => {
     supabase.from("comment_likes").select("id").eq("comment_id", comment.id).eq("visitor_id", visitorId)
@@ -176,7 +183,12 @@ function SingleComment({ comment, postId, onRefresh, depth = 0 }: {
               )}
               <span className="text-[11px] text-muted-foreground">· {timeAgo(comment.created_at)}</span>
             </div>
-            <p className="mt-1 whitespace-pre-wrap text-sm leading-relaxed text-foreground/85">{comment.content}</p>
+            <p className="mt-1 whitespace-pre-wrap text-sm leading-relaxed text-foreground/85">{displayContent}</p>
+            {isTruncated && (
+              <button onClick={() => setExpanded(!expanded)} className="mt-1 text-xs font-medium text-primary hover:underline">
+                {expanded ? "Show less" : "View full comment"}
+              </button>
+            )}
 
             <div className="mt-2 flex items-center gap-3">
               <button onClick={handleLike} className={`flex items-center gap-1 text-xs transition-colors ${liked ? "text-red-500" : "text-muted-foreground hover:text-red-500"}`}>
@@ -193,7 +205,7 @@ function SingleComment({ comment, postId, onRefresh, depth = 0 }: {
               {replies.length > 0 && (
                 <button onClick={() => setShowReplies(!showReplies)} className="flex items-center gap-1 text-xs text-muted-foreground transition-colors hover:text-foreground">
                   {showReplies ? <ChevronUp className="h-3.5 w-3.5" /> : <ChevronDown className="h-3.5 w-3.5" />}
-                  {replies.length} {replies.length === 1 ? "reply" : "replies"}
+                  {showReplies ? "Hide" : "Load"} {replies.length} {replies.length === 1 ? "reply" : "replies"}
                 </button>
               )}
             </div>
@@ -232,7 +244,7 @@ export function CommentSection({ postId }: { postId: string }) {
   const [comments, setComments] = useState<Comment[]>([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
-  const [showAll, setShowAll] = useState(false);
+  const [visibleCount, setVisibleCount] = useState(2);
 
   const fetchComments = useCallback(async () => {
     const { data } = await supabase
@@ -269,8 +281,8 @@ export function CommentSection({ postId }: { postId: string }) {
   }, [fetchComments]);
 
   const totalComments = comments.reduce((sum, c) => sum + 1 + (c.replies?.length || 0), 0);
-  const visibleComments = showAll ? comments : comments.slice(-2);
-  const hasMore = comments.length > 2 && !showAll;
+  const visibleComments = comments.slice(0, visibleCount);
+  const hasMore = comments.length > visibleCount;
 
   return (
     <motion.section
@@ -278,7 +290,7 @@ export function CommentSection({ postId }: { postId: string }) {
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.05 }}
     >
-      <div className="rounded-2xl border border-border bg-card p-5 shadow-[var(--shadow-card)]">
+      <div className="rounded-2xl border border-border bg-card p-5">
         <div className="mb-4 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <div className="flex h-7 w-7 items-center justify-center rounded-lg" style={{ background: "var(--gradient-primary)" }}>
@@ -315,18 +327,18 @@ export function CommentSection({ postId }: { postId: string }) {
           </div>
         ) : comments.length > 0 ? (
           <div className="space-y-0.5">
-            {hasMore && (
-              <button
-                onClick={() => setShowAll(true)}
-                className="mb-3 flex w-full items-center justify-center gap-1.5 rounded-xl border border-dashed border-border py-2.5 text-xs font-medium text-muted-foreground transition-colors hover:border-primary/30 hover:text-foreground"
-              >
-                <ChevronDown className="h-3.5 w-3.5" />
-                Load {comments.length - 2} older comment{comments.length - 2 > 1 ? "s" : ""}
-              </button>
-            )}
             {visibleComments.map((comment) => (
               <SingleComment key={comment.id} comment={comment} postId={postId} onRefresh={fetchComments} />
             ))}
+            {hasMore && (
+              <button
+                onClick={() => setVisibleCount((c) => c + 5)}
+                className="mt-3 flex w-full items-center justify-center gap-1.5 rounded-xl border border-dashed border-border py-2.5 text-xs font-medium text-muted-foreground transition-colors hover:border-primary/30 hover:text-foreground"
+              >
+                <ChevronDown className="h-3.5 w-3.5" />
+                Load more ({comments.length - visibleCount} remaining)
+              </button>
+            )}
           </div>
         ) : (
           <div className="py-6 text-center">

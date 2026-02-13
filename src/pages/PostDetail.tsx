@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import { Calendar, Eye, Clock, BookOpen } from "lucide-react";
+import { Calendar, Eye, Clock, BookOpen, ArrowLeft } from "lucide-react";
 import { motion } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
 import { PublicHeader } from "@/components/PublicHeader";
@@ -108,12 +108,19 @@ export default function PostDetail() {
       />
       <PublicHeader />
 
-      {/* Article header */}
-      <div className="container px-4 pb-4 pt-24 sm:px-6 md:pt-28 lg:px-16 xl:px-24">
-        <div className="mx-auto max-w-3xl">
+      {/* ── Modern Article Header ── */}
+      <div className="border-b border-border/40 bg-muted/20 pt-20 md:pt-24">
+        <div className="mx-auto max-w-7xl px-5 pb-8 sm:px-8 md:pb-10">
+          {/* Back link */}
+          <motion.div initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }}>
+            <Link to="/posts" className="mb-5 inline-flex items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-primary">
+              <ArrowLeft className="h-3.5 w-3.5" /> All Articles
+            </Link>
+          </motion.div>
+
           {/* Categories */}
           {post.categories.length > 0 && (
-            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="mb-4 flex flex-wrap gap-2">
+            <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="mb-4 flex flex-wrap gap-2">
               {post.categories.map((cat) => (
                 <span key={cat} className="rounded-full border border-primary/20 bg-primary/5 px-3 py-1 text-xs font-semibold text-primary">
                   {cat}
@@ -122,53 +129,50 @@ export default function PostDetail() {
             </motion.div>
           )}
 
-          {/* Title — gradient style */}
+          {/* Title */}
           <motion.h1
-            initial={{ opacity: 0, y: 16 }}
+            initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.05 }}
-            className="mb-6 font-display text-2xl font-extrabold leading-tight sm:text-3xl md:text-4xl"
+            className="mb-5 font-display text-2xl font-extrabold leading-tight text-foreground sm:text-3xl md:text-4xl lg:text-[2.75rem]"
           >
             <span className="gradient-text">{post.title}</span>
           </motion.h1>
 
-          {/* Metadata row */}
+          {/* Metadata pills */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.1 }}
-            className="mb-8 flex flex-wrap items-center gap-4 text-sm text-muted-foreground"
+            className="flex flex-wrap items-center gap-3"
           >
             {post.published_at && (
-              <div className="flex items-center gap-1.5">
-                <Calendar className="h-4 w-4" />
+              <div className="flex items-center gap-1.5 rounded-lg border border-border bg-card px-3 py-1.5 text-xs text-muted-foreground">
+                <Calendar className="h-3.5 w-3.5 text-primary" />
                 <time dateTime={post.published_at}>
-                  {new Date(post.published_at).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}
+                  {new Date(post.published_at).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
                 </time>
               </div>
             )}
-            <div className="flex items-center gap-1.5">
-              <Clock className="h-4 w-4" />
+            <div className="flex items-center gap-1.5 rounded-lg border border-border bg-card px-3 py-1.5 text-xs text-muted-foreground">
+              <Clock className="h-3.5 w-3.5 text-primary" />
               <span>{readTime} min read</span>
             </div>
-            <div className="flex items-center gap-1.5">
-              <Eye className="h-4 w-4" />
+            <div className="flex items-center gap-1.5 rounded-lg border border-border bg-card px-3 py-1.5 text-xs text-muted-foreground">
+              <Eye className="h-3.5 w-3.5 text-primary" />
               <span>{post.view_count.toLocaleString()} views</span>
             </div>
-            <div className="flex items-center gap-1.5">
-              <BookOpen className="h-4 w-4" />
+            <div className="flex items-center gap-1.5 rounded-lg border border-border bg-card px-3 py-1.5 text-xs text-muted-foreground">
+              <BookOpen className="h-3.5 w-3.5 text-primary" />
               <span>{words.toLocaleString()} words</span>
             </div>
           </motion.div>
         </div>
       </div>
 
-      {/* Separator */}
-      <div className="border-t border-border/40" />
-
-      <div className="container px-4 py-6 sm:px-6 md:py-8 lg:px-16 xl:px-24">
+      {/* ── Content ── */}
+      <div className="mx-auto max-w-7xl px-5 py-8 sm:px-8 md:py-10">
         <div className="lg:flex lg:gap-10 xl:gap-14">
-
           {/* Left: Article */}
           <article className="min-w-0 flex-1 overflow-hidden lg:max-w-3xl">
             <motion.div

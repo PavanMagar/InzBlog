@@ -29,7 +29,7 @@ export function SharePost({ title, slug }: SharePostProps) {
     { icon: "fa-brands fa-whatsapp", label: "WhatsApp", href: `https://wa.me/?text=${text}%20${encodedUrl}`, accent: "hover:bg-green-500/10 hover:text-green-600 hover:border-green-500/30" },
     { icon: "fa-brands fa-telegram", label: "Telegram", href: `https://t.me/share/url?url=${encodedUrl}&text=${text}`, accent: "hover:bg-blue-400/10 hover:text-blue-500 hover:border-blue-400/30" },
     { icon: "fa-brands fa-x-twitter", label: "X", href: `https://twitter.com/intent/tweet?text=${text}&url=${encodedUrl}`, accent: "hover:bg-foreground/5 hover:text-foreground hover:border-foreground/20" },
-    { icon: "fa-brands fa-linkedin-in", label: "LinkedIn", href: `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`, accent: "hover:bg-blue-600/10 hover:text-blue-600 hover:border-blue-600/30" },
+    { icon: "fa-brands fa-instagram", label: "Instagram", href: `https://www.instagram.com/`, accent: "hover:bg-pink-500/10 hover:text-pink-500 hover:border-pink-500/30" },
     { icon: "fa-solid fa-envelope", label: "Email", href: `mailto:?subject=${text}&body=${encodedUrl}`, accent: "hover:bg-orange-500/10 hover:text-orange-500 hover:border-orange-500/30" },
   ];
 
@@ -37,9 +37,8 @@ export function SharePost({ title, slug }: SharePostProps) {
     <motion.div
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
-      className="overflow-hidden rounded-2xl border border-border bg-card shadow-[var(--shadow-card)]"
+      className="overflow-hidden rounded-2xl border border-border bg-card"
     >
-
       <div className="p-5">
         <div className="mb-3 flex items-center gap-2">
           <div className="flex h-7 w-7 items-center justify-center rounded-lg" style={{ background: "var(--gradient-primary)" }}>
