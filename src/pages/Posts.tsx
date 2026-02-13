@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback } from "react";
 import { useSearchParams } from "react-router-dom";
-import { Search, SlidersHorizontal, X, ChevronDown } from "lucide-react";
+import { Search, SlidersHorizontal, X, ChevronDown, ChevronUp } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
 import { PublicHeader } from "@/components/PublicHeader";
@@ -27,7 +27,9 @@ export default function Posts() {
   const [categories, setCategories] = useState<{ id: string; name: string; slug: string }[]>([]);
   const [loading, setLoading] = useState(true);
   const [visibleCount, setVisibleCount] = useState(INITIAL_COUNT);
-  const [showFilters, setShowFilters] = useState(false);
+  const [showFilters, setShowFilters] = useState(true);
+  const [showAllCategories, setShowAllCategories] = useState(false);
+  const VISIBLE_CATEGORIES = 6;
 
   const query = searchParams.get("q") || "";
   const categorySlug = searchParams.get("category") || "";
@@ -166,7 +168,7 @@ export default function Posts() {
                     >
                       All
                     </button>
-                    {categories.map((c) => (
+                    {(showAllCategories ? categories : categories.slice(0, VISIBLE_CATEGORIES)).map((c) => (
                       <button
                         key={c.id}
                         onClick={() => updateParam("category", c.slug === categorySlug ? "" : c.slug)}
@@ -181,6 +183,18 @@ export default function Posts() {
                       </button>
                     ))}
                   </div>
+                  {categories.length > VISIBLE_CATEGORIES && (
+                    <button
+                      onClick={() => setShowAllCategories(!showAllCategories)}
+                      className="mt-3 inline-flex items-center gap-1 text-xs font-medium text-primary transition-colors hover:text-primary/80"
+                    >
+                      {showAllCategories ? (
+                        <><ChevronUp className="h-3.5 w-3.5" /> Show less</>
+                      ) : (
+                        <><ChevronDown className="h-3.5 w-3.5" /> Show {categories.length - VISIBLE_CATEGORIES} more</>
+                      )}
+                    </button>
+                  )}
                 </div>
               </motion.div>
             )}

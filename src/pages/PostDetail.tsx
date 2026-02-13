@@ -107,19 +107,12 @@ export default function PostDetail() {
       />
       <PublicHeader />
 
-      {/* ── Immersive Article Header ── */}
-      <div className="relative overflow-hidden pt-16 md:pt-20" style={{ background: "var(--gradient-hero)" }}>
-        {/* Decorative elements */}
-        <div className="pointer-events-none absolute inset-0">
-          <div className="absolute -right-32 -top-32 h-96 w-96 rounded-full opacity-20" style={{ background: "radial-gradient(circle, hsl(217 91% 60% / 0.4), transparent 70%)" }} />
-          <div className="absolute -left-20 bottom-0 h-72 w-72 rounded-full opacity-15" style={{ background: "radial-gradient(circle, hsl(271 81% 56% / 0.4), transparent 70%)" }} />
-          <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMSIgY3k9IjEiIHI9IjAuNSIgZmlsbD0icmdiYSgyNTUsMjU1LDI1NSwwLjAzKSIvPjwvc3ZnPg==')] opacity-60" />
-        </div>
-
-        <div className="relative mx-auto max-w-7xl px-5 pb-10 sm:px-8 md:pb-14">
+      {/* ── Article Header ── */}
+      <div className="border-b border-border/50 pt-20 md:pt-24" style={{ background: "var(--gradient-subtle)" }}>
+        <div className="mx-auto max-w-7xl px-5 pb-8 sm:px-8 md:pb-12">
           {/* Back link */}
           <motion.div initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }}>
-            <Link to="/posts" className="mb-6 inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-3.5 py-1.5 text-sm text-white/70 backdrop-blur-sm transition-all hover:border-white/20 hover:bg-white/10 hover:text-white">
+            <Link to="/posts" className="mb-6 inline-flex items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-primary">
               <ArrowLeft className="h-3.5 w-3.5" /> All Articles
             </Link>
           </motion.div>
@@ -128,7 +121,7 @@ export default function PostDetail() {
           {post.categories.length > 0 && (
             <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.03 }} className="mb-4 flex flex-wrap gap-2">
               {post.categories.map((cat) => (
-                <span key={cat} className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold text-white/90" style={{ background: "linear-gradient(135deg, hsl(217 91% 60% / 0.3), hsl(271 81% 56% / 0.3))", border: "1px solid hsl(217 91% 60% / 0.2)" }}>
+                <span key={cat} className="inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/5 px-3 py-1 text-xs font-semibold text-primary">
                   <Sparkles className="h-3 w-3" />
                   {cat}
                 </span>
@@ -138,44 +131,39 @@ export default function PostDetail() {
 
           {/* Title */}
           <motion.h1
-            initial={{ opacity: 0, y: 16 }}
+            initial={{ opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.06 }}
-            className="mb-6 max-w-4xl font-display text-2xl font-extrabold leading-[1.15] text-white sm:text-3xl md:text-4xl lg:text-5xl"
+            className="mb-6 max-w-4xl font-display text-2xl font-extrabold leading-[1.15] text-foreground sm:text-3xl md:text-4xl lg:text-[2.75rem]"
           >
-            {post.title}
+            <span className="gradient-text">{post.title}</span>
           </motion.h1>
 
           {/* Metadata row */}
           <motion.div
-            initial={{ opacity: 0, y: 10 }}
+            initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="flex flex-wrap items-center gap-4 text-sm text-white/60"
+            className="flex flex-wrap items-center gap-3"
           >
             {post.published_at && (
-              <div className="flex items-center gap-2">
-                <Calendar className="h-4 w-4 text-white/40" />
+              <div className="flex items-center gap-1.5 rounded-full border border-border bg-card px-3.5 py-1.5 text-xs text-muted-foreground shadow-sm">
+                <Calendar className="h-3.5 w-3.5 text-primary" />
                 <time dateTime={post.published_at}>
-                  {new Date(post.published_at).toLocaleDateString("en-US", { weekday: "short", month: "long", day: "numeric", year: "numeric" })}
+                  {new Date(post.published_at).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}
                 </time>
               </div>
             )}
-            <span className="hidden text-white/20 sm:inline">•</span>
-            <div className="flex items-center gap-2">
-              <Eye className="h-4 w-4 text-white/40" />
+            <div className="flex items-center gap-1.5 rounded-full border border-border bg-card px-3.5 py-1.5 text-xs text-muted-foreground shadow-sm">
+              <Eye className="h-3.5 w-3.5 text-primary" />
               <span>{post.view_count.toLocaleString()} views</span>
             </div>
-            <span className="hidden text-white/20 sm:inline">•</span>
-            <div className="flex items-center gap-2">
-              <BookOpen className="h-4 w-4 text-white/40" />
+            <div className="flex items-center gap-1.5 rounded-full border border-border bg-card px-3.5 py-1.5 text-xs text-muted-foreground shadow-sm">
+              <BookOpen className="h-3.5 w-3.5 text-primary" />
               <span>{words.toLocaleString()} words</span>
             </div>
           </motion.div>
         </div>
-
-        {/* Bottom fade */}
-        <div className="absolute bottom-0 left-0 right-0 h-8" style={{ background: "linear-gradient(to top, hsl(var(--background)), transparent)" }} />
       </div>
 
       {/* ── Content ── */}
