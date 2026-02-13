@@ -1,10 +1,9 @@
+import { motion } from "framer-motion";
 import { ArrowRight, HelpCircle, BookOpen, Shield, Users } from "lucide-react";
 import { Link } from "react-router-dom";
 import { PublicHeader } from "@/components/PublicHeader";
 import { PublicFooter } from "@/components/PublicFooter";
 import { SEOHead } from "@/components/SEOHead";
-import { ScrollReveal } from "@/components/ScrollReveal";
-import { motion } from "framer-motion";
 import {
   Accordion,
   AccordionContent,
@@ -97,7 +96,12 @@ export default function FAQ() {
         <section className="mx-auto max-w-4xl px-5 py-16 sm:px-8 md:py-24">
           <div className="space-y-12">
             {faqSections.map((section, si) => (
-              <ScrollReveal key={section.title} delay={si * 0.08}>
+              <motion.div
+                key={section.title}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: si * 0.1 }}
+              >
                 <div className="mb-5 flex items-center gap-3">
                   <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
                     <section.icon className="h-5 w-5" />
@@ -119,31 +123,29 @@ export default function FAQ() {
                     ))}
                   </Accordion>
                 </div>
-              </ScrollReveal>
+              </motion.div>
             ))}
           </div>
         </section>
 
         {/* CTA */}
-        <ScrollReveal>
-          <section className="border-t border-border/40 bg-muted/30">
-            <div className="mx-auto max-w-7xl px-5 py-16 text-center sm:px-8 md:py-20">
-              <h2 className="font-display text-2xl font-bold text-foreground sm:text-3xl">
-                Still have <span className="gradient-text">questions?</span>
-              </h2>
-              <p className="mx-auto mt-3 max-w-md text-sm text-muted-foreground">
-                Can't find what you're looking for? Reach out and we'll be happy to help.
-              </p>
-              <Link
-                to="/contact"
-                className="mt-6 inline-flex items-center gap-2 rounded-full px-7 py-3.5 text-sm font-semibold text-primary-foreground transition-all hover:opacity-90"
-                style={{ background: "var(--gradient-primary)" }}
-              >
-                Contact Us <ArrowRight className="h-4 w-4" />
-              </Link>
-            </div>
-          </section>
-        </ScrollReveal>
+        <section className="border-t border-border/40 bg-muted/30">
+          <div className="mx-auto max-w-7xl px-5 py-16 text-center sm:px-8 md:py-20">
+            <h2 className="font-display text-2xl font-bold text-foreground sm:text-3xl">
+              Still have <span className="gradient-text">questions?</span>
+            </h2>
+            <p className="mx-auto mt-3 max-w-md text-sm text-muted-foreground">
+              Can't find what you're looking for? Reach out and we'll be happy to help.
+            </p>
+            <Link
+              to="/contact"
+              className="mt-6 inline-flex items-center gap-2 rounded-full px-7 py-3.5 text-sm font-semibold text-primary-foreground transition-all hover:opacity-90"
+              style={{ background: "var(--gradient-primary)" }}
+            >
+              Contact Us <ArrowRight className="h-4 w-4" />
+            </Link>
+          </div>
+        </section>
       </main>
 
       <PublicFooter />

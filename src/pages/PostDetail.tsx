@@ -10,7 +10,6 @@ import { CommentSection } from "@/components/CommentSection";
 import { SharePost } from "@/components/SharePost";
 import { RelatedPosts } from "@/components/RelatedPosts";
 import { PostDetailSkeleton } from "@/components/skeletons/PostDetailSkeleton";
-import { ScrollReveal } from "@/components/ScrollReveal";
 import {
   LinkShortenerProvider,
   LinkShortenerTop,
@@ -165,16 +164,16 @@ export default function PostDetail() {
               dangerouslySetInnerHTML={{ __html: post.content || "" }}
             />
             <div className="mt-10 space-y-6 lg:hidden">
-              <ScrollReveal><SharePost title={post.title} slug={post.slug} /></ScrollReveal>
-              <ScrollReveal delay={0.1}><CommentSection postId={post.id} commentsEnabled={post.comments_enabled} /></ScrollReveal>
-              <ScrollReveal delay={0.2}><RelatedPosts currentPostId={post.id} categoryNames={post.categories} /></ScrollReveal>
+              <SharePost title={post.title} slug={post.slug} />
+              <CommentSection postId={post.id} commentsEnabled={post.comments_enabled} />
+              <RelatedPosts currentPostId={post.id} categoryNames={post.categories} />
             </div>
           </article>
           <aside className="hidden lg:block lg:w-80 xl:w-96">
             <div className="sticky top-24 space-y-6">
-              <ScrollReveal direction="right"><SharePost title={post.title} slug={post.slug} /></ScrollReveal>
-              <ScrollReveal direction="right" delay={0.1}><CommentSection postId={post.id} commentsEnabled={post.comments_enabled} /></ScrollReveal>
-              <ScrollReveal direction="right" delay={0.2}><RelatedPosts currentPostId={post.id} categoryNames={post.categories} /></ScrollReveal>
+              <SharePost title={post.title} slug={post.slug} />
+              <CommentSection postId={post.id} commentsEnabled={post.comments_enabled} />
+              <RelatedPosts currentPostId={post.id} categoryNames={post.categories} />
             </div>
           </aside>
         </div>

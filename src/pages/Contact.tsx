@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { motion } from "framer-motion";
 import { Mail, Send, User, MessageSquare, FileText, ArrowRight, Sparkles } from "lucide-react";
 import { Link } from "react-router-dom";
 import { PublicHeader } from "@/components/PublicHeader";
@@ -7,8 +8,6 @@ import { SEOHead } from "@/components/SEOHead";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { ScrollReveal } from "@/components/ScrollReveal";
-import { motion } from "framer-motion";
 
 const CONTACT_EMAIL = "example@email.com";
 
@@ -57,8 +56,15 @@ export default function Contact() {
         {/* Form Section */}
         <section className="mx-auto max-w-5xl px-5 pb-20 sm:px-8">
           <div className="grid gap-10 lg:grid-cols-5">
-            <ScrollReveal className="lg:col-span-3" direction="left">
+            {/* Form — takes 3 cols */}
+            <motion.div
+              className="lg:col-span-3"
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+            >
               <div className="rounded-3xl border border-border bg-card p-6 sm:p-8 shadow-sm">
+                {/* Gradient top bar */}
                 <div className="mb-6 h-1.5 w-20 rounded-full" style={{ background: "var(--gradient-primary)" }} />
                 <h2 className="font-display text-xl font-bold text-foreground sm:text-2xl">
                   Send a <span className="gradient-text">Message</span>
@@ -73,13 +79,30 @@ export default function Contact() {
                       <Label htmlFor="name" className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                         <User className="h-3.5 w-3.5 text-primary" /> Full Name
                       </Label>
-                      <Input id="name" required value={name} onChange={(e) => setName(e.target.value)} placeholder="John Doe" maxLength={100} className="h-12 rounded-xl border-border/60 bg-muted/30 text-sm transition-all focus:bg-background focus:shadow-md focus:shadow-primary/5" />
+                      <Input
+                        id="name"
+                        required
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        placeholder="John Doe"
+                        maxLength={100}
+                        className="h-12 rounded-xl border-border/60 bg-muted/30 text-sm transition-all focus:bg-background focus:shadow-md focus:shadow-primary/5"
+                      />
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="email" className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                         <Mail className="h-3.5 w-3.5 text-primary" /> Email
                       </Label>
-                      <Input id="email" type="email" required value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@example.com" maxLength={255} className="h-12 rounded-xl border-border/60 bg-muted/30 text-sm transition-all focus:bg-background focus:shadow-md focus:shadow-primary/5" />
+                      <Input
+                        id="email"
+                        type="email"
+                        required
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        placeholder="you@example.com"
+                        maxLength={255}
+                        className="h-12 rounded-xl border-border/60 bg-muted/30 text-sm transition-all focus:bg-background focus:shadow-md focus:shadow-primary/5"
+                      />
                     </div>
                   </div>
 
@@ -87,14 +110,31 @@ export default function Contact() {
                     <Label htmlFor="subject" className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                       <FileText className="h-3.5 w-3.5 text-primary" /> Subject
                     </Label>
-                    <Input id="subject" required value={subject} onChange={(e) => setSubject(e.target.value)} placeholder="What is this about?" maxLength={200} className="h-12 rounded-xl border-border/60 bg-muted/30 text-sm transition-all focus:bg-background focus:shadow-md focus:shadow-primary/5" />
+                    <Input
+                      id="subject"
+                      required
+                      value={subject}
+                      onChange={(e) => setSubject(e.target.value)}
+                      placeholder="What is this about?"
+                      maxLength={200}
+                      className="h-12 rounded-xl border-border/60 bg-muted/30 text-sm transition-all focus:bg-background focus:shadow-md focus:shadow-primary/5"
+                    />
                   </div>
 
                   <div className="space-y-2">
                     <Label htmlFor="message" className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                       <MessageSquare className="h-3.5 w-3.5 text-primary" /> Message
                     </Label>
-                    <Textarea id="message" required rows={5} value={message} onChange={(e) => setMessage(e.target.value)} placeholder="Write your message here..." maxLength={2000} className="rounded-xl border-border/60 bg-muted/30 text-sm resize-none transition-all focus:bg-background focus:shadow-md focus:shadow-primary/5" />
+                    <Textarea
+                      id="message"
+                      required
+                      rows={5}
+                      value={message}
+                      onChange={(e) => setMessage(e.target.value)}
+                      placeholder="Write your message here..."
+                      maxLength={2000}
+                      className="rounded-xl border-border/60 bg-muted/30 text-sm resize-none transition-all focus:bg-background focus:shadow-md focus:shadow-primary/5"
+                    />
                   </div>
 
                   <button
@@ -106,57 +146,69 @@ export default function Contact() {
                   </button>
                 </form>
               </div>
-            </ScrollReveal>
+            </motion.div>
 
-            <div className="lg:col-span-2 space-y-5">
-              <ScrollReveal direction="right" delay={0.1}>
-                <div className="rounded-3xl border border-border bg-card p-6">
-                  <div className="mb-4 h-1.5 w-14 rounded-full" style={{ background: "var(--gradient-primary)" }} />
-                  <h3 className="font-display text-base font-bold text-foreground">Before you reach out</h3>
-                  <p className="mt-2 text-sm text-muted-foreground leading-relaxed">Check if your question is already answered in our FAQ section.</p>
-                  <Link to="/faq" className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-primary transition-colors hover:text-primary/80">
-                    Visit FAQ <ArrowRight className="h-4 w-4" />
-                  </Link>
-                </div>
-              </ScrollReveal>
+            {/* Sidebar — takes 2 cols */}
+            <motion.div
+              className="lg:col-span-2 space-y-5"
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.25 }}
+            >
+              {/* FAQ card */}
+              <div className="rounded-3xl border border-border bg-card p-6">
+                <div className="mb-4 h-1.5 w-14 rounded-full" style={{ background: "var(--gradient-primary)" }} />
+                <h3 className="font-display text-base font-bold text-foreground">Before you reach out</h3>
+                <p className="mt-2 text-sm text-muted-foreground leading-relaxed">
+                  Check if your question is already answered in our FAQ section.
+                </p>
+                <Link
+                  to="/faq"
+                  className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-primary transition-colors hover:text-primary/80"
+                >
+                  Visit FAQ <ArrowRight className="h-4 w-4" />
+                </Link>
+              </div>
 
-              <ScrollReveal direction="right" delay={0.2}>
-                <div className="rounded-3xl border border-border bg-card p-6">
-                  <h3 className="font-display text-base font-bold text-foreground">Connect with us</h3>
-                  <p className="mt-2 text-sm text-muted-foreground">Follow us for updates and behind-the-scenes content.</p>
-                  <div className="mt-4 flex gap-3">
-                    {[
-                      { icon: "fa-brands fa-youtube", href: "#" },
-                      { icon: "fa-brands fa-telegram", href: "#" },
-                      { icon: "fa-brands fa-instagram", href: "#" },
-                      { icon: "fa-brands fa-github", href: "#" },
-                    ].map((s) => (
-                      <a key={s.icon} href={s.href} className="flex h-10 w-10 items-center justify-center rounded-xl border border-border text-muted-foreground transition-all hover:border-primary/30 hover:text-primary hover:-translate-y-0.5">
-                        <i className={`${s.icon} text-base`}></i>
-                      </a>
-                    ))}
-                  </div>
+              {/* Social card */}
+              <div className="rounded-3xl border border-border bg-card p-6">
+                <h3 className="font-display text-base font-bold text-foreground">Connect with us</h3>
+                <p className="mt-2 text-sm text-muted-foreground">Follow us for updates and behind-the-scenes content.</p>
+                <div className="mt-4 flex gap-3">
+                  {[
+                    { icon: "fa-brands fa-youtube", href: "#" },
+                    { icon: "fa-brands fa-telegram", href: "#" },
+                    { icon: "fa-brands fa-instagram", href: "#" },
+                    { icon: "fa-brands fa-github", href: "#" },
+                  ].map((s) => (
+                    <a
+                      key={s.icon}
+                      href={s.href}
+                      className="flex h-10 w-10 items-center justify-center rounded-xl border border-border text-muted-foreground transition-all hover:border-primary/30 hover:text-primary hover:-translate-y-0.5"
+                    >
+                      <i className={`${s.icon} text-base`}></i>
+                    </a>
+                  ))}
                 </div>
-              </ScrollReveal>
+              </div>
 
-              <ScrollReveal direction="right" delay={0.3}>
-                <div className="rounded-3xl border border-border bg-card p-6">
-                  <h3 className="font-display text-base font-bold text-foreground">What to expect</h3>
-                  <ul className="mt-3 space-y-2.5">
-                    {[
-                      "Email app opens with message pre-filled",
-                      "We typically respond within 24-48 hours",
-                      "For urgent matters, use social media",
-                    ].map((item, i) => (
-                      <li key={i} className="flex items-start gap-2.5 text-sm text-muted-foreground">
-                        <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" />
-                        {item}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </ScrollReveal>
-            </div>
+              {/* Expectations card */}
+              <div className="rounded-3xl border border-border bg-card p-6">
+                <h3 className="font-display text-base font-bold text-foreground">What to expect</h3>
+                <ul className="mt-3 space-y-2.5">
+                  {[
+                    "Email app opens with message pre-filled",
+                    "We typically respond within 24-48 hours",
+                    "For urgent matters, use social media",
+                  ].map((item, i) => (
+                    <li key={i} className="flex items-start gap-2.5 text-sm text-muted-foreground">
+                      <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" />
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </motion.div>
           </div>
         </section>
       </main>

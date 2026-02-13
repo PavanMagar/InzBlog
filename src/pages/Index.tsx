@@ -9,7 +9,6 @@ import { PostCard } from "@/components/PostCard";
 import { ProjectCard } from "@/components/ProjectCard";
 import { SEOHead } from "@/components/SEOHead";
 import { useSiteSettings } from "@/hooks/use-site-settings";
-import { ScrollReveal } from "@/components/ScrollReveal";
 import { PostCardSkeleton } from "@/components/skeletons/PostCardSkeleton";
 import { ProjectCardSkeleton } from "@/components/skeletons/ProjectCardSkeleton";
 import { TopicCardSkeleton } from "@/components/skeletons/TopicCardSkeleton";
@@ -215,35 +214,36 @@ export default function Index() {
 
         {/* ───── Latest Articles ───── */}
         <section className="mx-auto max-w-7xl px-5 py-16 sm:px-8 md:py-24">
-          <ScrollReveal>
-            <div className="mb-10">
-              <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-3.5 py-1.5">
-                <Zap className="h-3.5 w-3.5 text-primary" />
-                <span className="text-[11px] font-semibold uppercase tracking-wider text-primary">Fresh Content</span>
-              </div>
-              <h2 className="font-display text-2xl font-bold text-foreground sm:text-3xl md:text-4xl">
-                Latest <span className="gradient-text">Articles</span>
-              </h2>
-              <p className="mt-2 max-w-md text-sm text-muted-foreground">Fresh perspectives, tutorials, and developer insights.</p>
+          <div className="mb-10">
+            <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-3.5 py-1.5">
+              <Zap className="h-3.5 w-3.5 text-primary" />
+              <span className="text-[11px] font-semibold uppercase tracking-wider text-primary">Fresh Content</span>
             </div>
-          </ScrollReveal>
+            <h2 className="font-display text-2xl font-bold text-foreground sm:text-3xl md:text-4xl">
+              Latest <span className="gradient-text">Articles</span>
+            </h2>
+            <p className="mt-2 max-w-md text-sm text-muted-foreground">Fresh perspectives, tutorials, and developer insights.</p>
+          </div>
 
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {loading
               ? Array.from({ length: 6 }).map((_, i) => (
-                  <ScrollReveal key={i} delay={i * 0.05}>
-                    <PostCardSkeleton />
-                  </ScrollReveal>
+                  <PostCardSkeleton key={i} />
                 ))
               : recentPosts.map((post, i) => (
-                  <ScrollReveal key={post.id} delay={i * 0.05}>
+                  <motion.div
+                    key={post.id}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.4, delay: i * 0.06 }}
+                  >
                     <PostCard {...post} publishedAt={post.published_at} thumbnailUrl={post.thumbnail_url} />
-                  </ScrollReveal>
+                  </motion.div>
                 ))}
           </div>
 
           {!loading && recentPosts.length > 0 && (
-            <ScrollReveal className="mt-10 flex justify-center">
+            <div className="mt-10 flex justify-center">
               <Link
                 to="/posts"
                 className="group inline-flex items-center gap-2.5 rounded-full px-8 py-3.5 text-sm font-semibold text-primary-foreground transition-all hover:opacity-90 hover:scale-[1.02] active:scale-[0.98]"
@@ -251,42 +251,43 @@ export default function Index() {
               >
                 View All Articles <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
               </Link>
-            </ScrollReveal>
+            </div>
           )}
         </section>
 
         {/* ───── Recent Projects ───── */}
         <section className="border-t border-border/40 bg-muted/20">
           <div className="mx-auto max-w-7xl px-5 py-16 sm:px-8 md:py-24">
-            <ScrollReveal>
-              <div className="mb-10">
-                <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-accent/20 bg-accent/5 px-3.5 py-1.5">
-                  <Layers className="h-3.5 w-3.5 text-accent" />
-                  <span className="text-[11px] font-semibold uppercase tracking-wider text-accent">Showcase</span>
-                </div>
-                <h2 className="font-display text-2xl font-bold text-foreground sm:text-3xl md:text-4xl">
-                  Recent <span className="gradient-text">Projects</span>
-                </h2>
-                <p className="mt-2 max-w-md text-sm text-muted-foreground">Featured projects, demos, and real-world implementations.</p>
+            <div className="mb-10">
+              <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-accent/20 bg-accent/5 px-3.5 py-1.5">
+                <Layers className="h-3.5 w-3.5 text-accent" />
+                <span className="text-[11px] font-semibold uppercase tracking-wider text-accent">Showcase</span>
               </div>
-            </ScrollReveal>
+              <h2 className="font-display text-2xl font-bold text-foreground sm:text-3xl md:text-4xl">
+                Recent <span className="gradient-text">Projects</span>
+              </h2>
+              <p className="mt-2 max-w-md text-sm text-muted-foreground">Featured projects, demos, and real-world implementations.</p>
+            </div>
 
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {loading
                 ? Array.from({ length: 3 }).map((_, i) => (
-                    <ScrollReveal key={i} delay={i * 0.05}>
-                      <ProjectCardSkeleton />
-                    </ScrollReveal>
+                    <ProjectCardSkeleton key={i} />
                   ))
                 : recentProjects.map((post, i) => (
-                    <ScrollReveal key={post.id} delay={i * 0.05}>
+                    <motion.div
+                      key={post.id}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.4, delay: i * 0.06 }}
+                    >
                       <ProjectCard {...post} publishedAt={post.published_at} thumbnailUrl={post.thumbnail_url} />
-                    </ScrollReveal>
+                    </motion.div>
                   ))}
             </div>
 
             {!loading && recentProjects.length > 0 && (
-              <ScrollReveal className="mt-10 flex justify-center">
+              <div className="mt-10 flex justify-center">
                 <Link
                   to="/projects"
                   className="group inline-flex items-center gap-2.5 rounded-full px-8 py-3.5 text-sm font-semibold text-primary-foreground transition-all hover:opacity-90 hover:scale-[1.02] active:scale-[0.98]"
@@ -294,15 +295,15 @@ export default function Index() {
                 >
                   View All Projects <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                 </Link>
-              </ScrollReveal>
+              </div>
             )}
           </div>
         </section>
 
         {/* ───── Explore Topics ───── */}
-        <section className="border-t border-border/40 bg-muted/30">
-          <div className="mx-auto max-w-7xl px-5 py-16 sm:px-8 md:py-24">
-            <ScrollReveal>
+        {categories.length > 0 && (
+          <section className="border-t border-border/40 bg-muted/30">
+            <div className="mx-auto max-w-7xl px-5 py-16 sm:px-8 md:py-24">
               <div className="mb-12 flex flex-col items-start gap-4 sm:flex-row sm:items-end sm:justify-between">
                 <div>
                   <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-accent/20 bg-accent/5 px-3.5 py-1.5">
@@ -326,39 +327,42 @@ export default function Index() {
                   </button>
                 )}
               </div>
-            </ScrollReveal>
 
-            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-              {loading
-                ? Array.from({ length: 6 }).map((_, i) => (
-                    <ScrollReveal key={i} delay={i * 0.04}>
-                      <TopicCardSkeleton />
-                    </ScrollReveal>
-                  ))
-                : visibleTopics.map((cat, i) => (
-                    <ScrollReveal key={cat.id} delay={i * 0.04}>
-                      <Link
-                        to={`/posts?category=${encodeURIComponent(cat.slug)}`}
-                        className="group flex items-center gap-4 rounded-xl border border-border bg-card p-4 transition-all duration-300 hover:border-primary/20 hover:-translate-y-0.5"
+              <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                {loading
+                  ? Array.from({ length: 6 }).map((_, i) => (
+                      <TopicCardSkeleton key={i} />
+                    ))
+                  : visibleTopics.map((cat, i) => (
+                      <motion.div
+                        key={cat.id}
+                        initial={{ opacity: 0, y: 15 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.3, delay: i * 0.04 }}
                       >
-                        <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary transition-transform duration-300 group-hover:scale-110">
-                          <i className={getTopicIcon(cat.name)}></i>
-                        </div>
-                        <div className="min-w-0 flex-1">
-                          <h3 className="font-display text-sm font-bold text-foreground">{cat.name}</h3>
-                          <p className="text-xs text-muted-foreground">Explore articles →</p>
-                        </div>
-                      </Link>
-                    </ScrollReveal>
-                  ))}
+                        <Link
+                          to={`/posts?category=${encodeURIComponent(cat.slug)}`}
+                          className="group flex items-center gap-4 rounded-xl border border-border bg-card p-4 transition-all duration-300 hover:border-primary/20 hover:-translate-y-0.5"
+                        >
+                          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary transition-transform duration-300 group-hover:scale-110">
+                            <i className={getTopicIcon(cat.name)}></i>
+                          </div>
+                          <div className="min-w-0 flex-1">
+                            <h3 className="font-display text-sm font-bold text-foreground">{cat.name}</h3>
+                            <p className="text-xs text-muted-foreground">Explore articles →</p>
+                          </div>
+                        </Link>
+                      </motion.div>
+                    ))}
+              </div>
             </div>
-          </div>
-        </section>
+          </section>
+        )}
 
         {/* ───── Let's Connect ───── */}
         <section className="border-t border-border/40">
           <div className="mx-auto max-w-7xl px-5 py-16 sm:px-8 md:py-24">
-            <ScrollReveal className="mx-auto max-w-3xl">
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }} className="mx-auto max-w-3xl">
               <div className="text-center mb-12">
                 <h2 className="mb-3 font-display text-2xl font-bold text-foreground sm:text-3xl md:text-4xl">
                   Let's <span className="gradient-text">Connect</span>
@@ -375,32 +379,34 @@ export default function Index() {
                   { icon: "fa-brands fa-github", label: "GitHub", handle: "Star & Fork", href: "#", gradient: "linear-gradient(135deg, hsl(220, 15%, 25%), hsl(220, 20%, 40%))" },
                   { icon: "fa-brands fa-youtube", label: "YouTube", handle: "Subscribe", href: "#", gradient: "linear-gradient(135deg, hsl(0, 80%, 50%), hsl(350, 85%, 45%))" },
                 ].map((s, i) => (
-                  <ScrollReveal key={s.label} delay={i * 0.08}>
-                    <a
-                      href={s.href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="group relative flex flex-col items-center gap-3 overflow-hidden rounded-2xl border border-border bg-card p-6 transition-all duration-300 hover:-translate-y-1"
+                  <motion.a
+                    key={s.label}
+                    href={s.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.4, delay: i * 0.08 }}
+                    className="group relative flex flex-col items-center gap-3 overflow-hidden rounded-2xl border border-border bg-card p-6 transition-all duration-300 hover:-translate-y-1"
+                  >
+                    <div
+                      className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-[0.07]"
+                      style={{ background: s.gradient }}
+                    />
+                    <div
+                      className="flex h-12 w-12 items-center justify-center rounded-xl text-white transition-transform duration-300 group-hover:scale-110"
+                      style={{ background: s.gradient }}
                     >
-                      <div
-                        className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-[0.07]"
-                        style={{ background: s.gradient }}
-                      />
-                      <div
-                        className="flex h-12 w-12 items-center justify-center rounded-xl text-white transition-transform duration-300 group-hover:scale-110"
-                        style={{ background: s.gradient }}
-                      >
-                        <i className={`${s.icon} text-lg`}></i>
-                      </div>
-                      <div className="text-center">
-                        <p className="font-display text-sm font-bold text-foreground">{s.label}</p>
-                        <p className="mt-0.5 text-[11px] text-muted-foreground">{s.handle}</p>
-                      </div>
-                    </a>
-                  </ScrollReveal>
+                      <i className={`${s.icon} text-lg`}></i>
+                    </div>
+                    <div className="text-center">
+                      <p className="font-display text-sm font-bold text-foreground">{s.label}</p>
+                      <p className="mt-0.5 text-[11px] text-muted-foreground">{s.handle}</p>
+                    </div>
+                  </motion.a>
                 ))}
               </div>
-            </ScrollReveal>
+            </motion.div>
           </div>
         </section>
       </main>
