@@ -161,12 +161,12 @@ export function PublicHeader() {
 
             {/* Bottom buttons */}
             <div className="mt-4 flex gap-3 border-t border-border/40 pt-4">
-              <a href="#" className="flex flex-1 items-center justify-center gap-2 rounded-xl border border-border py-2.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground">
+              <Link to="/about" onClick={() => setMenuOpen(false)} className="flex flex-1 items-center justify-center gap-2 rounded-xl border border-border py-2.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground">
                 <Info className="h-4 w-4" /> About
-              </a>
-              <a href="#" className="flex flex-1 items-center justify-center gap-2 rounded-xl border border-border py-2.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground">
+              </Link>
+              <Link to="/contact" onClick={() => setMenuOpen(false)} className="flex flex-1 items-center justify-center gap-2 rounded-xl border border-border py-2.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground">
                 <Mail className="h-4 w-4" /> Contact
-              </a>
+              </Link>
             </div>
           </div>
         </div>
