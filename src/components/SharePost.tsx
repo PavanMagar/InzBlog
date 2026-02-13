@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Share2, Copy, Check, ExternalLink } from "lucide-react";
+import { Share2, Check, ExternalLink, Copy } from "lucide-react";
 import { motion } from "framer-motion";
 import { toast } from "sonner";
 
@@ -28,7 +28,7 @@ export function SharePost({ title, slug }: SharePostProps) {
   const platforms = [
     { icon: "fa-brands fa-whatsapp", label: "WhatsApp", href: `https://wa.me/?text=${text}%20${encodedUrl}`, accent: "hover:bg-green-500/10 hover:text-green-600 hover:border-green-500/30" },
     { icon: "fa-brands fa-telegram", label: "Telegram", href: `https://t.me/share/url?url=${encodedUrl}&text=${text}`, accent: "hover:bg-blue-400/10 hover:text-blue-500 hover:border-blue-400/30" },
-    { icon: "fa-brands fa-x-twitter", label: "X", href: `https://twitter.com/intent/tweet?text=${text}&url=${encodedUrl}`, accent: "hover:bg-foreground/5 hover:text-foreground hover:border-foreground/20" },
+    { icon: "fa-brands fa-square-x-twitter", label: "X", href: `https://twitter.com/intent/tweet?text=${text}&url=${encodedUrl}`, accent: "hover:bg-foreground/5 hover:text-foreground hover:border-foreground/20" },
     { icon: "fa-brands fa-instagram", label: "Instagram", href: `https://www.instagram.com/`, accent: "hover:bg-pink-500/10 hover:text-pink-500 hover:border-pink-500/30" },
     { icon: "fa-solid fa-envelope", label: "Email", href: `mailto:?subject=${text}&body=${encodedUrl}`, accent: "hover:bg-orange-500/10 hover:text-orange-500 hover:border-orange-500/30" },
   ];
@@ -61,14 +61,6 @@ export function SharePost({ title, slug }: SharePostProps) {
             </a>
           ))}
 
-          {/* Copy button */}
-          <button
-            onClick={copyLink}
-            aria-label="Copy link"
-            className="flex h-10 w-10 items-center justify-center rounded-xl border border-border bg-background text-muted-foreground transition-all duration-200 hover:border-primary/30 hover:bg-primary/10 hover:text-primary"
-          >
-            {copied ? <Check className="h-4 w-4 text-primary" /> : <Copy className="h-4 w-4" />}
-          </button>
         </div>
 
         {/* Quick copy URL bar */}
