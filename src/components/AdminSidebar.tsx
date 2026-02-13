@@ -5,10 +5,10 @@ import { useState } from "react";
 
 const navItems = [
   { title: "Dashboard", url: "/admin", icon: LayoutDashboard },
-  { title: "Analytics", url: "/admin/analytics", icon: BarChart3 },
   { title: "Posts", url: "/admin/posts", icon: FileText },
-  { title: "Comments", url: "/admin/comments", icon: MessageCircle },
   { title: "Categories", url: "/admin/categories", icon: FolderOpen },
+  { title: "Comments", url: "/admin/comments", icon: MessageCircle },
+  { title: "Analytics", url: "/admin/analytics", icon: BarChart3 },
   { title: "Link Shortener", url: "/admin/link-shortener", icon: Link2 },
   { title: "Settings", url: "/admin/settings", icon: Settings },
 ];

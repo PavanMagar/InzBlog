@@ -7,6 +7,7 @@ import { PublicHeader } from "@/components/PublicHeader";
 import { PublicFooter } from "@/components/PublicFooter";
 import { PostCard } from "@/components/PostCard";
 import { SEOHead } from "@/components/SEOHead";
+import { useSiteSettings } from "@/hooks/use-site-settings";
 
 interface PostWithCategories {
   id: string;
@@ -61,6 +62,7 @@ const fadeUp = {
 };
 
 export default function Index() {
+  const site = useSiteSettings();
   const [recentPosts, setRecentPosts] = useState<PostWithCategories[]>([]);
   const [categories, setCategories] = useState<{ id: string; name: string; slug: string }[]>([]);
   const [showAllTopics, setShowAllTopics] = useState(false);
@@ -103,7 +105,7 @@ export default function Index() {
 
   return (
     <>
-      <SEOHead title="Home" description="Inkwell — A modern platform for coding tutorials, programming resources, tech articles and developer knowledge." />
+      <SEOHead title="Home" description={site.site_description || "Inkwell — A modern platform for coding tutorials, programming resources, tech articles and developer knowledge."} />
       <PublicHeader />
 
       <main className="pt-16">
