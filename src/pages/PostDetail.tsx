@@ -127,7 +127,7 @@ export default function PostDetail() {
               </div>
             )}
 
-            <h1 className="mb-8 max-w-3xl font-display text-3xl font-bold leading-tight text-foreground sm:text-4xl md:text-5xl">
+            <h1 className="mb-8 max-w-3xl lg:max-w-none font-display text-3xl font-bold leading-tight text-foreground sm:text-4xl md:text-5xl">
               {post.title}
             </h1>
 
