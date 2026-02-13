@@ -17,17 +17,17 @@ export function PostCard({ title, slug, excerpt, thumbnailUrl, publishedAt, cate
     return (
       <Link
         to={`/posts/${slug}.html`}
-        className="group flex gap-3 rounded-xl border border-border/60 bg-card p-3 shadow-[var(--shadow-card)] transition-all hover:shadow-[var(--shadow-elevated)] hover:-translate-y-0.5"
+        className="group flex gap-3 rounded-xl border border-border bg-background p-3 transition-all hover:border-primary/30 hover:shadow-[var(--shadow-elevated)] hover:-translate-y-0.5"
       >
         {thumbnailUrl ? (
           <img src={thumbnailUrl} alt={title} className="h-16 w-20 shrink-0 rounded-lg object-cover" loading="lazy" />
         ) : (
-          <div className="flex h-16 w-20 shrink-0 items-center justify-center rounded-lg" style={{ background: "var(--gradient-subtle)" }}>
+          <div className="flex h-16 w-20 shrink-0 items-center justify-center rounded-lg bg-muted/50">
             <i className="fa-solid fa-newspaper text-sm text-muted-foreground/30"></i>
           </div>
         )}
         <div className="flex-1 min-w-0">
-          <h4 className="mb-1 line-clamp-2 text-sm font-semibold leading-tight text-card-foreground transition-colors group-hover:text-primary">
+          <h4 className="mb-1 line-clamp-2 text-sm font-semibold leading-tight text-foreground transition-colors group-hover:text-primary">
             {title}
           </h4>
           {publishedAt && (
@@ -48,7 +48,7 @@ export function PostCard({ title, slug, excerpt, thumbnailUrl, publishedAt, cate
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
-      className="group overflow-hidden rounded-2xl border border-border/60 bg-card shadow-[var(--shadow-card)] transition-all duration-300 hover:shadow-[var(--shadow-elevated)] hover:-translate-y-1"
+      className="group overflow-hidden rounded-2xl border border-border bg-background transition-all duration-300 hover:border-primary/30 hover:shadow-[var(--shadow-elevated)] hover:-translate-y-1"
     >
       <Link to={`/posts/${slug}.html`}>
         {thumbnailUrl ? (
@@ -61,8 +61,8 @@ export function PostCard({ title, slug, excerpt, thumbnailUrl, publishedAt, cate
             />
           </div>
         ) : (
-          <div className="aspect-[16/9] flex items-center justify-center" style={{ background: "var(--gradient-subtle)" }}>
-            <i className="fa-solid fa-newspaper text-3xl text-muted-foreground/30"></i>
+          <div className="aspect-[16/9] flex items-center justify-center bg-muted/30">
+            <i className="fa-solid fa-newspaper text-3xl text-muted-foreground/20"></i>
           </div>
         )}
         <div className="p-5">
@@ -75,7 +75,7 @@ export function PostCard({ title, slug, excerpt, thumbnailUrl, publishedAt, cate
               ))}
             </div>
           )}
-          <h3 className="mb-2 font-display text-lg font-semibold leading-tight text-card-foreground transition-colors group-hover:text-primary">
+          <h3 className="mb-2 font-display text-lg font-semibold leading-tight text-foreground transition-colors group-hover:text-primary">
             {title}
           </h3>
           {excerpt && (

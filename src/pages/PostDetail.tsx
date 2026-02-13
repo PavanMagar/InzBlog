@@ -108,12 +108,9 @@ export default function PostDetail() {
       />
       <PublicHeader />
 
-      {/* Hero header section */}
-      <div className="relative overflow-hidden border-b border-border bg-background">
-        <div className="absolute -left-32 -top-32 h-80 w-80 rounded-full bg-primary/[0.06] blur-3xl" />
-        <div className="absolute -bottom-32 -right-32 h-80 w-80 rounded-full bg-accent/[0.06] blur-3xl" />
-        
-        <div className="relative container px-4 pb-8 pt-8 sm:px-6 md:px-10 md:pb-12 md:pt-10 lg:px-20 xl:px-28">
+      {/* Article header */}
+      <div className="container px-4 pb-4 pt-8 sm:px-6 md:pt-12 lg:px-16 xl:px-24">
+        <div className="mx-auto max-w-3xl">
           {/* Categories */}
           {post.categories.length > 0 && (
             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="mb-4 flex flex-wrap gap-2">
@@ -125,54 +122,55 @@ export default function PostDetail() {
             </motion.div>
           )}
 
-          {/* Title */}
+          {/* Title — gradient style */}
           <motion.h1
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.05 }}
-            className="mb-6 max-w-3xl font-display text-xl font-extrabold leading-tight text-foreground sm:text-2xl md:text-3xl lg:text-4xl"
+            className="mb-6 font-display text-2xl font-extrabold leading-tight sm:text-3xl md:text-4xl"
           >
-            {post.title}
+            <span className="gradient-text">{post.title}</span>
           </motion.h1>
 
-          {/* Metadata pills */}
+          {/* Metadata row */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.1 }}
-            className="flex flex-wrap items-center gap-2 sm:gap-3"
+            className="mb-8 flex flex-wrap items-center gap-4 text-sm text-muted-foreground"
           >
             {post.published_at && (
-              <div className="flex items-center gap-1.5 rounded-full border border-border bg-card px-3 py-1.5 text-xs text-muted-foreground shadow-[var(--shadow-card)]">
-                <Calendar className="h-3.5 w-3.5" />
+              <div className="flex items-center gap-1.5">
+                <Calendar className="h-4 w-4" />
                 <time dateTime={post.published_at}>
                   {new Date(post.published_at).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}
                 </time>
               </div>
             )}
-            <div className="flex items-center gap-1.5 rounded-full border border-border bg-card px-3 py-1.5 text-xs text-muted-foreground shadow-[var(--shadow-card)]">
-              <Clock className="h-3.5 w-3.5" />
+            <div className="flex items-center gap-1.5">
+              <Clock className="h-4 w-4" />
               <span>{readTime} min read</span>
             </div>
-            <div className="flex items-center gap-1.5 rounded-full border border-border bg-card px-3 py-1.5 text-xs text-muted-foreground shadow-[var(--shadow-card)]">
-              <Eye className="h-3.5 w-3.5" />
+            <div className="flex items-center gap-1.5">
+              <Eye className="h-4 w-4" />
               <span>{post.view_count.toLocaleString()} views</span>
             </div>
-            <div className="flex items-center gap-1.5 rounded-full border border-border bg-card px-3 py-1.5 text-xs text-muted-foreground shadow-[var(--shadow-card)]">
-              <BookOpen className="h-3.5 w-3.5" />
+            <div className="flex items-center gap-1.5">
+              <BookOpen className="h-4 w-4" />
               <span>{words.toLocaleString()} words</span>
             </div>
           </motion.div>
         </div>
       </div>
 
-      <div className="container px-4 py-6 sm:px-6 md:px-10 md:py-8 lg:px-20 xl:px-28">
-        {/* Desktop: content LEFT, sidebar RIGHT */}
+      {/* Separator */}
+      <div className="border-t border-border/40" />
+
+      <div className="container px-4 py-6 sm:px-6 md:py-8 lg:px-16 xl:px-24">
         <div className="lg:flex lg:gap-10 xl:gap-14">
 
           {/* Left: Article */}
           <article className="min-w-0 flex-1 overflow-hidden lg:max-w-3xl">
-
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
