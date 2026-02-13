@@ -48,9 +48,9 @@ export function PublicFooter() {
           <div>
             <h4 className="mb-4 font-display text-sm font-semibold text-white">Resources</h4>
             <nav className="flex flex-col gap-2.5">
-              <a href="#" className="text-sm transition-colors hover:text-white">FAQ</a>
-              <a href="#" className="text-sm transition-colors hover:text-white">Privacy Policy</a>
-              <a href="#" className="text-sm transition-colors hover:text-white">Disclaimer</a>
+              <Link to="/faq" className="text-sm transition-colors hover:text-white">FAQ</Link>
+              <Link to="/privacy-policy" className="text-sm transition-colors hover:text-white">Privacy Policy</Link>
+              <Link to="/about" className="text-sm transition-colors hover:text-white">About</Link>
             </nav>
           </div>
 
@@ -58,9 +58,9 @@ export function PublicFooter() {
           <div>
             <h4 className="mb-4 font-display text-sm font-semibold text-white">Support</h4>
             <nav className="flex flex-col gap-2.5">
-              <a href="#" className="text-sm transition-colors hover:text-white">About</a>
-              <a href="#" className="text-sm transition-colors hover:text-white">Contact</a>
-              <a href="#" className="text-sm transition-colors hover:text-white">Report Issue</a>
+              <Link to="/about" className="text-sm transition-colors hover:text-white">About</Link>
+              <Link to="/contact" className="text-sm transition-colors hover:text-white">Contact</Link>
+              <Link to="/faq" className="text-sm transition-colors hover:text-white">Help Center</Link>
             </nav>
           </div>
         </div>
