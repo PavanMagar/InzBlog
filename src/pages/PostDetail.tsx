@@ -9,6 +9,8 @@ import { SEOHead } from "@/components/SEOHead";
 import { CommentSection } from "@/components/CommentSection";
 import { SharePost } from "@/components/SharePost";
 import { RelatedPosts } from "@/components/RelatedPosts";
+import { PostDetailSkeleton } from "@/components/skeletons/PostDetailSkeleton";
+import { ScrollReveal } from "@/components/ScrollReveal";
 import {
   LinkShortenerProvider,
   LinkShortenerTop,
@@ -71,14 +73,7 @@ export default function PostDetail() {
   }, [cleanSlug]);
 
   if (loading) {
-    return (
-      <>
-        <PublicHeader />
-        <div className="flex min-h-[60vh] items-center justify-center pt-16">
-          <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
-        </div>
-      </>
-    );
+    return <PostDetailSkeleton />;
   }
 
   if (!post) {
@@ -109,13 +104,10 @@ export default function PostDetail() {
       />
       <PublicHeader />
 
-      {/* ── Link Shortener Timer (top, below header) ── */}
       <div className="pt-20 md:pt-28">
         <LinkShortenerTop />
 
-        {/* ── Article Header ── */}
         <div className="mx-auto max-w-7xl px-5 sm:px-8">
-          {/* Modern header card */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -162,7 +154,6 @@ export default function PostDetail() {
         </div>
       </div>
 
-      {/* ── Content ── */}
       <div className="mx-auto max-w-7xl px-5 py-8 sm:px-8 md:py-10">
         <div className="lg:flex lg:gap-10 xl:gap-14">
           <article className="min-w-0 flex-1 overflow-hidden lg:max-w-3xl">
@@ -174,24 +165,22 @@ export default function PostDetail() {
               dangerouslySetInnerHTML={{ __html: post.content || "" }}
             />
             <div className="mt-10 space-y-6 lg:hidden">
-              <SharePost title={post.title} slug={post.slug} />
-              <CommentSection postId={post.id} commentsEnabled={post.comments_enabled} />
-              <RelatedPosts currentPostId={post.id} categoryNames={post.categories} />
+              <ScrollReveal><SharePost title={post.title} slug={post.slug} /></ScrollReveal>
+              <ScrollReveal delay={0.1}><CommentSection postId={post.id} commentsEnabled={post.comments_enabled} /></ScrollReveal>
+              <ScrollReveal delay={0.2}><RelatedPosts currentPostId={post.id} categoryNames={post.categories} /></ScrollReveal>
             </div>
           </article>
           <aside className="hidden lg:block lg:w-80 xl:w-96">
             <div className="sticky top-24 space-y-6">
-              <SharePost title={post.title} slug={post.slug} />
-              <CommentSection postId={post.id} commentsEnabled={post.comments_enabled} />
-              <RelatedPosts currentPostId={post.id} categoryNames={post.categories} />
+              <ScrollReveal direction="right"><SharePost title={post.title} slug={post.slug} /></ScrollReveal>
+              <ScrollReveal direction="right" delay={0.1}><CommentSection postId={post.id} commentsEnabled={post.comments_enabled} /></ScrollReveal>
+              <ScrollReveal direction="right" delay={0.2}><RelatedPosts currentPostId={post.id} categoryNames={post.categories} /></ScrollReveal>
             </div>
           </aside>
         </div>
       </div>
 
-      {/* ── Link Shortener Access (bottom, above footer) ── */}
       <LinkShortenerBottom />
-
       <PublicFooter />
     </LinkShortenerProvider>
   );
