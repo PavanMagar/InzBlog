@@ -1,5 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
-import { LayoutDashboard, FileText, FolderOpen, Plus, LogOut, Settings, Menu, X, Globe, BarChart3, MessageCircle, Link2 } from "lucide-react";
+import { LayoutDashboard, FileText, FolderOpen, LogOut, Settings, Menu, X, Globe, BarChart3, MessageCircle, Link2 } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
 import { useState } from "react";
 
@@ -7,7 +7,6 @@ const navItems = [
   { title: "Dashboard", url: "/admin", icon: LayoutDashboard },
   { title: "Analytics", url: "/admin/analytics", icon: BarChart3 },
   { title: "Posts", url: "/admin/posts", icon: FileText },
-  { title: "New Post", url: "/admin/posts/new", icon: Plus },
   { title: "Comments", url: "/admin/comments", icon: MessageCircle },
   { title: "Categories", url: "/admin/categories", icon: FolderOpen },
   { title: "Link Shortener", url: "/admin/link-shortener", icon: Link2 },
@@ -93,7 +92,7 @@ export function AdminSidebar() {
       )}
 
       {/* Desktop sidebar */}
-      <aside className="hidden h-screen w-64 flex-col bg-sidebar lg:flex">{sidebar}</aside>
+      <aside className="hidden h-screen w-64 flex-col bg-sidebar lg:flex sticky top-0">{sidebar}</aside>
     </>
   );
 }
