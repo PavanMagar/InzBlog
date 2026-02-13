@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { ArrowRight, Sparkles, BookOpen, Zap, Code2 } from "lucide-react";
+import { ArrowRight, Sparkles, BookOpen, Zap, Code2, Layers } from "lucide-react";
 import { motion } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
 import { PublicHeader } from "@/components/PublicHeader";
 import { PublicFooter } from "@/components/PublicFooter";
 import { PostCard } from "@/components/PostCard";
+import { ProjectCard } from "@/components/ProjectCard";
 import { SEOHead } from "@/components/SEOHead";
 import { useSiteSettings } from "@/hooks/use-site-settings";
 
@@ -64,6 +65,7 @@ const fadeUp = {
 export default function Index() {
   const site = useSiteSettings();
   const [recentPosts, setRecentPosts] = useState<PostWithCategories[]>([]);
+  const [recentProjects, setRecentProjects] = useState<PostWithCategories[]>([]);
   const [categories, setCategories] = useState<{ id: string; name: string; slug: string }[]>([]);
   const [showAllTopics, setShowAllTopics] = useState(false);
 
@@ -90,6 +92,31 @@ export default function Index() {
           })
         );
         setRecentPosts(postsWithCats);
+      }
+
+      // Fetch recent projects
+      const { data: projects } = await supabase
+        .from("posts")
+        .select("id, title, slug, excerpt, thumbnail_url, published_at")
+        .eq("status", "published")
+        .eq("is_project", true)
+        .order("published_at", { ascending: false })
+        .limit(3);
+
+      if (projects) {
+        const projectsWithCats = await Promise.all(
+          projects.map(async (post) => {
+            const { data: pc } = await supabase
+              .from("post_categories")
+              .select("category_id, categories(name)")
+              .eq("post_id", post.id);
+            return {
+              ...post,
+              categories: pc?.map((p: any) => p.categories?.name).filter(Boolean) ?? [],
+            };
+          })
+        );
+        setRecentProjects(projectsWithCats);
       }
 
       const { data: cats } = await supabase.from("categories").select("id, name, slug").order("name");
@@ -216,6 +243,47 @@ export default function Index() {
               >
                 View All Articles <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
               </Link>
+            </div>
+          </section>
+        )}
+
+        {/* ───── Recent Projects ───── */}
+        {recentProjects.length > 0 && (
+          <section className="border-t border-border/40 bg-muted/20">
+            <div className="mx-auto max-w-7xl px-5 py-16 sm:px-8 md:py-24">
+              <div className="mb-10">
+                <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-accent/20 bg-accent/5 px-3.5 py-1.5">
+                  <Layers className="h-3.5 w-3.5 text-accent" />
+                  <span className="text-[11px] font-semibold uppercase tracking-wider text-accent">Showcase</span>
+                </div>
+                <h2 className="font-display text-2xl font-bold text-foreground sm:text-3xl md:text-4xl">
+                  Recent <span className="gradient-text">Projects</span>
+                </h2>
+                <p className="mt-2 max-w-md text-sm text-muted-foreground">Featured projects, demos, and real-world implementations.</p>
+              </div>
+
+              <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                {recentProjects.map((post, i) => (
+                  <motion.div
+                    key={post.id}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.4, delay: i * 0.06 }}
+                  >
+                    <ProjectCard {...post} publishedAt={post.published_at} thumbnailUrl={post.thumbnail_url} />
+                  </motion.div>
+                ))}
+              </div>
+
+              <div className="mt-10 flex justify-center">
+                <Link
+                  to="/projects"
+                  className="group inline-flex items-center gap-2.5 rounded-full px-8 py-3.5 text-sm font-semibold text-primary-foreground transition-all hover:opacity-90 hover:scale-[1.02] active:scale-[0.98]"
+                  style={{ background: "var(--gradient-primary)" }}
+                >
+                  View All Projects <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                </Link>
+              </div>
             </div>
           </section>
         )}

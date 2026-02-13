@@ -45,7 +45,7 @@ export function PublicHeader() {
   const menuItems = [
     { to: "/", icon: FileText, label: "Home", desc: "Back to homepage" },
     { to: "/posts", icon: Code2, label: "Articles", desc: "Read all posts" },
-    { to: "/posts", icon: LayoutGrid, label: "Categories", desc: "Browse categories" },
+    { to: "/projects", icon: LayoutGrid, label: "Projects", desc: "View projects" },
   ];
 
   return (
@@ -74,6 +74,7 @@ export function PublicHeader() {
               {[
                 { to: "/", label: "Home" },
                 { to: "/posts", label: "Articles" },
+                { to: "/projects", label: "Projects" },
               ].map((link) => (
                 <Link
                   key={link.label}
