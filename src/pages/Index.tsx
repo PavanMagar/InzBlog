@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { ArrowRight, Sparkles, BookOpen, Zap, Code2, TrendingUp } from "lucide-react";
+import { ArrowRight, Sparkles, BookOpen, Zap, Code2 } from "lucide-react";
 import { motion } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
 import { PublicHeader } from "@/components/PublicHeader";
@@ -178,45 +178,19 @@ export default function Index() {
           </div>
         </section>
 
-        {/* ───── Stats ───── */}
-        <section className="border-y border-border/40">
-          <div className="mx-auto max-w-7xl px-5 py-8 sm:px-8">
-            <div className="grid grid-cols-3 divide-x divide-border/40">
-              {[
-                { value: "100+", label: "Articles", icon: BookOpen },
-                { value: "Open", label: "Source", icon: Code2 },
-                { value: "Fast", label: "Performance", icon: TrendingUp },
-              ].map((stat) => (
-                <div key={stat.label} className="flex flex-col items-center gap-1 py-2">
-                  <stat.icon className="h-4 w-4 text-primary mb-1 hidden sm:block" />
-                  <p className="font-display text-lg font-extrabold text-foreground sm:text-2xl">{stat.value}</p>
-                  <p className="text-[11px] text-muted-foreground sm:text-xs">{stat.label}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
 
         {/* ───── Latest Articles ───── */}
         {recentPosts.length > 0 && (
           <section className="mx-auto max-w-7xl px-5 py-16 sm:px-8 md:py-24">
-            <div className="mb-12 flex flex-col items-start gap-4 sm:flex-row sm:items-end sm:justify-between">
-              <div>
-                <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-3.5 py-1.5">
-                  <Zap className="h-3.5 w-3.5 text-primary" />
-                  <span className="text-[11px] font-semibold uppercase tracking-wider text-primary">Fresh Content</span>
-                </div>
-                <h2 className="font-display text-2xl font-bold text-foreground sm:text-3xl md:text-4xl">
-                  Latest <span className="gradient-text">Articles</span>
-                </h2>
-                <p className="mt-2 max-w-md text-sm text-muted-foreground">Fresh perspectives, tutorials, and developer insights.</p>
+            <div className="mb-10">
+              <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-3.5 py-1.5">
+                <Zap className="h-3.5 w-3.5 text-primary" />
+                <span className="text-[11px] font-semibold uppercase tracking-wider text-primary">Fresh Content</span>
               </div>
-              <Link
-                to="/posts"
-                className="inline-flex items-center gap-2 rounded-xl border border-border bg-card px-5 py-2.5 text-sm font-medium text-foreground transition-all hover:bg-muted hover:-translate-y-0.5 shrink-0"
-              >
-                View All <ArrowRight className="h-3.5 w-3.5" />
-              </Link>
+              <h2 className="font-display text-2xl font-bold text-foreground sm:text-3xl md:text-4xl">
+                Latest <span className="gradient-text">Articles</span>
+              </h2>
+              <p className="mt-2 max-w-md text-sm text-muted-foreground">Fresh perspectives, tutorials, and developer insights.</p>
             </div>
 
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -230,6 +204,16 @@ export default function Index() {
                   <PostCard {...post} publishedAt={post.published_at} thumbnailUrl={post.thumbnail_url} />
                 </motion.div>
               ))}
+            </div>
+
+            <div className="mt-10 flex justify-center">
+              <Link
+                to="/posts"
+                className="group inline-flex items-center gap-2.5 rounded-full px-8 py-3.5 text-sm font-semibold text-primary-foreground transition-all hover:opacity-90 hover:scale-[1.02] active:scale-[0.98]"
+                style={{ background: "var(--gradient-primary)" }}
+              >
+                View All Articles <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+              </Link>
             </div>
           </section>
         )}
@@ -292,49 +276,52 @@ export default function Index() {
         {/* ───── Let's Connect ───── */}
         <section className="border-t border-border/40">
           <div className="mx-auto max-w-7xl px-5 py-16 sm:px-8 md:py-24">
-            <div className="mx-auto max-w-2xl text-center">
-              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
-                <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-primary/10">
-                  <i className="fa-solid fa-satellite-dish text-xl text-primary"></i>
-                </div>
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }} className="mx-auto max-w-3xl">
+              <div className="text-center mb-12">
                 <h2 className="mb-3 font-display text-2xl font-bold text-foreground sm:text-3xl md:text-4xl">
                   Let's <span className="gradient-text">Connect</span>
                 </h2>
-                <p className="mx-auto mb-10 max-w-md text-sm leading-relaxed text-muted-foreground">
-                  Follow us for the latest tutorials, tech insights, and developer resources.
+                <p className="mx-auto max-w-md text-sm leading-relaxed text-muted-foreground">
+                  Follow along for tutorials, insights, and behind-the-scenes updates.
                 </p>
-              </motion.div>
+              </div>
 
-              <div className="grid grid-cols-3 gap-3 sm:grid-cols-6">
+              <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
                 {[
-                  { icon: "fa-brands fa-instagram", label: "Instagram", href: "#", color: "hsl(330, 70%, 55%)" },
-                  { icon: "fa-brands fa-x-twitter", label: "Twitter", href: "#", color: "hsl(200, 10%, 30%)" },
-                  { icon: "fa-brands fa-github", label: "GitHub", href: "#", color: "hsl(0, 0%, 25%)" },
-                  { icon: "fa-brands fa-linkedin-in", label: "LinkedIn", href: "#", color: "hsl(210, 80%, 45%)" },
-                  { icon: "fa-brands fa-youtube", label: "YouTube", href: "#", color: "hsl(0, 80%, 50%)" },
-                  { icon: "fa-brands fa-telegram", label: "Telegram", href: "#", color: "hsl(200, 70%, 50%)" },
+                  { icon: "fa-brands fa-instagram", label: "Instagram", handle: "@inkwell", href: "#", gradient: "linear-gradient(135deg, hsl(330, 80%, 55%), hsl(280, 70%, 55%), hsl(30, 90%, 55%))" },
+                  { icon: "fa-brands fa-telegram", label: "Telegram", handle: "Join Channel", href: "#", gradient: "linear-gradient(135deg, hsl(200, 75%, 50%), hsl(210, 80%, 60%))" },
+                  { icon: "fa-brands fa-github", label: "GitHub", handle: "Star & Fork", href: "#", gradient: "linear-gradient(135deg, hsl(220, 15%, 25%), hsl(220, 20%, 40%))" },
+                  { icon: "fa-brands fa-youtube", label: "YouTube", handle: "Subscribe", href: "#", gradient: "linear-gradient(135deg, hsl(0, 80%, 50%), hsl(350, 85%, 45%))" },
                 ].map((s, i) => (
                   <motion.a
                     key={s.label}
                     href={s.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.3, delay: i * 0.05 }}
-                    className="group flex flex-col items-center gap-2.5 rounded-xl border border-border bg-card p-4 transition-all duration-300 hover:border-primary/20 hover:-translate-y-1"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.4, delay: i * 0.08 }}
+                    className="group relative flex flex-col items-center gap-3 overflow-hidden rounded-2xl border border-border bg-card p-6 transition-all duration-300 hover:-translate-y-1"
                   >
+                    {/* Hover gradient glow */}
                     <div
-                      className="flex h-10 w-10 items-center justify-center rounded-xl transition-transform duration-300 group-hover:scale-110"
-                      style={{ backgroundColor: `${s.color}15`, color: s.color }}
+                      className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-[0.07]"
+                      style={{ background: s.gradient }}
+                    />
+                    <div
+                      className="flex h-12 w-12 items-center justify-center rounded-xl text-white transition-transform duration-300 group-hover:scale-110"
+                      style={{ background: s.gradient }}
                     >
-                      <i className={`${s.icon} text-base`}></i>
+                      <i className={`${s.icon} text-lg`}></i>
                     </div>
-                    <span className="text-[11px] font-medium text-muted-foreground group-hover:text-foreground">{s.label}</span>
+                    <div className="text-center">
+                      <p className="font-display text-sm font-bold text-foreground">{s.label}</p>
+                      <p className="mt-0.5 text-[11px] text-muted-foreground">{s.handle}</p>
+                    </div>
                   </motion.a>
                 ))}
               </div>
-            </div>
+            </motion.div>
           </div>
         </section>
       </main>
