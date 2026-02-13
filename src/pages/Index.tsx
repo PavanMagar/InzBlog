@@ -9,6 +9,9 @@ import { PostCard } from "@/components/PostCard";
 import { ProjectCard } from "@/components/ProjectCard";
 import { SEOHead } from "@/components/SEOHead";
 import { useSiteSettings } from "@/hooks/use-site-settings";
+import { PostCardSkeleton } from "@/components/skeletons/PostCardSkeleton";
+import { ProjectCardSkeleton } from "@/components/skeletons/ProjectCardSkeleton";
+import { TopicCardSkeleton } from "@/components/skeletons/TopicCardSkeleton";
 
 interface PostWithCategories {
   id: string;
@@ -68,9 +71,11 @@ export default function Index() {
   const [recentProjects, setRecentProjects] = useState<PostWithCategories[]>([]);
   const [categories, setCategories] = useState<{ id: string; name: string; slug: string }[]>([]);
   const [showAllTopics, setShowAllTopics] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
+      setLoading(true);
       const { data: posts } = await supabase
         .from("posts")
         .select("id, title, slug, excerpt, thumbnail_url, published_at")
@@ -95,7 +100,6 @@ export default function Index() {
         setRecentPosts(postsWithCats);
       }
 
-      // Fetch recent projects
       const { data: projects } = await supabase
         .from("posts")
         .select("id, title, slug, excerpt, thumbnail_url, published_at")
@@ -123,6 +127,7 @@ export default function Index() {
 
       const { data: cats } = await supabase.from("categories").select("id, name, slug").order("name");
       if (cats) setCategories(cats);
+      setLoading(false);
     };
     fetchData();
   }, []);
@@ -140,13 +145,11 @@ export default function Index() {
       <main className="pt-16">
         {/* ───── Hero ───── */}
         <section className="relative overflow-hidden">
-          {/* Subtle gradient orb */}
           <div className="pointer-events-none absolute -top-32 left-1/2 -translate-x-1/2 h-[500px] w-[700px] rounded-full opacity-[0.07]" style={{ background: "var(--gradient-primary)", filter: "blur(100px)" }} />
 
           <div className="relative mx-auto max-w-7xl px-5 pb-16 pt-14 sm:px-8 md:pb-24 md:pt-20 lg:pb-28">
             <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-20">
               <motion.div initial="hidden" animate="visible" variants={{ visible: { transition: { staggerChildren: 0.1 } } }}>
-                {/* Greeting */}
                 <motion.div variants={fadeUp} custom={0} className="mb-6 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-4 py-2">
                   <Sparkles className="h-4 w-4 text-primary" />
                   <span className="text-sm font-medium text-foreground">{greeting} Buddy!</span>
@@ -209,34 +212,37 @@ export default function Index() {
           </div>
         </section>
 
-
         {/* ───── Latest Articles ───── */}
-        {recentPosts.length > 0 && (
-          <section className="mx-auto max-w-7xl px-5 py-16 sm:px-8 md:py-24">
-            <div className="mb-10">
-              <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-3.5 py-1.5">
-                <Zap className="h-3.5 w-3.5 text-primary" />
-                <span className="text-[11px] font-semibold uppercase tracking-wider text-primary">Fresh Content</span>
-              </div>
-              <h2 className="font-display text-2xl font-bold text-foreground sm:text-3xl md:text-4xl">
-                Latest <span className="gradient-text">Articles</span>
-              </h2>
-              <p className="mt-2 max-w-md text-sm text-muted-foreground">Fresh perspectives, tutorials, and developer insights.</p>
+        <section className="mx-auto max-w-7xl px-5 py-16 sm:px-8 md:py-24">
+          <div className="mb-10">
+            <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-3.5 py-1.5">
+              <Zap className="h-3.5 w-3.5 text-primary" />
+              <span className="text-[11px] font-semibold uppercase tracking-wider text-primary">Fresh Content</span>
             </div>
+            <h2 className="font-display text-2xl font-bold text-foreground sm:text-3xl md:text-4xl">
+              Latest <span className="gradient-text">Articles</span>
+            </h2>
+            <p className="mt-2 max-w-md text-sm text-muted-foreground">Fresh perspectives, tutorials, and developer insights.</p>
+          </div>
 
-            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {recentPosts.map((post, i) => (
-                <motion.div
-                  key={post.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.4, delay: i * 0.06 }}
-                >
-                  <PostCard {...post} publishedAt={post.published_at} thumbnailUrl={post.thumbnail_url} />
-                </motion.div>
-              ))}
-            </div>
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {loading
+              ? Array.from({ length: 6 }).map((_, i) => (
+                  <PostCardSkeleton key={i} />
+                ))
+              : recentPosts.map((post, i) => (
+                  <motion.div
+                    key={post.id}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.4, delay: i * 0.06 }}
+                  >
+                    <PostCard {...post} publishedAt={post.published_at} thumbnailUrl={post.thumbnail_url} />
+                  </motion.div>
+                ))}
+          </div>
 
+          {!loading && recentPosts.length > 0 && (
             <div className="mt-10 flex justify-center">
               <Link
                 to="/posts"
@@ -246,37 +252,41 @@ export default function Index() {
                 View All Articles <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
               </Link>
             </div>
-          </section>
-        )}
+          )}
+        </section>
 
         {/* ───── Recent Projects ───── */}
-        {recentProjects.length > 0 && (
-          <section className="border-t border-border/40 bg-muted/20">
-            <div className="mx-auto max-w-7xl px-5 py-16 sm:px-8 md:py-24">
-              <div className="mb-10">
-                <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-accent/20 bg-accent/5 px-3.5 py-1.5">
-                  <Layers className="h-3.5 w-3.5 text-accent" />
-                  <span className="text-[11px] font-semibold uppercase tracking-wider text-accent">Showcase</span>
-                </div>
-                <h2 className="font-display text-2xl font-bold text-foreground sm:text-3xl md:text-4xl">
-                  Recent <span className="gradient-text">Projects</span>
-                </h2>
-                <p className="mt-2 max-w-md text-sm text-muted-foreground">Featured projects, demos, and real-world implementations.</p>
+        <section className="border-t border-border/40 bg-muted/20">
+          <div className="mx-auto max-w-7xl px-5 py-16 sm:px-8 md:py-24">
+            <div className="mb-10">
+              <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-accent/20 bg-accent/5 px-3.5 py-1.5">
+                <Layers className="h-3.5 w-3.5 text-accent" />
+                <span className="text-[11px] font-semibold uppercase tracking-wider text-accent">Showcase</span>
               </div>
+              <h2 className="font-display text-2xl font-bold text-foreground sm:text-3xl md:text-4xl">
+                Recent <span className="gradient-text">Projects</span>
+              </h2>
+              <p className="mt-2 max-w-md text-sm text-muted-foreground">Featured projects, demos, and real-world implementations.</p>
+            </div>
 
-              <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                {recentProjects.map((post, i) => (
-                  <motion.div
-                    key={post.id}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.4, delay: i * 0.06 }}
-                  >
-                    <ProjectCard {...post} publishedAt={post.published_at} thumbnailUrl={post.thumbnail_url} />
-                  </motion.div>
-                ))}
-              </div>
+            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {loading
+                ? Array.from({ length: 3 }).map((_, i) => (
+                    <ProjectCardSkeleton key={i} />
+                  ))
+                : recentProjects.map((post, i) => (
+                    <motion.div
+                      key={post.id}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.4, delay: i * 0.06 }}
+                    >
+                      <ProjectCard {...post} publishedAt={post.published_at} thumbnailUrl={post.thumbnail_url} />
+                    </motion.div>
+                  ))}
+            </div>
 
+            {!loading && recentProjects.length > 0 && (
               <div className="mt-10 flex justify-center">
                 <Link
                   to="/projects"
@@ -286,9 +296,9 @@ export default function Index() {
                   View All Projects <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                 </Link>
               </div>
-            </div>
-          </section>
-        )}
+            )}
+          </div>
+        </section>
 
         {/* ───── Explore Topics ───── */}
         {categories.length > 0 && (
@@ -319,27 +329,31 @@ export default function Index() {
               </div>
 
               <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-                {visibleTopics.map((cat, i) => (
-                  <motion.div
-                    key={cat.id}
-                    initial={{ opacity: 0, y: 15 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.3, delay: i * 0.04 }}
-                  >
-                    <Link
-                      to={`/posts?category=${encodeURIComponent(cat.slug)}`}
-                      className="group flex items-center gap-4 rounded-xl border border-border bg-card p-4 transition-all duration-300 hover:border-primary/20 hover:-translate-y-0.5"
-                    >
-                      <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary transition-transform duration-300 group-hover:scale-110">
-                        <i className={getTopicIcon(cat.name)}></i>
-                      </div>
-                      <div className="min-w-0 flex-1">
-                        <h3 className="font-display text-sm font-bold text-foreground">{cat.name}</h3>
-                        <p className="text-xs text-muted-foreground">Explore articles →</p>
-                      </div>
-                    </Link>
-                  </motion.div>
-                ))}
+                {loading
+                  ? Array.from({ length: 6 }).map((_, i) => (
+                      <TopicCardSkeleton key={i} />
+                    ))
+                  : visibleTopics.map((cat, i) => (
+                      <motion.div
+                        key={cat.id}
+                        initial={{ opacity: 0, y: 15 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.3, delay: i * 0.04 }}
+                      >
+                        <Link
+                          to={`/posts?category=${encodeURIComponent(cat.slug)}`}
+                          className="group flex items-center gap-4 rounded-xl border border-border bg-card p-4 transition-all duration-300 hover:border-primary/20 hover:-translate-y-0.5"
+                        >
+                          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary transition-transform duration-300 group-hover:scale-110">
+                            <i className={getTopicIcon(cat.name)}></i>
+                          </div>
+                          <div className="min-w-0 flex-1">
+                            <h3 className="font-display text-sm font-bold text-foreground">{cat.name}</h3>
+                            <p className="text-xs text-muted-foreground">Explore articles →</p>
+                          </div>
+                        </Link>
+                      </motion.div>
+                    ))}
               </div>
             </div>
           </section>
@@ -375,7 +389,6 @@ export default function Index() {
                     transition={{ duration: 0.4, delay: i * 0.08 }}
                     className="group relative flex flex-col items-center gap-3 overflow-hidden rounded-2xl border border-border bg-card p-6 transition-all duration-300 hover:-translate-y-1"
                   >
-                    {/* Hover gradient glow */}
                     <div
                       className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-[0.07]"
                       style={{ background: s.gradient }}
