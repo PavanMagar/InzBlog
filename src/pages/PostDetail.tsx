@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import { Calendar, Eye } from "lucide-react";
+import { Eye } from "lucide-react";
 import { motion } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
 import { PublicHeader } from "@/components/PublicHeader";
@@ -103,46 +103,51 @@ export default function PostDetail() {
       />
       <PublicHeader />
 
-      <div className="pt-24 md:pt-32 pb-10 md:pb-14" style={{ background: "var(--gradient-subtle)" }}>
+      <div className="pt-20 md:pt-28">
         <LinkShortenerTop />
 
         <div className="mx-auto max-w-7xl px-5 sm:px-8">
           <motion.div
-            initial={{ opacity: 0, y: 16 }}
+            initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4 }}
-            className="rounded-2xl border border-border/60 bg-card/80 p-6 sm:p-8 md:p-10 backdrop-blur-sm shadow-[var(--shadow-elevated)]"
+            transition={{ duration: 0.35 }}
+            className="py-8 md:py-12"
           >
-            {post.categories.length > 0 && (
-              <div className="mb-4 flex flex-wrap gap-2">
-                {post.categories.map((cat) => (
-                  <span key={cat} className="rounded-full border border-primary/20 bg-primary/10 px-3.5 py-1 text-[11px] font-bold uppercase tracking-widest text-primary">
-                    {cat}
-                  </span>
-                ))}
-              </div>
-            )}
+            <div className="flex flex-wrap items-center gap-3 mb-5">
+              <Link to="/posts" className="text-sm text-muted-foreground hover:text-primary transition-colors">Articles</Link>
+              {post.categories.length > 0 && (
+                <>
+                  <span className="text-muted-foreground/40">/</span>
+                  {post.categories.map((cat, i) => (
+                    <span key={cat}>
+                      <span className="text-sm font-medium text-primary">{cat}</span>
+                      {i < post.categories.length - 1 && <span className="text-muted-foreground/40 ml-3">/</span>}
+                    </span>
+                  ))}
+                </>
+              )}
+            </div>
 
-            <h1 className="mb-5 max-w-4xl font-display text-2xl font-extrabold leading-snug text-foreground sm:text-3xl md:text-4xl lg:text-[2.75rem]">
+            <h1 className="mb-6 max-w-3xl font-display text-3xl font-bold leading-tight text-foreground sm:text-4xl md:text-[2.75rem]">
               {post.title}
             </h1>
 
-            <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
-              <div className="flex items-center gap-2">
-                <Calendar className="h-4 w-4 text-primary/70" />
+            <div className="flex items-center gap-3">
+              <div className="h-px flex-1 max-w-[60px] bg-primary/40" />
+              <div className="flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
                 <time dateTime={postDate}>
-                  {new Date(postDate).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}
+                  {new Date(postDate).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
                 </time>
+                <span className="text-muted-foreground/30">•</span>
+                <div className="flex items-center gap-1.5">
+                  <Eye className="h-3.5 w-3.5" />
+                  <span>{post.view_count.toLocaleString()}</span>
+                </div>
               </div>
-              <span className="h-1 w-1 rounded-full bg-muted-foreground/30" />
-              <div className="flex items-center gap-2">
-                <Eye className="h-4 w-4 text-primary/70" />
-                <span>{post.view_count.toLocaleString()} views</span>
-              </div>
-              <span className="h-1 w-1 rounded-full bg-muted-foreground/30" />
-              <span>{estimateReadTime(post.content)} min read</span>
             </div>
           </motion.div>
+
+          <div className="h-px w-full bg-border/60" />
         </div>
       </div>
 
