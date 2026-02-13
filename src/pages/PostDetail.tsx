@@ -108,59 +108,63 @@ export default function PostDetail() {
       <PublicHeader />
 
       {/* ── Article Header ── */}
-      <div className="border-b border-border/50 pt-20 md:pt-24" style={{ background: "var(--gradient-subtle)" }}>
-        <div className="mx-auto max-w-7xl px-5 pb-8 sm:px-8 md:pb-12">
+      <div className="pt-20 md:pt-24">
+        <div className="mx-auto max-w-7xl px-5 sm:px-8">
           {/* Back link */}
           <motion.div initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }}>
-            <Link to="/posts" className="mb-6 inline-flex items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-primary">
+            <Link to="/posts" className="mb-5 inline-flex items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-primary">
               <ArrowLeft className="h-3.5 w-3.5" /> All Articles
             </Link>
           </motion.div>
 
-          {/* Categories */}
-          {post.categories.length > 0 && (
-            <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.03 }} className="mb-4 flex flex-wrap gap-2">
-              {post.categories.map((cat) => (
-                <span key={cat} className="inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/5 px-3 py-1 text-xs font-semibold text-primary">
-                  <Sparkles className="h-3 w-3" />
-                  {cat}
-                </span>
-              ))}
-            </motion.div>
-          )}
-
-          {/* Title */}
-          <motion.h1
-            initial={{ opacity: 0, y: 14 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.06 }}
-            className="mb-6 max-w-4xl font-display text-2xl font-extrabold leading-[1.15] text-foreground sm:text-3xl md:text-4xl lg:text-[2.75rem]"
-          >
-            <span className="gradient-text">{post.title}</span>
-          </motion.h1>
-
-          {/* Metadata row */}
+          {/* Header card */}
           <motion.div
-            initial={{ opacity: 0, y: 8 }}
+            initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-            className="flex flex-wrap items-center gap-3"
+            transition={{ delay: 0.04 }}
+            className="relative overflow-hidden rounded-2xl border border-border bg-card p-6 sm:p-8 md:p-10"
+            style={{ boxShadow: "var(--shadow-elevated)" }}
           >
-            {post.published_at && (
-              <div className="flex items-center gap-1.5 rounded-full border border-border bg-card px-3.5 py-1.5 text-xs text-muted-foreground shadow-sm">
-                <Calendar className="h-3.5 w-3.5 text-primary" />
-                <time dateTime={post.published_at}>
-                  {new Date(post.published_at).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}
-                </time>
+            {/* Decorative accent bar */}
+            <div className="absolute inset-x-0 top-0 h-1.5" style={{ background: "var(--gradient-primary)" }} />
+
+            {/* Categories */}
+            {post.categories.length > 0 && (
+              <div className="mb-4 flex flex-wrap gap-2">
+                {post.categories.map((cat) => (
+                  <span key={cat} className="inline-flex items-center gap-1.5 rounded-md bg-primary/10 px-2.5 py-1 text-xs font-semibold text-primary">
+                    <Sparkles className="h-3 w-3" />
+                    {cat}
+                  </span>
+                ))}
               </div>
             )}
-            <div className="flex items-center gap-1.5 rounded-full border border-border bg-card px-3.5 py-1.5 text-xs text-muted-foreground shadow-sm">
-              <Eye className="h-3.5 w-3.5 text-primary" />
-              <span>{post.view_count.toLocaleString()} views</span>
-            </div>
-            <div className="flex items-center gap-1.5 rounded-full border border-border bg-card px-3.5 py-1.5 text-xs text-muted-foreground shadow-sm">
-              <BookOpen className="h-3.5 w-3.5 text-primary" />
-              <span>{words.toLocaleString()} words</span>
+
+            {/* Title */}
+            <h1 className="mb-5 max-w-4xl font-display text-2xl font-extrabold leading-[1.18] text-foreground sm:text-3xl md:text-4xl lg:text-[2.75rem]">
+              {post.title}
+            </h1>
+
+            {/* Metadata strip */}
+            <div className="flex flex-wrap items-center gap-x-5 gap-y-2 border-t border-border/60 pt-5 text-sm text-muted-foreground">
+              {post.published_at && (
+                <div className="flex items-center gap-2">
+                  <Calendar className="h-4 w-4 text-primary" />
+                  <time dateTime={post.published_at}>
+                    {new Date(post.published_at).toLocaleDateString("en-US", { weekday: "short", month: "long", day: "numeric", year: "numeric" })}
+                  </time>
+                </div>
+              )}
+              <span className="hidden text-border sm:inline">|</span>
+              <div className="flex items-center gap-2">
+                <Eye className="h-4 w-4 text-primary" />
+                <span>{post.view_count.toLocaleString()} views</span>
+              </div>
+              <span className="hidden text-border sm:inline">|</span>
+              <div className="flex items-center gap-2">
+                <BookOpen className="h-4 w-4 text-primary" />
+                <span>{words.toLocaleString()} words</span>
+              </div>
             </div>
           </motion.div>
         </div>
