@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import { Calendar, Eye } from "lucide-react";
+import { Calendar, Eye, ArrowLeft } from "lucide-react";
 import { motion } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
 import { PublicHeader } from "@/components/PublicHeader";
@@ -114,6 +114,13 @@ export default function PostDetail() {
 
         {/* ── Article Header ── */}
         <div className="mx-auto max-w-7xl px-5 sm:px-8">
+          {/* Back link */}
+          <motion.div initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }}>
+            <Link to="/posts" className="mb-8 inline-flex items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-primary">
+              <ArrowLeft className="h-3.5 w-3.5" /> All Articles
+            </Link>
+          </motion.div>
+
           {/* Modern header card */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
