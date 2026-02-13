@@ -23,8 +23,10 @@ interface LinkShortenerState {
 
 /** Top section: timer + "scroll down" button */
 export function LinkShortenerTop() {
-  const { link, phase, timeLeft, handleContinue } = useLinkShortenerContext();
+  const ctx = useLinkShortenerContext();
 
+  if (!ctx) return null;
+  const { link, phase, timeLeft, handleContinue } = ctx;
   if (!link || (phase !== "timer" && phase !== "ready")) return null;
 
   const progress = ((15 - timeLeft) / 15) * 100;
@@ -76,8 +78,9 @@ export function LinkShortenerTop() {
 
 /** Bottom section: password prompt + access button (placed above footer) */
 export function LinkShortenerBottom() {
+  const ctx = useLinkShortenerContext();
   const { link, phase, passwordInput, setPasswordInput, passwordError, handlePassword } =
-    useLinkShortenerContext();
+    ctx ?? { link: null, phase: "timer" as const, passwordInput: "", setPasswordInput: () => {}, passwordError: false, handlePassword: () => {} };
   const bottomRef = useRef<HTMLDivElement>(null);
 
   // Auto-scroll into view when this section becomes visible
@@ -162,9 +165,7 @@ interface LinkShortenerContextValue {
 const LinkShortenerContext = createContext<LinkShortenerContextValue | null>(null);
 
 function useLinkShortenerContext() {
-  const ctx = useContext(LinkShortenerContext);
-  if (!ctx) throw new Error("Must be used inside LinkShortenerProvider");
-  return ctx;
+  return useContext(LinkShortenerContext);
 }
 
 /** Wrap around the page content to provide link shortener state */
