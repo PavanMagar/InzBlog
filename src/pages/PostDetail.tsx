@@ -72,7 +72,7 @@ export default function PostDetail() {
     return (
       <>
         <PublicHeader />
-        <div className="flex min-h-[60vh] items-center justify-center">
+        <div className="flex min-h-[60vh] items-center justify-center pt-16">
           <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
         </div>
       </>
@@ -83,7 +83,7 @@ export default function PostDetail() {
     return (
       <>
         <PublicHeader />
-        <div className="container px-4 py-20 text-center">
+        <div className="container px-4 py-20 pt-36 text-center">
           <i className="fa-solid fa-file-circle-question mb-4 text-5xl text-muted-foreground/30"></i>
           <h1 className="mb-3 font-display text-3xl font-bold text-foreground">Article Not Found</h1>
           <p className="mb-6 text-muted-foreground">The article you're looking for doesn't exist.</p>
@@ -109,7 +109,7 @@ export default function PostDetail() {
       <PublicHeader />
 
       {/* Article header */}
-      <div className="container px-4 pb-4 pt-8 sm:px-6 md:pt-12 lg:px-16 xl:px-24">
+      <div className="container px-4 pb-4 pt-24 sm:px-6 md:pt-28 lg:px-16 xl:px-24">
         <div className="mx-auto max-w-3xl">
           {/* Categories */}
           {post.categories.length > 0 && (

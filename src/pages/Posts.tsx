@@ -103,7 +103,7 @@ export default function Posts() {
       <SEOHead title="Articles" description="Browse coding tutorials, programming guides, and tech articles." />
       <PublicHeader />
 
-      <main className="container px-4 py-8 sm:px-6 md:py-12">
+      <main className="container px-4 py-8 pt-24 sm:px-6 md:py-12 md:pt-28">
         {/* Page title — gradient style matching reference */}
         <div className="mb-10 text-center">
           <h1 className="font-display text-3xl font-extrabold sm:text-4xl md:text-5xl">

@@ -98,7 +98,7 @@ export default function Index() {
       <SEOHead title="Home" description="Inkwell — A modern platform for coding tutorials, programming resources, tech articles and developer knowledge." />
       <PublicHeader />
 
-      <main>
+      <main className="pt-16">
         {/* Hero */}
         <section className="relative overflow-hidden bg-background">
           <div className="container relative px-4 pb-12 pt-12 sm:px-6 sm:pb-16 sm:pt-16 md:pb-24 md:pt-20 lg:pb-28">
