@@ -5,7 +5,9 @@ import { AdminSidebar } from "@/components/AdminSidebar";
 import { RichTextEditor } from "@/components/RichTextEditor";
 import { useAuth } from "@/lib/auth-context";
 import { toast } from "sonner";
-import { Plus, Upload, X, Image as ImageIcon } from "lucide-react";
+import { Plus, Upload, X, Image as ImageIcon, MessageCircle } from "lucide-react";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
 
 function slugify(text: string) {
   return text
@@ -36,6 +38,7 @@ export default function AdminPostEditor() {
   const [uploading, setUploading] = useState(false);
   const [newCategoryName, setNewCategoryName] = useState("");
   const [showNewCategory, setShowNewCategory] = useState(false);
+  const [commentsEnabled, setCommentsEnabled] = useState(true);
 
   useEffect(() => {
     supabase.from("categories").select("id, name").order("name").then(({ data }) => {
@@ -54,6 +57,7 @@ export default function AdminPostEditor() {
         setThumbnailUrl(post.thumbnail_url || "");
         setContent(post.content || "");
         setStatus(post.status);
+        setCommentsEnabled(post.comments_enabled ?? true);
       }
       const { data: pc } = await supabase.from("post_categories").select("category_id").eq("post_id", id);
       if (pc) setSelectedCategories(pc.map((p) => p.category_id));
@@ -136,6 +140,7 @@ export default function AdminPostEditor() {
       content,
       status: publishStatus,
       author_id: user?.id,
+      comments_enabled: commentsEnabled,
     };
 
     let postId = id;
@@ -287,6 +292,26 @@ export default function AdminPostEditor() {
                     </button>
                   </div>
                 )}
+              </div>
+
+              {/* Comments Toggle */}
+              <div className="rounded-2xl border border-border bg-card p-5 shadow-[var(--shadow-card)]">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <MessageCircle className="h-4 w-4 text-primary" />
+                    <Label htmlFor="comments-toggle" className="text-sm font-semibold text-card-foreground cursor-pointer">
+                      Comments
+                    </Label>
+                  </div>
+                  <Switch
+                    id="comments-toggle"
+                    checked={commentsEnabled}
+                    onCheckedChange={setCommentsEnabled}
+                  />
+                </div>
+                <p className="mt-2 text-xs text-muted-foreground">
+                  {commentsEnabled ? "Readers can leave comments on this post." : "Comments are disabled for this post."}
+                </p>
               </div>
 
               {/* Categories */}

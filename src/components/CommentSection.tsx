@@ -240,7 +240,7 @@ function SingleComment({ comment, postId, onRefresh, depth = 0 }: {
   );
 }
 
-export function CommentSection({ postId }: { postId: string }) {
+export function CommentSection({ postId, commentsEnabled = true }: { postId: string; commentsEnabled?: boolean }) {
   const [comments, setComments] = useState<Comment[]>([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
@@ -300,15 +300,17 @@ export function CommentSection({ postId }: { postId: string }) {
               Discussion {totalComments > 0 && <span className="ml-1 text-muted-foreground font-normal">({totalComments})</span>}
             </h3>
           </div>
-          <Button
-            size="sm"
-            variant={showForm ? "outline" : "default"}
-            className="gap-1.5 text-xs"
-            onClick={() => setShowForm(!showForm)}
-          >
-            <Plus className="h-3.5 w-3.5" />
-            {showForm ? "Close" : "Comment"}
-          </Button>
+          {commentsEnabled && (
+            <Button
+              size="sm"
+              variant={showForm ? "outline" : "default"}
+              className="gap-1.5 text-xs"
+              onClick={() => setShowForm(!showForm)}
+            >
+              <Plus className="h-3.5 w-3.5" />
+              {showForm ? "Close" : "Comment"}
+            </Button>
+          )}
         </div>
 
         <AnimatePresence>
@@ -321,7 +323,12 @@ export function CommentSection({ postId }: { postId: string }) {
           )}
         </AnimatePresence>
 
-        {loading ? (
+        {!commentsEnabled ? (
+          <div className="py-6 text-center">
+            <MessageCircle className="mx-auto mb-2 h-8 w-8 text-muted-foreground/20" />
+            <p className="text-sm text-muted-foreground">Comments are turned off for this post.</p>
+          </div>
+        ) : loading ? (
           <div className="flex justify-center py-6">
             <div className="h-5 w-5 animate-spin rounded-full border-2 border-primary border-t-transparent" />
           </div>
