@@ -18,6 +18,7 @@ interface PostData {
   content: string | null;
   thumbnail_url: string | null;
   published_at: string | null;
+  created_at: string;
   view_count: number;
   categories: string[];
 }
@@ -89,8 +90,9 @@ export default function PostDetail() {
       </>
     );
   }
+  const postDate = post.published_at || post.created_at;
 
-  
+
 
   return (
     <>
@@ -120,11 +122,8 @@ export default function PostDetail() {
             transition={{ delay: 0.05 }}
             className="relative overflow-hidden rounded-2xl border border-border/60 bg-card/50 backdrop-blur-sm"
           >
-            {/* Top gradient bar */}
-            <div className="h-1" style={{ background: "var(--gradient-primary)" }} />
-
             <div className="flex">
-              {/* Left accent stripe — visible on all screens */}
+              {/* Left accent stripe */}
               <motion.div
                 initial={{ scaleY: 0 }}
                 animate={{ scaleY: 1 }}
@@ -153,35 +152,25 @@ export default function PostDetail() {
                   {post.title}
                 </h1>
 
-                {/* Author + Meta row */}
-                <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-                  {/* Author info */}
-                  <div className="flex items-center gap-3">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10">
-                      <User className="h-5 w-5 text-primary" />
+                {/* Author + Date + Views — single row on all screens */}
+                <div className="flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
+                  <div className="flex items-center gap-2">
+                    <div className="flex h-7 w-7 items-center justify-center rounded-full bg-primary/10">
+                      <User className="h-3.5 w-3.5 text-primary" />
                     </div>
-                    <div>
-                      <p className="text-sm font-semibold text-foreground">Admin</p>
-                      {post.published_at && (
-                        <time dateTime={post.published_at} className="text-xs text-muted-foreground">
-                          {new Date(post.published_at).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}
-                        </time>
-                      )}
-                    </div>
+                    <span className="font-semibold text-foreground">Admin</span>
                   </div>
-
-                  {/* Stats pills */}
-                  <div className="flex items-center gap-3">
-                    {post.published_at && (
-                      <div className="flex items-center gap-1.5 rounded-full bg-muted/60 px-3 py-1.5 text-xs font-medium text-muted-foreground">
-                        <Calendar className="h-3.5 w-3.5 text-primary/70" />
-                        <span>{new Date(post.published_at).toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" })}</span>
-                      </div>
-                    )}
-                    <div className="flex items-center gap-1.5 rounded-full bg-muted/60 px-3 py-1.5 text-xs font-medium text-muted-foreground">
-                      <Eye className="h-3.5 w-3.5 text-primary/70" />
-                      <span>{post.view_count.toLocaleString()}</span>
-                    </div>
+                  <span className="text-border">·</span>
+                  <div className="flex items-center gap-1.5">
+                    <Calendar className="h-3.5 w-3.5 text-primary/70" />
+                    <time dateTime={postDate}>
+                      {new Date(postDate).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}
+                    </time>
+                  </div>
+                  <span className="text-border">·</span>
+                  <div className="flex items-center gap-1.5">
+                    <Eye className="h-3.5 w-3.5 text-primary/70" />
+                    <span>{post.view_count.toLocaleString()} views</span>
                   </div>
                 </div>
               </div>
