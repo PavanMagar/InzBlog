@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import { Calendar, Eye, BookOpen, ArrowLeft } from "lucide-react";
+import { Calendar, Eye, ArrowLeft, User } from "lucide-react";
 import { motion } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
 import { PublicHeader } from "@/components/PublicHeader";
@@ -28,10 +28,6 @@ function estimateReadTime(html: string | null): number {
   return Math.max(1, Math.ceil(text.split(/\s+/).length / 200));
 }
 
-function wordCount(html: string | null): number {
-  if (!html) return 0;
-  return html.replace(/<[^>]*>/g, "").split(/\s+/).filter(Boolean).length;
-}
 
 export default function PostDetail() {
   const { slug } = useParams();
@@ -94,7 +90,7 @@ export default function PostDetail() {
     );
   }
 
-  const words = wordCount(post.content);
+  
 
   return (
     <>
@@ -112,72 +108,85 @@ export default function PostDetail() {
         <div className="mx-auto max-w-7xl px-5 sm:px-8">
           {/* Back link */}
           <motion.div initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }}>
-            <Link to="/posts" className="mb-6 inline-flex items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-primary">
+            <Link to="/posts" className="mb-8 inline-flex items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-primary">
               <ArrowLeft className="h-3.5 w-3.5" /> All Articles
             </Link>
           </motion.div>
 
-          {/* Header with left accent border */}
+          {/* Modern header card */}
           <motion.div
-            initial={{ opacity: 0, y: 16 }}
+            initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.05 }}
-            className="flex gap-0"
+            className="relative overflow-hidden rounded-2xl border border-border/60 bg-card/50 backdrop-blur-sm"
           >
-            {/* Gradient accent stripe */}
-            <div
-              className="hidden w-1.5 shrink-0 rounded-full sm:block"
-              style={{ background: "var(--gradient-primary)" }}
-            />
+            {/* Top gradient bar */}
+            <div className="h-1" style={{ background: "var(--gradient-primary)" }} />
 
-            <div className="sm:pl-6 md:pl-8">
-              {/* Categories */}
-              {post.categories.length > 0 && (
-                <div className="mb-3 flex flex-wrap gap-2">
-                  {post.categories.map((cat) => (
-                    <span
-                      key={cat}
-                      className="rounded-md bg-primary/10 px-2.5 py-0.5 text-xs font-bold uppercase tracking-wide text-primary"
-                    >
-                      {cat}
-                    </span>
-                  ))}
-                </div>
-              )}
+            <div className="flex">
+              {/* Left accent stripe — visible on all screens */}
+              <motion.div
+                initial={{ scaleY: 0 }}
+                animate={{ scaleY: 1 }}
+                transition={{ delay: 0.2, duration: 0.5 }}
+                className="w-1 shrink-0 origin-top"
+                style={{ background: "var(--gradient-primary)" }}
+              />
 
-              {/* Title */}
-              <h1 className="mb-5 max-w-4xl font-display text-2xl font-extrabold leading-[1.18] text-foreground sm:text-3xl md:text-[2.5rem] lg:text-[2.85rem]">
-                {post.title}
-              </h1>
-
-              {/* Metadata row */}
-              <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-muted-foreground">
-                {post.published_at && (
-                  <>
-                    <div className="flex items-center gap-1.5">
-                      <Calendar className="h-4 w-4 text-primary/70" />
-                      <time dateTime={post.published_at}>
-                        {new Date(post.published_at).toLocaleDateString("en-US", { weekday: "short", month: "long", day: "numeric", year: "numeric" })}
-                      </time>
-                    </div>
-                    <span className="text-border">·</span>
-                  </>
+              <div className="flex-1 p-5 sm:p-7 md:p-9">
+                {/* Categories */}
+                {post.categories.length > 0 && (
+                  <div className="mb-4 flex flex-wrap gap-2">
+                    {post.categories.map((cat) => (
+                      <span
+                        key={cat}
+                        className="rounded-full border border-primary/20 bg-primary/8 px-3 py-1 text-[11px] font-bold uppercase tracking-widest text-primary"
+                      >
+                        {cat}
+                      </span>
+                    ))}
+                  </div>
                 )}
-                <div className="flex items-center gap-1.5">
-                  <Eye className="h-4 w-4 text-primary/70" />
-                  <span>{post.view_count.toLocaleString()} views</span>
-                </div>
-                <span className="text-border">·</span>
-                <div className="flex items-center gap-1.5">
-                  <BookOpen className="h-4 w-4 text-primary/70" />
-                  <span>{words.toLocaleString()} words</span>
+
+                {/* Title */}
+                <h1 className="mb-6 max-w-4xl font-display text-2xl font-extrabold leading-[1.15] text-foreground sm:text-3xl md:text-[2.5rem] lg:text-[3rem]">
+                  {post.title}
+                </h1>
+
+                {/* Author + Meta row */}
+                <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                  {/* Author info */}
+                  <div className="flex items-center gap-3">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10">
+                      <User className="h-5 w-5 text-primary" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-semibold text-foreground">Admin</p>
+                      {post.published_at && (
+                        <time dateTime={post.published_at} className="text-xs text-muted-foreground">
+                          {new Date(post.published_at).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}
+                        </time>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Stats pills */}
+                  <div className="flex items-center gap-3">
+                    {post.published_at && (
+                      <div className="flex items-center gap-1.5 rounded-full bg-muted/60 px-3 py-1.5 text-xs font-medium text-muted-foreground">
+                        <Calendar className="h-3.5 w-3.5 text-primary/70" />
+                        <span>{new Date(post.published_at).toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" })}</span>
+                      </div>
+                    )}
+                    <div className="flex items-center gap-1.5 rounded-full bg-muted/60 px-3 py-1.5 text-xs font-medium text-muted-foreground">
+                      <Eye className="h-3.5 w-3.5 text-primary/70" />
+                      <span>{post.view_count.toLocaleString()}</span>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
           </motion.div>
-
-          {/* Subtle separator */}
-          <div className="mt-8 border-t border-border" />
         </div>
       </div>
 
