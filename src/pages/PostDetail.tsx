@@ -9,7 +9,11 @@ import { SEOHead } from "@/components/SEOHead";
 import { CommentSection } from "@/components/CommentSection";
 import { SharePost } from "@/components/SharePost";
 import { RelatedPosts } from "@/components/RelatedPosts";
-import { LinkShortenerOverlay } from "@/components/LinkShortenerOverlay";
+import {
+  LinkShortenerProvider,
+  LinkShortenerTop,
+  LinkShortenerBottom,
+} from "@/components/LinkShortenerOverlay";
 
 interface PostData {
   id: string;
@@ -29,7 +33,6 @@ function estimateReadTime(html: string | null): number {
   const text = html.replace(/<[^>]*>/g, "");
   return Math.max(1, Math.ceil(text.split(/\s+/).length / 200));
 }
-
 
 export default function PostDetail() {
   const { slug } = useParams();
@@ -91,12 +94,11 @@ export default function PostDetail() {
       </>
     );
   }
+
   const postDate = post.published_at || post.created_at;
 
-
-
   return (
-    <>
+    <LinkShortenerProvider>
       <SEOHead
         title={post.title}
         description={post.excerpt || undefined}
@@ -106,11 +108,11 @@ export default function PostDetail() {
       />
       <PublicHeader />
 
-      {/* ── Link Shortener Overlay (top) ── */}
-      <LinkShortenerOverlay />
-
-      {/* ── Article Header ── */}
+      {/* ── Link Shortener Timer (top, below header) ── */}
       <div className="pt-20 md:pt-28">
+        <LinkShortenerTop />
+
+        {/* ── Article Header ── */}
         <div className="mx-auto max-w-7xl px-5 sm:px-8">
           {/* Back link */}
           <motion.div initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }}>
@@ -127,7 +129,6 @@ export default function PostDetail() {
             className="relative overflow-hidden rounded-2xl border border-border/60 bg-card/50 backdrop-blur-sm"
           >
             <div className="flex">
-              {/* Left accent stripe */}
               <motion.div
                 initial={{ scaleY: 0 }}
                 animate={{ scaleY: 1 }}
@@ -135,28 +136,19 @@ export default function PostDetail() {
                 className="w-1 shrink-0 origin-top"
                 style={{ background: "var(--gradient-primary)" }}
               />
-
               <div className="flex-1 p-5 sm:p-7 md:p-9">
-                {/* Categories */}
                 {post.categories.length > 0 && (
                   <div className="mb-4 flex flex-wrap gap-2">
                     {post.categories.map((cat) => (
-                      <span
-                        key={cat}
-                        className="rounded-full border border-primary/20 bg-primary/8 px-3 py-1 text-[11px] font-bold uppercase tracking-widest text-primary"
-                      >
+                      <span key={cat} className="rounded-full border border-primary/20 bg-primary/8 px-3 py-1 text-[11px] font-bold uppercase tracking-widest text-primary">
                         {cat}
                       </span>
                     ))}
                   </div>
                 )}
-
-                {/* Title */}
                 <h1 className="mb-6 max-w-4xl font-display text-2xl font-extrabold leading-[1.15] text-foreground sm:text-3xl md:text-[2.5rem] lg:text-[3rem]">
                   {post.title}
                 </h1>
-
-                {/* Date + Views — single row */}
                 <div className="flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
                   <div className="flex items-center gap-1.5">
                     <Calendar className="h-3.5 w-3.5 text-primary/70" />
@@ -179,7 +171,6 @@ export default function PostDetail() {
       {/* ── Content ── */}
       <div className="mx-auto max-w-7xl px-5 py-8 sm:px-8 md:py-10">
         <div className="lg:flex lg:gap-10 xl:gap-14">
-          {/* Left: Article */}
           <article className="min-w-0 flex-1 overflow-hidden lg:max-w-3xl">
             <motion.div
               initial={{ opacity: 0 }}
@@ -188,16 +179,12 @@ export default function PostDetail() {
               className="prose-content max-w-none text-foreground [&_img]:max-w-full [&_pre]:max-w-full [&_pre]:overflow-x-auto [&_table]:max-w-full [&_table]:overflow-x-auto"
               dangerouslySetInnerHTML={{ __html: post.content || "" }}
             />
-
-            {/* Mobile-only sections */}
             <div className="mt-10 space-y-6 lg:hidden">
               <SharePost title={post.title} slug={post.slug} />
               <CommentSection postId={post.id} />
               <RelatedPosts currentPostId={post.id} categoryNames={post.categories} />
             </div>
           </article>
-
-          {/* Right sidebar: desktop */}
           <aside className="hidden lg:block lg:w-80 xl:w-96">
             <div className="sticky top-24 space-y-6">
               <SharePost title={post.title} slug={post.slug} />
@@ -208,7 +195,10 @@ export default function PostDetail() {
         </div>
       </div>
 
+      {/* ── Link Shortener Access (bottom, above footer) ── */}
+      <LinkShortenerBottom />
+
       <PublicFooter />
-    </>
+    </LinkShortenerProvider>
   );
 }
