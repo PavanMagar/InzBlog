@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { Search, Menu, X, FileText, Code2, LayoutGrid, Info, Mail } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import { useSiteSettings } from "@/hooks/use-site-settings";
 
 export function PublicHeader() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -9,6 +10,7 @@ export function PublicHeader() {
   const [visible, setVisible] = useState(true);
   const lastScrollY = useRef(0);
   const navigate = useNavigate();
+  const site = useSiteSettings();
 
   useEffect(() => {
     const onScroll = () => {
@@ -57,10 +59,14 @@ export function PublicHeader() {
           <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6">
             {/* Logo */}
             <Link to="/" className="flex items-center gap-2.5 shrink-0">
-              <div className="flex h-9 w-9 items-center justify-center rounded-xl" style={{ background: "var(--gradient-primary)" }}>
-                <i className="fa-solid fa-feather-pointed text-sm text-white"></i>
-              </div>
-              <span className="font-display text-xl font-bold gradient-text">Inkwell</span>
+              {site.site_icon_url ? (
+                <img src={site.site_icon_url} alt={site.site_title} className="h-9 w-9 rounded-xl object-cover" />
+              ) : (
+                <div className="flex h-9 w-9 items-center justify-center rounded-xl" style={{ background: "var(--gradient-primary)" }}>
+                  <i className="fa-solid fa-feather-pointed text-sm text-white"></i>
+                </div>
+              )}
+              <span className="font-display text-xl font-bold gradient-text">{site.site_title}</span>
             </Link>
 
             {/* Desktop nav + fixed-width search */}

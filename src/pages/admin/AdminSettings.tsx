@@ -3,7 +3,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { AdminSidebar } from "@/components/AdminSidebar";
 import { useAuth } from "@/lib/auth-context";
 import { toast } from "sonner";
-import { Eye, EyeOff, Globe, Image as ImageIcon, Search, Share2, Code, Upload, X, Trash2 } from "lucide-react";
+import { Eye, EyeOff, Globe, Image as ImageIcon, Search, Share2, Code, Upload, X, Trash2, User } from "lucide-react";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -47,6 +48,7 @@ const defaultSettings: Omit<SiteSettings, "id"> = {
 
 export default function AdminSettings() {
   const { user } = useAuth();
+  const isMobile = useIsMobile();
   const [newEmail, setNewEmail] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -214,11 +216,11 @@ export default function AdminSettings() {
         <div className="mx-auto max-w-3xl p-4 sm:p-8">
           <Tabs defaultValue="site" className="space-y-6">
             <TabsList className="w-full justify-start rounded-xl bg-muted/50 p-1">
-              <TabsTrigger value="site" className="gap-2 rounded-lg"><Globe className="h-4 w-4" /> Site</TabsTrigger>
-              <TabsTrigger value="seo" className="gap-2 rounded-lg"><Search className="h-4 w-4" /> SEO</TabsTrigger>
-              <TabsTrigger value="social" className="gap-2 rounded-lg"><Share2 className="h-4 w-4" /> Social</TabsTrigger>
-              <TabsTrigger value="advanced" className="gap-2 rounded-lg"><Code className="h-4 w-4" /> Advanced</TabsTrigger>
-              <TabsTrigger value="account" className="gap-2 rounded-lg"><Eye className="h-4 w-4" /> Account</TabsTrigger>
+              <TabsTrigger value="site" className="gap-2 rounded-lg" title="Site"><Globe className="h-4 w-4" />{!isMobile && " Site"}</TabsTrigger>
+              <TabsTrigger value="seo" className="gap-2 rounded-lg" title="SEO"><Search className="h-4 w-4" />{!isMobile && " SEO"}</TabsTrigger>
+              <TabsTrigger value="social" className="gap-2 rounded-lg" title="Social"><Share2 className="h-4 w-4" />{!isMobile && " Social"}</TabsTrigger>
+              <TabsTrigger value="advanced" className="gap-2 rounded-lg" title="Advanced"><Code className="h-4 w-4" />{!isMobile && " Advanced"}</TabsTrigger>
+              <TabsTrigger value="account" className="gap-2 rounded-lg" title="Account"><User className="h-4 w-4" />{!isMobile && " Account"}</TabsTrigger>
             </TabsList>
 
             {/* SITE TAB */}

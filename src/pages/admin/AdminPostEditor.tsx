@@ -272,26 +272,6 @@ export default function AdminPostEditor() {
                 )}
               </div>
 
-              {/* Comments Toggle */}
-              <div className="rounded-2xl border border-border bg-card p-5 shadow-[var(--shadow-card)]">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <MessageCircle className="h-4 w-4 text-primary" />
-                    <Label htmlFor="comments-toggle" className="text-sm font-semibold text-card-foreground cursor-pointer">
-                      Comments
-                    </Label>
-                  </div>
-                  <Switch
-                    id="comments-toggle"
-                    checked={commentsEnabled}
-                    onCheckedChange={setCommentsEnabled}
-                  />
-                </div>
-                <p className="mt-2 text-xs text-muted-foreground">
-                  {commentsEnabled ? "Readers can leave comments on this post." : "Comments are disabled for this post."}
-                </p>
-              </div>
-
               {/* Categories */}
               <div className="rounded-2xl border border-border bg-card p-5 shadow-[var(--shadow-card)]">
                 <div className="mb-3 flex items-center justify-between">
@@ -338,6 +318,26 @@ export default function AdminPostEditor() {
                     ))}
                   </div>
                 )}
+              </div>
+
+              {/* Comments Toggle */}
+              <div className="rounded-2xl border border-border bg-card p-5 shadow-[var(--shadow-card)]">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <MessageCircle className="h-4 w-4 text-primary" />
+                    <Label htmlFor="comments-toggle" className="text-sm font-semibold text-card-foreground cursor-pointer">
+                      Comments
+                    </Label>
+                  </div>
+                  <Switch
+                    id="comments-toggle"
+                    checked={commentsEnabled}
+                    onCheckedChange={setCommentsEnabled}
+                  />
+                </div>
+                <p className="mt-2 text-xs text-muted-foreground">
+                  {commentsEnabled ? "Readers can leave comments on this post." : "Comments are disabled for this post."}
+                </p>
               </div>
 
               {/* Publish - placed at end */}
