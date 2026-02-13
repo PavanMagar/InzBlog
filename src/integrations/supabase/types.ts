@@ -241,6 +241,69 @@ export type Database = {
         }
         Relationships: []
       }
+      site_settings: {
+        Row: {
+          created_at: string
+          custom_head_scripts: string | null
+          favicon_url: string | null
+          google_analytics_id: string | null
+          id: string
+          meta_author: string | null
+          meta_keywords: string | null
+          og_image_url: string | null
+          robots_txt_content: string | null
+          site_description: string
+          site_icon_url: string | null
+          site_tagline: string | null
+          site_title: string
+          social_facebook: string | null
+          social_instagram: string | null
+          social_linkedin: string | null
+          social_twitter: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          custom_head_scripts?: string | null
+          favicon_url?: string | null
+          google_analytics_id?: string | null
+          id?: string
+          meta_author?: string | null
+          meta_keywords?: string | null
+          og_image_url?: string | null
+          robots_txt_content?: string | null
+          site_description?: string
+          site_icon_url?: string | null
+          site_tagline?: string | null
+          site_title?: string
+          social_facebook?: string | null
+          social_instagram?: string | null
+          social_linkedin?: string | null
+          social_twitter?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          custom_head_scripts?: string | null
+          favicon_url?: string | null
+          google_analytics_id?: string | null
+          id?: string
+          meta_author?: string | null
+          meta_keywords?: string | null
+          og_image_url?: string | null
+          robots_txt_content?: string | null
+          site_description?: string
+          site_icon_url?: string | null
+          site_tagline?: string | null
+          site_title?: string
+          social_facebook?: string | null
+          social_instagram?: string | null
+          social_linkedin?: string | null
+          social_twitter?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string

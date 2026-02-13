@@ -181,9 +181,9 @@ export default function AdminLinkShortener() {
           {/* Links List */}
           <Card className="border-border/60 bg-card/80 backdrop-blur-sm">
             <CardHeader>
-              <div className="flex items-center justify-between">
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <CardTitle className="flex items-center gap-2 text-lg"><Link2 className="h-4 w-4" /> All Links ({filtered.length})</CardTitle>
-                <div className="relative w-64">
+                <div className="relative w-full sm:w-64">
                   <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                   <Input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search..." className="pl-9" />
                 </div>
@@ -197,35 +197,37 @@ export default function AdminLinkShortener() {
               ) : (
                 <div className="space-y-3">
                   {filtered.map((link) => (
-                    <div key={link.id} className="flex items-center justify-between rounded-xl border border-border/60 bg-background/50 p-4">
-                      <div className="min-w-0 flex-1">
-                        {editId === link.id ? (
-                          <div className="flex flex-wrap gap-2">
-                            <Input value={editName} onChange={(e) => setEditName(e.target.value)} className="w-40" />
-                            <Input value={editUrl} onChange={(e) => setEditUrl(e.target.value)} className="w-60" />
+                    <div key={link.id} className="rounded-xl border border-border/60 bg-background/50 p-4">
+                      {editId === link.id ? (
+                        <div className="space-y-3">
+                          <div className="grid gap-2 sm:grid-cols-2">
+                            <Input value={editName} onChange={(e) => setEditName(e.target.value)} placeholder="Link name" />
+                            <Input value={editUrl} onChange={(e) => setEditUrl(e.target.value)} placeholder="Original URL" />
+                          </div>
+                          <div className="flex gap-2">
                             <Button size="sm" onClick={() => handleEdit(link.id)}>Save</Button>
                             <Button size="sm" variant="ghost" onClick={() => setEditId(null)}>Cancel</Button>
                           </div>
-                        ) : (
-                          <>
-                            <div className="flex items-center gap-2">
+                        </div>
+                      ) : (
+                        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                          <div className="min-w-0 flex-1">
+                            <div className="flex flex-wrap items-center gap-2">
                               <span className="font-medium text-foreground">{link.link_name}</span>
                               {link.password && <Badge variant="secondary" className="gap-1 text-xs"><Lock className="h-3 w-3" />Protected</Badge>}
                             </div>
-                            <div className="mt-1 flex items-center gap-3 text-xs text-muted-foreground">
+                            <div className="mt-1 flex flex-wrap items-center gap-3 text-xs text-muted-foreground">
                               <span>{new Date(link.created_at).toLocaleDateString()}</span>
                               <span className="flex items-center gap-1"><MousePointerClick className="h-3 w-3" />{link.clicks} clicks</span>
                             </div>
-                          </>
-                        )}
-                      </div>
-                      {editId !== link.id && (
-                        <div className="flex items-center gap-1">
-                          <Button size="icon" variant="ghost" onClick={() => setViewLink(link)}><Eye className="h-4 w-4" /></Button>
-                          <Button size="icon" variant="ghost" onClick={() => { setEditId(link.id); setEditName(link.link_name); setEditUrl(link.original_url); }}><Pencil className="h-4 w-4" /></Button>
-                          <Button size="icon" variant="ghost" onClick={() => copyUrl(link)}><Copy className="h-4 w-4" /></Button>
-                          <Button size="icon" variant="ghost" onClick={() => window.open(getShortUrl(link), "_blank")}><ExternalLink className="h-4 w-4" /></Button>
-                          <Button size="icon" variant="ghost" className="text-destructive" onClick={() => handleDelete(link.id)}><Trash2 className="h-4 w-4" /></Button>
+                          </div>
+                          <div className="flex items-center gap-1 border-t border-border/40 pt-2 sm:border-0 sm:pt-0">
+                            <Button size="icon" variant="ghost" onClick={() => setViewLink(link)}><Eye className="h-4 w-4" /></Button>
+                            <Button size="icon" variant="ghost" onClick={() => { setEditId(link.id); setEditName(link.link_name); setEditUrl(link.original_url); }}><Pencil className="h-4 w-4" /></Button>
+                            <Button size="icon" variant="ghost" onClick={() => copyUrl(link)}><Copy className="h-4 w-4" /></Button>
+                            <Button size="icon" variant="ghost" onClick={() => window.open(getShortUrl(link), "_blank")}><ExternalLink className="h-4 w-4" /></Button>
+                            <Button size="icon" variant="ghost" className="text-destructive" onClick={() => handleDelete(link.id)}><Trash2 className="h-4 w-4" /></Button>
+                          </div>
                         </div>
                       )}
                     </div>

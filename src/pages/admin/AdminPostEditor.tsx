@@ -230,28 +230,6 @@ export default function AdminPostEditor() {
 
             {/* Sidebar */}
             <div className="space-y-5">
-              {/* Publish */}
-              <div className="rounded-2xl border border-border bg-card p-5 shadow-[var(--shadow-card)]">
-                <h3 className="mb-4 text-sm font-semibold text-card-foreground">Publish</h3>
-                <div className="flex gap-2">
-                  <button
-                    onClick={() => handleSave("draft")}
-                    disabled={saving}
-                    className="flex-1 rounded-xl border border-border bg-background px-4 py-2.5 text-sm font-medium text-foreground hover:bg-muted disabled:opacity-50"
-                  >
-                    Save Draft
-                  </button>
-                  <button
-                    onClick={() => handleSave("published")}
-                    disabled={saving}
-                    className="flex-1 rounded-xl px-4 py-2.5 text-sm font-medium text-primary-foreground hover:opacity-90 disabled:opacity-50"
-                    style={{ background: "var(--gradient-primary)" }}
-                  >
-                    {isEditing && status === "published" ? "Update" : "Publish"}
-                  </button>
-                </div>
-              </div>
-
               {/* Thumbnail */}
               <div className="rounded-2xl border border-border bg-card p-5 shadow-[var(--shadow-card)]">
                 <h3 className="mb-3 text-sm font-semibold text-card-foreground">Thumbnail</h3>
@@ -360,6 +338,28 @@ export default function AdminPostEditor() {
                     ))}
                   </div>
                 )}
+              </div>
+
+              {/* Publish - placed at end */}
+              <div className="rounded-2xl border border-border bg-card p-5 shadow-[var(--shadow-card)]">
+                <h3 className="mb-4 text-sm font-semibold text-card-foreground">Publish</h3>
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => handleSave("draft")}
+                    disabled={saving}
+                    className="flex-1 rounded-xl border border-border bg-background px-4 py-2.5 text-sm font-medium text-foreground hover:bg-muted disabled:opacity-50"
+                  >
+                    Save Draft
+                  </button>
+                  <button
+                    onClick={() => handleSave("published")}
+                    disabled={saving}
+                    className="flex-1 rounded-xl px-4 py-2.5 text-sm font-medium text-primary-foreground hover:opacity-90 disabled:opacity-50"
+                    style={{ background: "var(--gradient-primary)" }}
+                  >
+                    {isEditing && status === "published" ? "Update" : "Publish"}
+                  </button>
+                </div>
               </div>
             </div>
           </div>
