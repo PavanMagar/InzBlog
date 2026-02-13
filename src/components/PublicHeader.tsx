@@ -21,9 +21,14 @@ export function PublicHeader() {
   }, []);
 
   useEffect(() => {
-    if (menuOpen) document.body.style.overflow = "hidden";
-    else document.body.style.overflow = "";
-    return () => { document.body.style.overflow = ""; };
+    if (menuOpen) {
+      document.body.style.overflow = "hidden";
+      document.body.style.paddingRight = `${window.innerWidth - document.documentElement.clientWidth}px`;
+    } else {
+      document.body.style.overflow = "";
+      document.body.style.paddingRight = "";
+    }
+    return () => { document.body.style.overflow = ""; document.body.style.paddingRight = ""; };
   }, [menuOpen]);
 
   const handleSearch = (e: React.FormEvent) => {
@@ -113,7 +118,7 @@ export function PublicHeader() {
             transform: menuOpen ? "translateY(0)" : "translateY(-100%)",
           }}
         >
-          <div className="border-b border-border/40 bg-background/95 backdrop-blur-xl px-4 pb-5 pt-3 shadow-lg">
+          <div className="border-b border-border/40 bg-background/95 backdrop-blur-xl px-4 pb-5 pt-3">
             {/* Search */}
             <form onSubmit={handleSearch} className="relative mb-4">
               <input
