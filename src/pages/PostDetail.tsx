@@ -26,6 +26,7 @@ interface PostData {
   created_at: string;
   view_count: number;
   categories: string[];
+  comments_enabled: boolean;
 }
 
 function estimateReadTime(html: string | null): number {
@@ -174,14 +175,14 @@ export default function PostDetail() {
             />
             <div className="mt-10 space-y-6 lg:hidden">
               <SharePost title={post.title} slug={post.slug} />
-              <CommentSection postId={post.id} />
+              <CommentSection postId={post.id} commentsEnabled={post.comments_enabled} />
               <RelatedPosts currentPostId={post.id} categoryNames={post.categories} />
             </div>
           </article>
           <aside className="hidden lg:block lg:w-80 xl:w-96">
             <div className="sticky top-24 space-y-6">
               <SharePost title={post.title} slug={post.slug} />
-              <CommentSection postId={post.id} />
+              <CommentSection postId={post.id} commentsEnabled={post.comments_enabled} />
               <RelatedPosts currentPostId={post.id} categoryNames={post.categories} />
             </div>
           </aside>
