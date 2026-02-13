@@ -103,51 +103,43 @@ export default function PostDetail() {
       />
       <PublicHeader />
 
-      <div className="pt-20 md:pt-28">
+      <div className="pt-24 md:pt-32 pb-8 md:pb-12" style={{ background: "var(--gradient-hero)" }}>
         <LinkShortenerTop />
 
         <div className="mx-auto max-w-7xl px-5 sm:px-8">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.05 }}
-            className="relative overflow-hidden rounded-2xl border border-border/60 bg-card/50 backdrop-blur-sm"
+            transition={{ duration: 0.4 }}
           >
-            <div className="flex">
-              <motion.div
-                initial={{ scaleY: 0 }}
-                animate={{ scaleY: 1 }}
-                transition={{ delay: 0.2, duration: 0.5 }}
-                className="w-1 shrink-0 origin-top"
-                style={{ background: "var(--gradient-primary)" }}
-              />
-              <div className="flex-1 p-5 sm:p-7 md:p-9">
-                {post.categories.length > 0 && (
-                  <div className="mb-4 flex flex-wrap gap-2">
-                    {post.categories.map((cat) => (
-                      <span key={cat} className="rounded-full border border-primary/20 bg-primary/8 px-3 py-1 text-[11px] font-bold uppercase tracking-widest text-primary">
-                        {cat}
-                      </span>
-                    ))}
-                  </div>
-                )}
-                <h1 className="mb-6 max-w-4xl font-display text-2xl font-extrabold leading-[1.15] text-foreground sm:text-3xl md:text-[2.5rem] lg:text-[3rem]">
-                  {post.title}
-                </h1>
-                <div className="flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
-                  <div className="flex items-center gap-1.5">
-                    <Calendar className="h-3.5 w-3.5 text-primary/70" />
-                    <time dateTime={postDate}>
-                      {new Date(postDate).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}
-                    </time>
-                  </div>
-                  <span className="text-border">·</span>
-                  <div className="flex items-center gap-1.5">
-                    <Eye className="h-3.5 w-3.5 text-primary/70" />
-                    <span>{post.view_count.toLocaleString()} views</span>
-                  </div>
-                </div>
+            {post.categories.length > 0 && (
+              <div className="mb-5 flex flex-wrap gap-2">
+                {post.categories.map((cat) => (
+                  <span key={cat} className="rounded-full bg-primary/15 px-3.5 py-1 text-[11px] font-bold uppercase tracking-widest text-primary-foreground/80">
+                    {cat}
+                  </span>
+                ))}
               </div>
+            )}
+
+            <h1 className="mb-6 max-w-4xl font-display text-2xl font-extrabold leading-snug text-primary-foreground sm:text-3xl md:text-4xl lg:text-5xl">
+              {post.title}
+            </h1>
+
+            <div className="flex flex-wrap items-center gap-4 text-sm text-primary-foreground/60">
+              <div className="flex items-center gap-2">
+                <Calendar className="h-4 w-4" />
+                <time dateTime={postDate}>
+                  {new Date(postDate).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}
+                </time>
+              </div>
+              <span className="h-1 w-1 rounded-full bg-primary-foreground/30" />
+              <div className="flex items-center gap-2">
+                <Eye className="h-4 w-4" />
+                <span>{post.view_count.toLocaleString()} views</span>
+              </div>
+              <span className="h-1 w-1 rounded-full bg-primary-foreground/30" />
+              <span>{estimateReadTime(post.content)} min read</span>
             </div>
           </motion.div>
         </div>

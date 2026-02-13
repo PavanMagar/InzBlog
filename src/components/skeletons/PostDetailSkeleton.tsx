@@ -5,19 +5,18 @@ export function PostDetailSkeleton() {
   return (
     <>
       <PublicHeader />
-      <div className="pt-20 md:pt-28">
+      <div className="pt-24 md:pt-32 pb-8 md:pb-12" style={{ background: "var(--gradient-hero)" }}>
         <div className="mx-auto max-w-7xl px-5 sm:px-8">
-          <div className="rounded-2xl border border-border/60 bg-card/50 backdrop-blur-sm p-5 sm:p-7 md:p-9">
-            <div className="flex gap-2 mb-4">
-              <Skeleton className="h-6 w-20 rounded-full" />
-              <Skeleton className="h-6 w-24 rounded-full" />
-            </div>
-            <Skeleton className="h-10 w-4/5 mb-3" />
-            <Skeleton className="h-8 w-3/5 mb-6" />
-            <div className="flex gap-3">
-              <Skeleton className="h-4 w-32" />
-              <Skeleton className="h-4 w-24" />
-            </div>
+          <div className="flex gap-2 mb-5">
+            <Skeleton className="h-6 w-20 rounded-full bg-white/10" />
+            <Skeleton className="h-6 w-24 rounded-full bg-white/10" />
+          </div>
+          <Skeleton className="h-10 w-4/5 mb-3 bg-white/10" />
+          <Skeleton className="h-8 w-3/5 mb-6 bg-white/10" />
+          <div className="flex gap-4">
+            <Skeleton className="h-4 w-32 bg-white/10" />
+            <Skeleton className="h-4 w-24 bg-white/10" />
+            <Skeleton className="h-4 w-20 bg-white/10" />
           </div>
         </div>
       </div>
