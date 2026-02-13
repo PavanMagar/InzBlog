@@ -11,7 +11,7 @@ export function PublicFooter() {
               <div className="flex h-8 w-8 items-center justify-center rounded-lg" style={{ background: "var(--gradient-primary)" }}>
                 <i className="fa-solid fa-feather-pointed text-xs text-white"></i>
               </div>
-              <span className="font-display text-lg font-bold text-white">Inkwell</span>
+              <span className="font-display text-lg font-bold text-white">InvizHer</span>
             </Link>
             <p className="mt-4 text-sm leading-relaxed">
               Exploring the world of programming and development through providing the thoughtful content.
@@ -67,7 +67,7 @@ export function PublicFooter() {
 
         <div className="mt-10 border-t border-[hsl(220,20%,20%)] pt-6">
           <p className="text-center text-sm text-[hsl(220,15%,45%)]">
-            © {new Date().getFullYear()} Inkwell. All rights reserved.
+            © {new Date().getFullYear()} InvizHer. All rights reserved.
           </p>
         </div>
       </div>
