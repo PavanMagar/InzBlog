@@ -103,7 +103,7 @@ export default function PostDetail() {
       />
       <PublicHeader />
 
-      <div className="pt-24 md:pt-32 pb-8 md:pb-12" style={{ background: "var(--gradient-hero)" }}>
+      <div className="pt-24 md:pt-32 pb-10 md:pb-14" style={{ background: "var(--gradient-subtle)" }}>
         <LinkShortenerTop />
 
         <div className="mx-auto max-w-7xl px-5 sm:px-8">
@@ -111,34 +111,35 @@ export default function PostDetail() {
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4 }}
+            className="rounded-2xl border border-border/60 bg-card/80 p-6 sm:p-8 md:p-10 backdrop-blur-sm shadow-[var(--shadow-elevated)]"
           >
             {post.categories.length > 0 && (
-              <div className="mb-5 flex flex-wrap gap-2">
+              <div className="mb-4 flex flex-wrap gap-2">
                 {post.categories.map((cat) => (
-                  <span key={cat} className="rounded-full bg-primary/15 px-3.5 py-1 text-[11px] font-bold uppercase tracking-widest text-primary-foreground/80">
+                  <span key={cat} className="rounded-full border border-primary/20 bg-primary/10 px-3.5 py-1 text-[11px] font-bold uppercase tracking-widest text-primary">
                     {cat}
                   </span>
                 ))}
               </div>
             )}
 
-            <h1 className="mb-6 max-w-4xl font-display text-2xl font-extrabold leading-snug text-primary-foreground sm:text-3xl md:text-4xl lg:text-5xl">
+            <h1 className="mb-5 max-w-4xl font-display text-2xl font-extrabold leading-snug text-foreground sm:text-3xl md:text-4xl lg:text-[2.75rem]">
               {post.title}
             </h1>
 
-            <div className="flex flex-wrap items-center gap-4 text-sm text-primary-foreground/60">
+            <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
               <div className="flex items-center gap-2">
-                <Calendar className="h-4 w-4" />
+                <Calendar className="h-4 w-4 text-primary/70" />
                 <time dateTime={postDate}>
                   {new Date(postDate).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}
                 </time>
               </div>
-              <span className="h-1 w-1 rounded-full bg-primary-foreground/30" />
+              <span className="h-1 w-1 rounded-full bg-muted-foreground/30" />
               <div className="flex items-center gap-2">
-                <Eye className="h-4 w-4" />
+                <Eye className="h-4 w-4 text-primary/70" />
                 <span>{post.view_count.toLocaleString()} views</span>
               </div>
-              <span className="h-1 w-1 rounded-full bg-primary-foreground/30" />
+              <span className="h-1 w-1 rounded-full bg-muted-foreground/30" />
               <span>{estimateReadTime(post.content)} min read</span>
             </div>
           </motion.div>
