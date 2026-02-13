@@ -100,26 +100,22 @@ export default function Posts() {
 
   return (
     <>
-      <SEOHead title="Articles" description="Browse coding tutorials, programming guides, and tech articles. Search, filter by category, and discover developer resources." />
+      <SEOHead title="Articles" description="Browse coding tutorials, programming guides, and tech articles." />
       <PublicHeader />
 
-      <main className="container px-6 py-8 md:px-10 md:py-12 lg:px-16">
-        {/* Hero Header */}
-        <div className="relative mb-10 overflow-hidden rounded-2xl border border-border bg-card p-6 shadow-[var(--shadow-card)] sm:p-8 md:p-10">
-          <div className="absolute inset-0 opacity-50" style={{ background: "var(--gradient-subtle)" }} />
-          <div className="absolute -right-20 -top-20 h-48 w-48 rounded-full bg-primary/5 blur-3xl" />
-          <div className="relative z-10">
-            <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-3 py-1">
-              <i className="fa-solid fa-newspaper text-[10px] text-primary"></i>
-              <span className="text-[10px] font-semibold uppercase tracking-wider text-primary">All Articles</span>
-            </div>
-            <h1 className="mb-2 font-display text-2xl font-bold text-foreground sm:text-3xl md:text-4xl">Articles & Tutorials</h1>
-            <p className="max-w-lg text-sm text-muted-foreground">Discover coding tutorials, programming guides, and tech resources for developers</p>
-          </div>
+      <main className="container px-4 py-8 sm:px-6 md:py-12">
+        {/* Page title — gradient style matching reference */}
+        <div className="mb-10 text-center">
+          <h1 className="font-display text-3xl font-extrabold sm:text-4xl md:text-5xl">
+            <span className="gradient-text">Articles & Tutorials</span>
+          </h1>
+          <p className="mx-auto mt-3 max-w-lg text-sm text-muted-foreground">
+            Discover coding tutorials, programming guides, and tech resources for developers
+          </p>
         </div>
 
-        {/* Search + Categories Bar */}
-        <div className="mb-8 space-y-4">
+        {/* Search + Filters */}
+        <div className="mx-auto mb-8 max-w-2xl space-y-4">
           <div className="flex gap-3">
             <div className="relative flex-1">
               <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
@@ -127,7 +123,7 @@ export default function Posts() {
                 value={query}
                 onChange={(e) => updateParam("q", e.target.value)}
                 placeholder="Search articles..."
-                className="h-12 w-full rounded-xl border border-input bg-card pl-11 pr-10 text-sm shadow-[var(--shadow-card)] outline-none transition-all focus:shadow-[var(--shadow-elevated)] focus:ring-2 focus:ring-ring"
+                className="h-12 w-full rounded-xl border border-input bg-background pl-11 pr-10 text-sm outline-none transition-all focus:border-primary/30 focus:ring-2 focus:ring-ring/20"
               />
               {query && (
                 <button onClick={() => updateParam("q", "")} className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full p-1 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground">
@@ -138,7 +134,7 @@ export default function Posts() {
             <button
               onClick={() => setShowFilters(!showFilters)}
               className={`flex h-12 items-center gap-2 rounded-xl border px-4 text-sm font-medium transition-all ${
-                showFilters || categorySlug ? "border-primary/30 bg-primary/5 text-primary shadow-[var(--shadow-card)]" : "border-input bg-card text-foreground shadow-[var(--shadow-card)] hover:bg-muted"
+                showFilters || categorySlug ? "border-primary/30 bg-primary/5 text-primary" : "border-input bg-background text-foreground hover:bg-muted"
               }`}
             >
               <SlidersHorizontal className="h-4 w-4" />
@@ -156,7 +152,7 @@ export default function Posts() {
                 exit={{ opacity: 0, height: 0 }}
                 className="overflow-hidden"
               >
-                <div className="rounded-xl border border-border bg-card p-4 shadow-[var(--shadow-card)]">
+                <div className="rounded-xl border border-border bg-background p-4">
                   <p className="mb-3 text-xs font-medium uppercase tracking-wider text-muted-foreground">Categories</p>
                   <div className="flex flex-wrap gap-2">
                     <button
@@ -235,7 +231,7 @@ export default function Posts() {
               <div className="mt-10 flex justify-center">
                 <button
                   onClick={() => setVisibleCount((c) => c + LOAD_MORE_COUNT)}
-                  className="inline-flex items-center gap-2 rounded-xl border border-border bg-card px-6 py-3 text-sm font-medium text-foreground shadow-[var(--shadow-card)] transition-all hover:shadow-[var(--shadow-elevated)] hover:-translate-y-0.5"
+                  className="inline-flex items-center gap-2 rounded-xl border border-border bg-background px-6 py-3 text-sm font-medium text-foreground transition-all hover:bg-muted hover:-translate-y-0.5"
                 >
                   <ChevronDown className="h-4 w-4" />
                   Load More ({allPosts.length - visibleCount} remaining)

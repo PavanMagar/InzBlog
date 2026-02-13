@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { ArrowRight, Code2, BookOpen, Cpu, Globe, ChevronRight } from "lucide-react";
+import { ArrowRight, Terminal, Sparkles, BookOpen, Zap, Code2 } from "lucide-react";
 import { motion } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
 import { PublicHeader } from "@/components/PublicHeader";
@@ -51,17 +51,6 @@ function getTopicIcon(name: string) {
   return fallbacks[name.charCodeAt(0) % fallbacks.length];
 }
 
-const topicColors = [
-  "from-blue-500/15 to-blue-600/5 border-blue-500/20 hover:border-blue-500/40",
-  "from-purple-500/15 to-purple-600/5 border-purple-500/20 hover:border-purple-500/40",
-  "from-emerald-500/15 to-emerald-600/5 border-emerald-500/20 hover:border-emerald-500/40",
-  "from-orange-500/15 to-orange-600/5 border-orange-500/20 hover:border-orange-500/40",
-  "from-rose-500/15 to-rose-600/5 border-rose-500/20 hover:border-rose-500/40",
-  "from-cyan-500/15 to-cyan-600/5 border-cyan-500/20 hover:border-cyan-500/40",
-  "from-amber-500/15 to-amber-600/5 border-amber-500/20 hover:border-amber-500/40",
-  "from-indigo-500/15 to-indigo-600/5 border-indigo-500/20 hover:border-indigo-500/40",
-];
-
 export default function Index() {
   const [recentPosts, setRecentPosts] = useState<PostWithCategories[]>([]);
   const [categories, setCategories] = useState<{ id: string; name: string; slug: string }[]>([]);
@@ -100,6 +89,10 @@ export default function Index() {
 
   const visibleTopics = showAllTopics ? categories : categories.slice(0, TOPICS_INITIAL);
 
+  // Time-based greeting
+  const hour = new Date().getHours();
+  const greeting = hour < 12 ? "Good Morning" : hour < 17 ? "Good Afternoon" : "Good Evening";
+
   return (
     <>
       <SEOHead title="Home" description="Inkwell — A modern platform for coding tutorials, programming resources, tech articles and developer knowledge." />
@@ -107,90 +100,110 @@ export default function Index() {
 
       <main>
         {/* Hero */}
-        <section className="relative overflow-hidden border-b border-border bg-background">
-          <div className="absolute -left-40 -top-40 h-[500px] w-[500px] rounded-full bg-primary/[0.06] blur-3xl" />
-
-          <div className="container relative z-10 px-6 py-14 sm:py-20 md:py-28 md:px-10 lg:px-16">
+        <section className="relative overflow-hidden bg-background">
+          <div className="container relative px-4 pb-12 pt-12 sm:px-6 sm:pb-16 sm:pt-16 md:pb-24 md:pt-20 lg:pb-28">
             <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
               <motion.div
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.7 }}
               >
-                <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-4 py-1.5">
-                  <span className="relative flex h-2 w-2">
-                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-500 opacity-75"></span>
-                    <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500"></span>
-                  </span>
-                  <span className="text-xs font-medium tracking-wide text-muted-foreground">DEVELOPER KNOWLEDGE HUB</span>
+                {/* Greeting badge */}
+                <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-4 py-2">
+                  <Sparkles className="h-4 w-4 text-primary" />
+                  <span className="text-sm font-medium text-foreground">{greeting} Buddy!</span>
+                  <span className="text-sm">✨</span>
                 </div>
 
-                <h1 className="mb-6 font-display text-3xl font-bold leading-[1.1] text-foreground sm:text-4xl md:text-5xl lg:text-6xl">
-                  Code. Learn.{" "}
-                  <span className="gradient-text">Build.</span>
+                <h1 className="mb-6 font-display text-4xl font-extrabold leading-[1.1] text-foreground sm:text-5xl md:text-6xl lg:text-7xl">
+                  Code. Create.{" "}
+                  <br />
+                  <span className="gradient-text">Innovate.</span>
                 </h1>
-                <p className="mb-8 max-w-lg text-sm leading-relaxed text-muted-foreground sm:text-base">
-                  Explore in-depth coding tutorials, programming guides, and tech resources. Written by developers, for developers.
+
+                <p className="mb-8 max-w-lg text-base leading-relaxed text-muted-foreground sm:text-lg">
+                  Your gateway to programming tutorials, innovative projects, and cutting-edge development resources.
                 </p>
+
                 <div className="flex flex-col gap-3 sm:flex-row">
                   <Link
                     to="/posts"
-                    className="inline-flex items-center justify-center gap-2 rounded-xl px-6 py-3.5 font-medium text-primary-foreground transition-all hover:opacity-90 hover:shadow-lg"
+                    className="inline-flex items-center justify-center gap-2 rounded-xl px-7 py-3.5 text-sm font-semibold text-primary-foreground transition-all hover:opacity-90 hover:shadow-lg"
                     style={{ background: "var(--gradient-primary)" }}
                   >
-                    Browse Articles <ArrowRight className="h-4 w-4" />
+                    Browse Posts <ArrowRight className="h-4 w-4" />
                   </Link>
                   <Link
                     to="/posts?category="
-                    className="inline-flex items-center justify-center gap-2 rounded-xl border border-border bg-card px-6 py-3.5 font-medium text-foreground transition-all hover:bg-muted"
+                    className="inline-flex items-center justify-center gap-2 rounded-xl border border-border bg-background px-7 py-3.5 text-sm font-semibold text-foreground transition-all hover:bg-muted"
                   >
-                    Explore Topics
+                    <BookOpen className="h-4 w-4" /> Categories
                   </Link>
                 </div>
               </motion.div>
 
-              {/* Right side — feature cards */}
+              {/* Right — terminal card */}
               <motion.div
-                initial={{ opacity: 0, x: 30 }}
+                initial={{ opacity: 0, x: 40 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.7, delay: 0.2 }}
                 className="hidden lg:block"
               >
-                <div className="grid grid-cols-2 gap-4">
-                  {[
-                    { icon: <Code2 className="h-6 w-6" />, title: "Coding Tutorials", desc: "Step-by-step guides" },
-                    { icon: <BookOpen className="h-6 w-6" />, title: "Tech Articles", desc: "Deep-dive analysis" },
-                    { icon: <Cpu className="h-6 w-6" />, title: "Dev Resources", desc: "Tools & libraries" },
-                    { icon: <Globe className="h-6 w-6" />, title: "Web & More", desc: "Modern tech stack" },
-                  ].map((item, i) => (
-                    <motion.div
-                      key={item.title}
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.5, delay: 0.3 + i * 0.1 }}
-                      className="rounded-2xl border border-border bg-card p-5 shadow-[var(--shadow-card)] transition-all hover:shadow-[var(--shadow-elevated)] hover:-translate-y-1"
-                    >
-                      <div className="mb-3 flex h-11 w-11 items-center justify-center rounded-xl bg-primary/10 text-primary">
-                        {item.icon}
-                      </div>
-                      <h3 className="mb-1 font-display text-sm font-semibold text-foreground">{item.title}</h3>
-                      <p className="text-xs text-muted-foreground">{item.desc}</p>
-                    </motion.div>
-                  ))}
+                <div className="rounded-2xl border border-border bg-[hsl(225,35%,8%)] p-0 shadow-[var(--shadow-elevated)] overflow-hidden">
+                  {/* Terminal top bar */}
+                  <div className="flex items-center justify-between border-b border-white/10 px-4 py-3">
+                    <div className="flex gap-2">
+                      <div className="h-3 w-3 rounded-full bg-red-400" />
+                      <div className="h-3 w-3 rounded-full bg-yellow-400" />
+                      <div className="h-3 w-3 rounded-full bg-green-400" />
+                    </div>
+                    <span className="font-mono text-xs text-white/40">inkwell.sh</span>
+                  </div>
+                  {/* Terminal content */}
+                  <div className="p-6 font-mono text-sm leading-relaxed">
+                    <p className="text-green-400">→ ~ inkwell</p>
+                    <p className="mt-3 text-white/70">Welcome to Inkwell Blog Platform</p>
+                    <p className="mt-1 text-white/40">Discover tutorials, guides & resources...</p>
+                    <p className="mt-4 text-white/50">Enter your search query...</p>
+                    <p className="mt-2 text-white/30">Press <span className="rounded border border-white/20 px-1.5 py-0.5 text-xs text-white/60">Enter</span> to search</p>
+                    <p className="mt-4 text-primary">█</p>
+                  </div>
                 </div>
               </motion.div>
             </div>
           </div>
         </section>
 
+        {/* Stats row */}
+        <section className="border-y border-border/40">
+          <div className="container px-4 py-6 sm:px-6">
+            <div className="flex flex-wrap items-center justify-center gap-8 sm:gap-14 md:gap-20">
+              {[
+                { value: "100+", label: "Articles", color: "text-primary" },
+                { value: "Open", label: "Source", color: "text-accent" },
+                { value: "Fast", label: "Performance", color: "text-primary" },
+              ].map((stat) => (
+                <div key={stat.label} className="text-center">
+                  <p className={`font-display text-xl font-extrabold ${stat.color} sm:text-2xl`}>{stat.value}</p>
+                  <p className="text-xs text-muted-foreground">{stat.label}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
         {/* Latest Articles */}
         {recentPosts.length > 0 && (
-          <section className="container px-6 py-14 md:px-10 md:py-20 lg:px-16">
-            <div className="mb-10 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-              <div>
-                <h2 className="font-display text-2xl font-bold text-foreground sm:text-3xl">Latest Articles</h2>
-                <p className="mt-2 text-sm text-muted-foreground">Fresh perspectives and tutorials</p>
+          <section className="container px-4 py-14 sm:px-6 md:py-20">
+            <div className="mb-10 text-center">
+              <div className="mx-auto mb-4 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-4 py-1.5">
+                <Zap className="h-3.5 w-3.5 text-primary" />
+                <span className="text-xs font-semibold uppercase tracking-wider text-primary">Fresh Content</span>
               </div>
+              <h2 className="font-display text-2xl font-bold text-foreground sm:text-3xl md:text-4xl">
+                Latest <span className="gradient-text">Articles</span>
+              </h2>
+              <p className="mx-auto mt-3 max-w-md text-sm text-muted-foreground">Fresh perspectives, tutorials, and developer insights</p>
             </div>
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {recentPosts.map((post, i) => (
@@ -207,7 +220,7 @@ export default function Index() {
             <div className="mt-10 flex justify-center">
               <Link
                 to="/posts"
-                className="inline-flex items-center gap-2 rounded-xl border border-border bg-card px-6 py-3 text-sm font-medium text-foreground shadow-[var(--shadow-card)] transition-all hover:shadow-[var(--shadow-elevated)] hover:-translate-y-0.5"
+                className="inline-flex items-center gap-2 rounded-xl border border-border bg-background px-6 py-3 text-sm font-medium text-foreground transition-all hover:bg-muted hover:-translate-y-0.5"
               >
                 View All Articles <ArrowRight className="h-4 w-4" />
               </Link>
@@ -217,71 +230,50 @@ export default function Index() {
 
         {/* Explore Topics */}
         {categories.length > 0 && (
-          <section className="relative overflow-hidden border-t border-border">
-            <div className="absolute inset-0" style={{ background: "var(--gradient-subtle)" }} />
-            <div className="absolute -right-40 top-0 h-80 w-80 rounded-full bg-primary/5 blur-3xl" />
-            <div className="absolute -left-40 bottom-0 h-80 w-80 rounded-full bg-accent/5 blur-3xl" />
-
-            <div className="container relative z-10 px-6 py-16 md:px-10 md:py-24 lg:px-16">
-              <div className="mb-12 flex flex-col items-center text-center">
-                <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-4 py-1.5">
-                  <i className="fa-solid fa-compass text-xs text-primary"></i>
-                  <span className="text-xs font-semibold uppercase tracking-wider text-primary">Browse by Topic</span>
+          <section className="border-t border-border/40">
+            <div className="container px-4 py-16 sm:px-6 md:py-24">
+              <div className="mb-12 text-center">
+                <div className="mx-auto mb-4 inline-flex items-center gap-2 rounded-full border border-accent/20 bg-accent/5 px-4 py-1.5">
+                  <Code2 className="h-3.5 w-3.5 text-accent" />
+                  <span className="text-xs font-semibold uppercase tracking-wider text-accent">Browse by Topic</span>
                 </div>
-                <h2 className="font-display text-2xl font-bold text-foreground sm:text-3xl md:text-4xl">Explore Topics</h2>
-                <p className="mt-3 max-w-md text-sm leading-relaxed text-muted-foreground">
-                  Dive into curated collections of articles organized by technology and category
+                <h2 className="font-display text-2xl font-bold text-foreground sm:text-3xl md:text-4xl">
+                  Explore <span className="gradient-text">Topics</span>
+                </h2>
+                <p className="mx-auto mt-3 max-w-md text-sm text-muted-foreground">
+                  Dive into curated collections organized by technology
                 </p>
               </div>
 
-              <div className="mx-auto grid max-w-5xl gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                {visibleTopics.map((cat, i) => {
-                  const colorSets = [
-                    { bg: "hsl(217, 91%, 60%)", light: "hsl(217, 91%, 60% / 0.1)", border: "hsl(217, 91%, 60% / 0.2)" },
-                    { bg: "hsl(271, 81%, 56%)", light: "hsl(271, 81%, 56% / 0.1)", border: "hsl(271, 81%, 56% / 0.2)" },
-                    { bg: "hsl(160, 84%, 39%)", light: "hsl(160, 84%, 39% / 0.1)", border: "hsl(160, 84%, 39% / 0.2)" },
-                    { bg: "hsl(25, 95%, 53%)", light: "hsl(25, 95%, 53% / 0.1)", border: "hsl(25, 95%, 53% / 0.2)" },
-                    { bg: "hsl(346, 77%, 50%)", light: "hsl(346, 77%, 50% / 0.1)", border: "hsl(346, 77%, 50% / 0.2)" },
-                    { bg: "hsl(189, 94%, 43%)", light: "hsl(189, 94%, 43% / 0.1)", border: "hsl(189, 94%, 43% / 0.2)" },
-                  ];
-                  const c = colorSets[i % colorSets.length];
-                  return (
-                    <motion.div
-                      key={cat.id}
-                      initial={{ opacity: 0, y: 15 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.3, delay: i * 0.04 }}
+              <div className="mx-auto grid max-w-4xl gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                {visibleTopics.map((cat, i) => (
+                  <motion.div
+                    key={cat.id}
+                    initial={{ opacity: 0, y: 15 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.3, delay: i * 0.04 }}
+                  >
+                    <Link
+                      to={`/posts?category=${encodeURIComponent(cat.slug)}`}
+                      className="group flex items-center gap-4 rounded-xl border border-border bg-background p-4 transition-all duration-300 hover:border-primary/30 hover:shadow-[var(--shadow-elevated)] hover:-translate-y-0.5"
                     >
-                      <Link
-                        to={`/posts?category=${encodeURIComponent(cat.slug)}`}
-                        className="group relative flex items-center gap-4 overflow-hidden rounded-2xl border bg-card p-5 transition-all duration-300 hover:shadow-[var(--shadow-elevated)] hover:-translate-y-1"
-                        style={{ borderColor: c.border }}
-                      >
-                        <div
-                          className="absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-                          style={{ background: `linear-gradient(135deg, ${c.light}, transparent)` }}
-                        />
-                        <div
-                          className="relative z-10 flex h-12 w-12 shrink-0 items-center justify-center rounded-xl text-lg transition-transform duration-300 group-hover:scale-110"
-                          style={{ background: c.light, color: c.bg }}
-                        >
-                          <i className={getTopicIcon(cat.name)}></i>
-                        </div>
-                        <div className="relative z-10 flex-1 min-w-0">
-                          <h3 className="font-display text-sm font-bold text-foreground">{cat.name}</h3>
-                          <p className="mt-0.5 text-xs text-muted-foreground">Explore articles →</p>
-                        </div>
-                      </Link>
-                    </motion.div>
-                  );
-                })}
+                      <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary transition-transform duration-300 group-hover:scale-110">
+                        <i className={getTopicIcon(cat.name)}></i>
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <h3 className="font-display text-sm font-bold text-foreground">{cat.name}</h3>
+                        <p className="text-xs text-muted-foreground">Explore articles →</p>
+                      </div>
+                    </Link>
+                  </motion.div>
+                ))}
               </div>
 
               {categories.length > TOPICS_INITIAL && !showAllTopics && (
                 <div className="mt-10 flex justify-center">
                   <button
                     onClick={() => setShowAllTopics(true)}
-                    className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-6 py-3 text-sm font-medium text-foreground shadow-[var(--shadow-card)] transition-all hover:shadow-[var(--shadow-elevated)] hover:-translate-y-0.5"
+                    className="inline-flex items-center gap-2 rounded-xl border border-border bg-background px-6 py-3 text-sm font-medium text-foreground transition-all hover:bg-muted hover:-translate-y-0.5"
                   >
                     Show All Topics
                     <span className="flex h-5 w-5 items-center justify-center rounded-full bg-primary/10 text-xs text-primary">
@@ -295,36 +287,33 @@ export default function Index() {
         )}
 
         {/* Connect With Us */}
-        <section className="relative overflow-hidden border-t border-border bg-background">
-          <div className="absolute -right-20 top-1/2 h-64 w-64 -translate-y-1/2 rounded-full bg-primary/[0.06] blur-3xl" />
-          <div className="absolute -left-20 top-1/2 h-64 w-64 -translate-y-1/2 rounded-full bg-accent/[0.06] blur-3xl" />
-
-          <div className="container relative z-10 px-6 py-16 md:px-10 md:py-24 lg:px-16">
+        <section className="border-t border-border/40">
+          <div className="container px-4 py-16 sm:px-6 md:py-24">
             <div className="mx-auto max-w-3xl text-center">
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
               >
-                <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-2xl border border-primary/20 bg-primary/5">
-                  <i className="fa-solid fa-satellite-dish text-2xl text-primary"></i>
+                <div className="mx-auto mb-6 flex h-14 w-14 items-center justify-center rounded-2xl border border-primary/20 bg-primary/5">
+                  <i className="fa-solid fa-satellite-dish text-xl text-primary"></i>
                 </div>
                 <h2 className="mb-3 font-display text-2xl font-bold text-foreground sm:text-3xl md:text-4xl">
                   Let's <span className="gradient-text">Connect</span>
                 </h2>
                 <p className="mx-auto mb-10 max-w-md text-sm leading-relaxed text-muted-foreground">
-                  Follow us for the latest tutorials, tech insights, and developer resources. Join our growing community.
+                  Follow us for the latest tutorials, tech insights, and developer resources.
                 </p>
               </motion.div>
 
-              <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-6">
+              <div className="grid grid-cols-3 gap-3 sm:grid-cols-6">
                 {[
-                  { icon: "fa-brands fa-instagram", label: "Instagram", href: "#", color: "hsl(330, 70%, 55%)" },
-                  { icon: "fa-brands fa-x-twitter", label: "Twitter", href: "#", color: "hsl(0, 0%, 50%)" },
-                  { icon: "fa-brands fa-github", label: "GitHub", href: "#", color: "hsl(0, 0%, 40%)" },
-                  { icon: "fa-brands fa-linkedin-in", label: "LinkedIn", href: "#", color: "hsl(210, 80%, 55%)" },
-                  { icon: "fa-brands fa-youtube", label: "YouTube", href: "#", color: "hsl(0, 80%, 55%)" },
-                  { icon: "fa-brands fa-telegram", label: "Telegram", href: "#", color: "hsl(200, 80%, 55%)" },
+                  { icon: "fa-brands fa-instagram", label: "Instagram", href: "#" },
+                  { icon: "fa-brands fa-x-twitter", label: "Twitter", href: "#" },
+                  { icon: "fa-brands fa-github", label: "GitHub", href: "#" },
+                  { icon: "fa-brands fa-linkedin-in", label: "LinkedIn", href: "#" },
+                  { icon: "fa-brands fa-youtube", label: "YouTube", href: "#" },
+                  { icon: "fa-brands fa-telegram", label: "Telegram", href: "#" },
                 ].map((s, i) => (
                   <motion.a
                     key={s.label}
@@ -334,13 +323,10 @@ export default function Index() {
                     initial={{ opacity: 0, y: 15 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.3, delay: i * 0.05 }}
-                    className="group flex flex-col items-center gap-2.5 rounded-2xl border border-border bg-card p-5 shadow-[var(--shadow-card)] transition-all duration-300 hover:shadow-[var(--shadow-elevated)] hover:-translate-y-1"
+                    className="group flex flex-col items-center gap-2 rounded-xl border border-border bg-background p-4 transition-all duration-300 hover:border-primary/30 hover:shadow-[var(--shadow-elevated)] hover:-translate-y-1"
                   >
-                    <div
-                      className="flex h-11 w-11 items-center justify-center rounded-xl transition-transform duration-300 group-hover:scale-110"
-                      style={{ background: `${s.color}15`, color: s.color }}
-                    >
-                      <i className={`${s.icon} text-lg`}></i>
+                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary transition-transform duration-300 group-hover:scale-110">
+                      <i className={`${s.icon} text-base`}></i>
                     </div>
                     <span className="text-xs font-medium text-muted-foreground group-hover:text-foreground">{s.label}</span>
                   </motion.a>
@@ -349,17 +335,6 @@ export default function Index() {
             </div>
           </div>
         </section>
-
-        {/* Empty state */}
-        {recentPosts.length === 0 && (
-          <section className="container px-4 py-24 text-center">
-            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl" style={{ background: "var(--gradient-subtle)" }}>
-              <i className="fa-solid fa-pen-nib text-2xl text-primary"></i>
-            </div>
-            <h2 className="mb-3 mt-6 font-display text-2xl font-bold text-foreground">No articles yet</h2>
-            <p className="text-muted-foreground">Content is coming soon. Stay tuned!</p>
-          </section>
-        )}
       </main>
 
       <PublicFooter />
