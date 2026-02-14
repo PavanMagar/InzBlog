@@ -21,17 +21,17 @@ A full-featured, modern blog platform built with React, TypeScript, Tailwind CSS
 1. [Prerequisites](#prerequisites)
 2. [Project Structure](#project-structure)
 3. [Supabase Setup](#supabase-setup)
-4. [Environment Variables](#environment-variables)
-5. [Local Development](#local-development)
-6. [Edge Functions](#edge-functions)
-7. [Building for Production](#building-for-production)
-8. [Deployment](#deployment)
+4. [Admin Setup](#admin-setup)
+5. [Edge Functions (Manual Setup)](#edge-functions-manual-setup)
+6. [Environment Variables](#environment-variables)
+7. [Local Development](#local-development)
+8. [Building for Production](#building-for-production)
+9. [Deployment](#deployment)
    - [Vercel](#deploy-to-vercel)
    - [Cloudflare Pages](#deploy-to-cloudflare-pages)
    - [Render](#deploy-to-render)
    - [Netlify](#deploy-to-netlify)
    - [Self-Hosted / VPS](#deploy-to-vps--self-hosted)
-9. [Admin Setup](#admin-setup)
 10. [Troubleshooting](#troubleshooting)
 
 ---
@@ -41,7 +41,7 @@ A full-featured, modern blog platform built with React, TypeScript, Tailwind CSS
 Before you begin, make sure you have:
 
 - **Node.js** v18 or later — [Download](https://nodejs.org/) or use [nvm](https://github.com/nvm-sh/nvm)
-- **npm** (comes with Node.js) or **bun** — [Download bun](https://bun.sh/)
+- **npm** (comes with Node.js)
 - **Git** — [Download](https://git-scm.com/)
 - **Supabase account** (free) — [Sign up](https://supabase.com/)
 
@@ -73,7 +73,7 @@ inkwell/
 │   ├── main.tsx               # App entry point
 │   └── App.tsx                # Router & providers
 ├── supabase/
-│   └── functions/             # Supabase Edge Functions
+│   └── functions/             # Supabase Edge Functions (reference code)
 │       ├── increment-link-click/
 │       └── setup-admin/
 ├── database.sql               # Complete database setup script
@@ -136,49 +136,259 @@ inkwell/
 2. You should see a `thumbnails` bucket
 3. It should be marked as **Public**
 
-### Step 6: Deploy Edge Functions
+---
 
-Edge functions handle server-side logic. You need the Supabase CLI:
+## Admin Setup
 
-```bash
-# Install Supabase CLI
-npm install -g supabase
+> ⚠️ **No CLI required!** Everything is done through the Supabase Dashboard.
 
-# Login to Supabase
-supabase login
+### Step 1: Create the Admin User
 
-# Link your project (use your project ref from Step 2)
-supabase link --project-ref YOUR_PROJECT_REF_ID
+1. In your Supabase dashboard, go to **Authentication** → **Users**
+2. Click **"Add user"** → **"Create new user"**
+3. Fill in:
+   - **Email:** `admin@admin.com`
+   - **Password:** `admin1234`
+   - ✅ Check **"Auto Confirm User"** checkbox
+4. Click **"Create user"**
 
-# Deploy all edge functions
-supabase functions deploy increment-link-click --no-verify-jwt
-supabase functions deploy setup-admin
+### Step 2: Copy the User UUID
+
+1. After creating the user, they will appear in the users list
+2. Click on the user row to see their details
+3. Find the **"User UID"** field — it looks like `12345678-abcd-efgh-ijkl-123456789012`
+4. **Copy this UUID** — you'll need it in the next step
+
+### Step 3: Assign Admin Role
+
+1. Go to **SQL Editor** in the Supabase dashboard
+2. Click **"New query"**
+3. Paste this SQL, replacing `YOUR_USER_UUID` with the UUID you copied:
+
+```sql
+INSERT INTO public.user_roles (user_id, role)
+VALUES ('YOUR_USER_UUID', 'admin');
 ```
 
-> **Note:** `increment-link-click` uses `--no-verify-jwt` because it's called from the public frontend without authentication.
+4. Click **"Run"**
+5. You should see "Success. 1 row affected"
 
-### Step 7: Create Admin User
+### Step 4: Verify Admin Access
 
-After deploying edge functions, create your admin user:
+1. Navigate to `/admin/login` on your deployed site (or `http://localhost:8080/admin/login` locally)
+2. Login with:
+   - **Email:** `admin@admin.com`
+   - **Password:** `admin1234`
+3. You should see the admin dashboard
 
-```bash
-# Using curl
-curl -X POST \
-  'https://YOUR_PROJECT_REF.supabase.co/functions/v1/setup-admin' \
-  -H 'Authorization: Bearer YOUR_ANON_KEY' \
-  -H 'Content-Type: application/json'
+### Step 5: Change Your Credentials
+
+1. Go to **Admin → Settings → Account**
+2. Update your **email** to your real email
+3. Update your **password** to a strong password
+4. Click **"Save"**
+
+> ⚠️ **IMPORTANT:** Always change the default credentials immediately after first login!
+
+---
+
+## Edge Functions (Manual Setup)
+
+The project uses two Edge Functions. You do **NOT** need the Supabase CLI — you can create them directly in the Supabase Dashboard.
+
+### Function 1: `increment-link-click`
+
+This function increments the click counter for shortened links. It's called from the public frontend without authentication.
+
+**Steps to create:**
+
+1. Go to your Supabase dashboard → **Edge Functions**
+2. Click **"Create a new function"**
+3. Name it: `increment-link-click`
+4. Replace the default code with the following:
+
+```typescript
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers":
+    "authorization, x-client-info, apikey, content-type",
+};
+
+Deno.serve(async (req) => {
+  // Handle CORS preflight
+  if (req.method === "OPTIONS") {
+    return new Response(null, { headers: corsHeaders });
+  }
+
+  // Only allow POST
+  if (req.method !== "POST") {
+    return new Response(JSON.stringify({ error: "Method not allowed" }), {
+      status: 405,
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+    });
+  }
+
+  try {
+    const { link_id } = await req.json();
+
+    // Validate link_id
+    if (!link_id || typeof link_id !== "string") {
+      return new Response(JSON.stringify({ error: "Invalid link_id" }), {
+        status: 400,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    // Validate UUID format
+    const uuidRegex =
+      /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+    if (!uuidRegex.test(link_id)) {
+      return new Response(JSON.stringify({ error: "Invalid UUID format" }), {
+        status: 400,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    // Create Supabase client with service role key
+    const supabase = createClient(
+      Deno.env.get("SUPABASE_URL")!,
+      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
+    );
+
+    // Call the increment function
+    const { error } = await supabase.rpc("increment_link_clicks", {
+      p_link_id: link_id,
+    });
+
+    if (error) {
+      return new Response(JSON.stringify({ error: error.message }), {
+        status: 500,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    return new Response(JSON.stringify({ success: true }), {
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+    });
+  } catch (e) {
+    return new Response(JSON.stringify({ error: "Internal server error" }), {
+      status: 500,
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+    });
+  }
+});
 ```
 
-Or open this URL in your browser:
+5. Click **"Deploy"**
+6. After deployment, go to the function's **Settings** tab
+7. **Disable JWT verification** — toggle off "Verify JWT" (this function is called publicly)
+
+### Function 2: `setup-admin` (Optional)
+
+This function is an **alternative** way to create the admin user programmatically instead of the manual steps above. It's optional — you only need it if you prefer API-based admin creation.
+
+**Steps to create:**
+
+1. Go to your Supabase dashboard → **Edge Functions**
+2. Click **"Create a new function"**
+3. Name it: `setup-admin`
+4. Replace the default code with the following:
+
+```typescript
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers":
+    "authorization, x-client-info, apikey, content-type",
+};
+
+Deno.serve(async (req) => {
+  if (req.method === "OPTIONS") {
+    return new Response("ok", { headers: corsHeaders });
+  }
+
+  try {
+    const supabaseAdmin = createClient(
+      Deno.env.get("SUPABASE_URL") ?? "",
+      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? ""
+    );
+
+    const adminEmail = "admin@admin.com";
+    const adminPassword = "admin1234";
+
+    // Check if admin user already exists
+    const { data: existingUsers } =
+      await supabaseAdmin.auth.admin.listUsers();
+    const existingAdmin = existingUsers?.users?.find(
+      (u) => u.email === adminEmail
+    );
+
+    let userId: string;
+
+    if (existingAdmin) {
+      userId = existingAdmin.id;
+    } else {
+      // Create admin user
+      const { data: newUser, error: createError } =
+        await supabaseAdmin.auth.admin.createUser({
+          email: adminEmail,
+          password: adminPassword,
+          email_confirm: true,
+        });
+
+      if (createError) throw createError;
+      userId = newUser.user.id;
+    }
+
+    // Ensure admin role exists in user_roles table
+    const { data: existingRole } = await supabaseAdmin
+      .from("user_roles")
+      .select("id")
+      .eq("user_id", userId)
+      .eq("role", "admin")
+      .maybeSingle();
+
+    if (!existingRole) {
+      const { error: roleError } = await supabaseAdmin
+        .from("user_roles")
+        .insert({ user_id: userId, role: "admin" });
+
+      if (roleError) throw roleError;
+    }
+
+    return new Response(
+      JSON.stringify({
+        success: true,
+        message: "Admin user ready",
+        email: adminEmail,
+      }),
+      {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      }
+    );
+  } catch (error) {
+    return new Response(
+      JSON.stringify({ success: false, error: error.message }),
+      {
+        status: 500,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      }
+    );
+  }
+});
+```
+
+5. Click **"Deploy"**
+6. To invoke it, open this URL in your browser or use curl:
+
 ```
 https://YOUR_PROJECT_REF.supabase.co/functions/v1/setup-admin
 ```
 
-This creates an admin user with:
-- **Email:** `admin@inkwell.blog`
-- **Password:** `admin1234`
-
-> ⚠️ **IMPORTANT:** Change these credentials immediately after first login via the Admin Settings page!
+This will automatically create the admin user and assign the admin role.
 
 ---
 
@@ -216,11 +426,7 @@ cd inkwell
 ### Step 2: Install Dependencies
 
 ```bash
-# Using npm
 npm install
-
-# OR using bun (faster)
-bun install
 ```
 
 ### Step 3: Set Up Environment Variables
@@ -233,11 +439,7 @@ cp .env.example .env
 ### Step 4: Start the Development Server
 
 ```bash
-# Using npm
 npm run dev
-
-# OR using bun
-bun run dev
 ```
 
 ### Step 5: Open in Browser
@@ -253,40 +455,9 @@ The dev server features:
 
 1. Go to [http://localhost:8080/admin/login](http://localhost:8080/admin/login)
 2. Login with:
-   - Email: `admin@inkwell.blog`
+   - Email: `admin@admin.com`
    - Password: `admin1234`
 3. **Change your password** in Admin → Settings → Account
-
----
-
-## Edge Functions
-
-The project includes two Supabase Edge Functions:
-
-### 1. `increment-link-click`
-- **Purpose:** Increments the click counter for shortened links
-- **Auth:** No JWT verification (public access)
-- **Method:** POST
-- **Body:** `{ "link_id": "uuid-string" }`
-
-### 2. `setup-admin`
-- **Purpose:** Creates the initial admin user and role
-- **Auth:** Uses service role key internally
-- **Method:** POST
-- **Body:** None required
-
-### Local Edge Function Development
-
-```bash
-# Start edge functions locally (requires Docker)
-supabase start
-supabase functions serve
-
-# Test locally
-curl -X POST http://localhost:54321/functions/v1/setup-admin \
-  -H 'Authorization: Bearer YOUR_ANON_KEY' \
-  -H 'Content-Type: application/json'
-```
 
 ---
 
@@ -295,11 +466,7 @@ curl -X POST http://localhost:54321/functions/v1/setup-admin \
 ### Step 1: Build the Project
 
 ```bash
-# Using npm
 npm run build
-
-# OR using bun
-bun run build
 ```
 
 This creates a `dist/` folder with optimized static files.
@@ -307,11 +474,7 @@ This creates a `dist/` folder with optimized static files.
 ### Step 2: Preview the Build Locally
 
 ```bash
-# Using npm
 npm run preview
-
-# OR using npx
-npx vite preview --port 4173
 ```
 
 Navigate to [http://localhost:4173](http://localhost:4173) to verify.
@@ -321,6 +484,8 @@ Navigate to [http://localhost:4173](http://localhost:4173) to verify.
 ## Deployment
 
 The build output is a static site (HTML + JS + CSS). It can be hosted on any static hosting platform.
+
+> **IMPORTANT:** All deployment platforms must use `npm install` (not `bun install`) as the install command to avoid lockfile compatibility issues.
 
 ---
 
@@ -419,7 +584,7 @@ vercel --prod
 
 #### SPA Routing Fix for Vercel
 
-Create a `vercel.json` file in your project root:
+The project already includes a `vercel.json` file that handles SPA routing:
 
 ```json
 {
@@ -429,7 +594,7 @@ Create a `vercel.json` file in your project root:
 }
 ```
 
-This ensures client-side routing works for all routes.
+No additional configuration needed.
 
 ---
 
@@ -457,8 +622,21 @@ This ensures client-side routing works for all routes.
    - **Build output directory:** `dist`
    - **Root directory:** `/` (leave empty)
 
-7. **Add Environment Variables**
-   - Expand "Environment variables (advanced)"
+7. **⚠️ IMPORTANT: Set the install command**
+   - Expand **"Environment variables (advanced)"**
+   - Click **"Add variable"**
+   - Add this special variable to force npm:
+     ```
+     Variable name: NPM_FLAGS
+     Value: --prefer-offline
+     ```
+   - **Also add this variable:**
+     ```
+     Variable name: NODE_VERSION
+     Value: 18
+     ```
+
+8. **Add Environment Variables**
    - Click "Add variable" for each:
      ```
      Variable name: VITE_SUPABASE_URL
@@ -471,11 +649,26 @@ This ensures client-side routing works for all routes.
      Value: YOUR_PROJECT_REF
      ```
 
-8. **Click "Save and Deploy"**
+9. **Click "Save and Deploy"**
 
-9. **Wait for the build** (2-5 minutes)
+10. **Wait for the build** (2-5 minutes)
 
-10. **Your site is live** at `https://inkwell.pages.dev`
+11. **Your site is live** at `https://inkwell.pages.dev`
+
+> **⚠️ Fix for "lockfile" errors on Cloudflare:** If you see errors about `bun.lockb` or frozen lockfile, delete the `bun.lockb` file from your repository and generate a `package-lock.json` instead:
+> ```bash
+> # Remove bun lockfile
+> rm bun.lockb
+> 
+> # Generate npm lockfile
+> npm install
+> 
+> # Commit the change
+> git add package-lock.json .gitignore
+> git rm bun.lockb
+> git commit -m "Switch to npm lockfile for Cloudflare compatibility"
+> git push
+> ```
 
 #### Option B: Via Wrangler CLI
 
@@ -498,14 +691,13 @@ wrangler pages deploy dist --project-name=inkwell
 
 #### SPA Routing Fix for Cloudflare Pages
 
-Cloudflare Pages needs a `_redirects` file in the `public/` folder:
+The project already includes a `public/_redirects` file:
 
-Create `public/_redirects`:
 ```
 /*    /index.html   200
 ```
 
-This ensures all routes serve the SPA correctly.
+This ensures all routes serve the SPA correctly. No additional configuration needed.
 
 #### Adding a Custom Domain on Cloudflare Pages
 
@@ -603,20 +795,49 @@ In Render dashboard:
 
 7. **Click "Deploy site"**
 
+#### Option B: Via Netlify CLI
+
+```bash
+# Step 1: Install Netlify CLI
+npm install -g netlify-cli
+
+# Step 2: Login
+netlify login
+
+# Step 3: Initialize
+netlify init
+
+# Step 4: Set environment variables
+netlify env:set VITE_SUPABASE_URL "https://YOUR_PROJECT_REF.supabase.co"
+netlify env:set VITE_SUPABASE_PUBLISHABLE_KEY "your-anon-key"
+netlify env:set VITE_SUPABASE_PROJECT_ID "YOUR_PROJECT_REF"
+
+# Step 5: Deploy
+netlify deploy --prod
+```
+
 #### SPA Routing Fix for Netlify
 
-Create `public/_redirects`:
+The project already includes `public/_redirects`:
 ```
 /*    /index.html   200
 ```
 
-Or create `netlify.toml` in project root:
+Alternatively, you can create `netlify.toml` in the project root:
 ```toml
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
 ```
+
+#### Adding a Custom Domain on Netlify
+
+1. Go to your site → **Domain settings**
+2. Click **Add custom domain**
+3. Enter your domain
+4. Follow DNS instructions (CNAME or A record)
+5. Enable HTTPS (automatic via Let's Encrypt)
 
 ---
 
@@ -769,21 +990,7 @@ Run whenever you push new code:
 
 ---
 
-## Admin Setup
-
-### First-Time Admin Login
-
-1. Make sure you've run the `setup-admin` edge function (see [Step 7 of Supabase Setup](#step-7-create-admin-user))
-2. Navigate to `/admin/login` on your deployed site
-3. Login with:
-   - **Email:** `admin@inkwell.blog`
-   - **Password:** `admin1234`
-4. **Immediately change your credentials:**
-   - Go to Admin → Settings → Account
-   - Update your email
-   - Update your password
-
-### Admin Features
+## Admin Features
 
 | Feature | Path | Description |
 |---------|------|-------------|
@@ -817,18 +1024,25 @@ Run whenever you push new code:
 - ✅ This is a client-side routing issue — all routes need to serve `index.html`
 
 #### Admin Login Doesn't Work
-- ✅ Make sure the `setup-admin` edge function was deployed and called
-- ✅ Check that `user_roles` table has a row with `role = 'admin'`
-- ✅ Verify the user exists in Authentication → Users
+- ✅ Make sure you created the user in Authentication → Users
+- ✅ Check that `user_roles` table has a row with `role = 'admin'` for your user
+- ✅ Verify the user exists and is confirmed in Authentication → Users
+- ✅ Make sure you used the correct UUID when inserting the admin role
 
 #### Images Don't Upload
 - ✅ Check that the `thumbnails` storage bucket exists and is public
 - ✅ Verify storage policies allow authenticated uploads
 
+#### Cloudflare Build Fails with "lockfile" Error
+- ✅ Delete `bun.lockb` from your repository
+- ✅ Run `npm install` to generate `package-lock.json`
+- ✅ Commit and push `package-lock.json`
+- ✅ Make sure the build command is `npm run build` (not `bun run build`)
+
 #### Edge Function Errors
-- ✅ Check that edge functions are deployed: `supabase functions list`
-- ✅ View edge function logs: `supabase functions logs increment-link-click`
-- ✅ Ensure `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` secrets are set
+- ✅ Make sure the Edge Functions were created in the Supabase Dashboard
+- ✅ Check that `increment-link-click` has JWT verification **disabled**
+- ✅ View edge function logs in the Supabase Dashboard → Edge Functions → Logs
 
 ### Getting Help
 
