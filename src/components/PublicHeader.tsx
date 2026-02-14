@@ -52,11 +52,10 @@ export function PublicHeader() {
     <>
       {/* Fixed header bar */}
       <header
-        className="fixed top-0 left-0 w-full z-50 transition-transform duration-300 md:p-0 p-2"
+        className="fixed top-0 left-0 w-full z-50 transition-transform duration-300"
         style={{ transform: visible ? "translateY(0)" : "translateY(-100%)" }}
       >
-        {/* Desktop: full-width bar. Mobile: floating rounded card */}
-        <div className="md:border-b md:border-border/40 md:bg-background/80 md:backdrop-blur-xl md:rounded-none rounded-2xl border border-border/40 bg-background/95 backdrop-blur-xl md:shadow-none shadow-lg overflow-hidden">
+        <div className="border-b border-border/40 bg-background/95 backdrop-blur-xl overflow-hidden">
           <div className="mx-auto flex h-14 md:h-16 max-w-7xl items-center justify-between px-4 sm:px-6">
             {/* Logo */}
             <Link to="/" className="flex items-center gap-2.5 shrink-0">
