@@ -50,13 +50,14 @@ export function PublicHeader() {
 
   return (
     <>
-      {/* Fixed header bar — never changes width */}
+      {/* Fixed header bar */}
       <header
-        className="fixed top-0 left-0 w-full z-50 transition-transform duration-300"
+        className="fixed top-0 left-0 w-full z-50 transition-transform duration-300 md:p-0 p-2"
         style={{ transform: visible ? "translateY(0)" : "translateY(-100%)" }}
       >
-        <div className="border-b border-border/40 bg-background/80 backdrop-blur-xl">
-          <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6">
+        {/* Desktop: full-width bar. Mobile: floating rounded card */}
+        <div className="md:border-b md:border-border/40 md:bg-background/80 md:backdrop-blur-xl md:rounded-none rounded-2xl border border-border/40 bg-background/95 backdrop-blur-xl md:shadow-none shadow-lg overflow-hidden">
+          <div className="mx-auto flex h-14 md:h-16 max-w-7xl items-center justify-between px-4 sm:px-6">
             {/* Logo */}
             <Link to="/" className="flex items-center gap-2.5 shrink-0">
               {site.site_icon_url ? (
@@ -100,91 +101,82 @@ export function PublicHeader() {
             {/* Mobile hamburger */}
             <button
               onClick={() => setMenuOpen(!menuOpen)}
-              className="flex h-10 w-10 items-center justify-center rounded-xl border border-border text-muted-foreground transition-colors hover:bg-muted md:hidden"
+              className="flex h-10 w-10 items-center justify-center rounded-xl text-muted-foreground transition-colors hover:bg-muted md:hidden"
             >
               {menuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
             </button>
           </div>
-        </div>
-      </header>
 
-      {/* Mobile menu — renders as a fixed overlay BELOW header, clips at header bottom */}
-      {/* Uses clip-path so it appears to slide from behind the header */}
-      <div
-        className={`fixed inset-x-0 top-16 z-40 md:hidden transition-all duration-300 ease-in-out ${
-          menuOpen ? "pointer-events-auto" : "pointer-events-none"
-        }`}
-        style={{
-          transform: visible ? "translateY(0)" : "translateY(calc(-100% - 4rem))",
-          transitionProperty: "transform",
-        }}
-      >
-        <div
-          className="transition-transform duration-300 ease-in-out origin-top"
-          style={{
-            transform: menuOpen ? "translateY(0)" : "translateY(-100%)",
-          }}
-        >
-          <div className="border-b border-border/40 bg-background/95 backdrop-blur-xl px-4 pb-5 pt-3">
-            {/* Search */}
-            <form onSubmit={handleSearch} className="relative mb-4">
-              <input
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                placeholder="Search posts..."
-                className="h-12 w-full rounded-xl border border-input bg-muted/50 pl-4 pr-12 text-sm outline-none placeholder:text-muted-foreground/60 focus:border-primary/30 focus:ring-2 focus:ring-ring/20"
-              />
-              <button type="submit" className="absolute right-1.5 top-1/2 -translate-y-1/2 flex h-9 w-9 items-center justify-center rounded-lg text-primary-foreground" style={{ background: "var(--gradient-primary)" }}>
-                <Search className="h-4 w-4" />
-              </button>
-            </form>
+          {/* Mobile menu — inside the same rounded card */}
+          <div
+            className="md:hidden overflow-hidden transition-all duration-300 ease-in-out"
+            style={{
+              maxHeight: menuOpen ? "500px" : "0px",
+              opacity: menuOpen ? 1 : 0,
+            }}
+          >
+            <div className="border-t border-border/40 px-4 pb-4 pt-3">
+              {/* Search */}
+              <form onSubmit={handleSearch} className="relative mb-3">
+                <input
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  placeholder="Search posts..."
+                  className="h-11 w-full rounded-xl border border-input bg-muted/50 pl-4 pr-12 text-sm outline-none placeholder:text-muted-foreground/60 focus:border-primary/30 focus:ring-2 focus:ring-ring/20"
+                />
+                <button type="submit" className="absolute right-1.5 top-1/2 -translate-y-1/2 flex h-8 w-8 items-center justify-center rounded-lg text-primary-foreground" style={{ background: "var(--gradient-primary)" }}>
+                  <Search className="h-4 w-4" />
+                </button>
+              </form>
 
-            {/* Menu items */}
-            <nav className="flex flex-col gap-1">
-              {menuItems.map((item, i) => (
-                <Link
-                  key={item.label}
-                  to={item.to}
-                  onClick={() => setMenuOpen(false)}
-                  className="flex items-center gap-4 rounded-xl px-3 py-3 transition-all hover:bg-muted"
-                  style={{
-                    transitionDelay: menuOpen ? `${i * 50}ms` : "0ms",
-                    opacity: menuOpen ? 1 : 0,
-                    transform: menuOpen ? "translateY(0)" : "translateY(-8px)",
-                    transitionProperty: "opacity, transform, background-color",
-                    transitionDuration: "200ms",
-                  }}
-                >
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary shrink-0">
-                    <item.icon className="h-5 w-5" />
-                  </div>
-                  <div>
-                    <div className="text-sm font-semibold text-foreground">{item.label}</div>
-                    <div className="text-xs text-muted-foreground">{item.desc}</div>
-                  </div>
+              {/* Menu items */}
+              <nav className="flex flex-col gap-1">
+                {menuItems.map((item, i) => (
+                  <Link
+                    key={item.label}
+                    to={item.to}
+                    onClick={() => setMenuOpen(false)}
+                    className="flex items-center gap-4 rounded-xl px-3 py-2.5 transition-all hover:bg-muted"
+                    style={{
+                      transitionDelay: menuOpen ? `${i * 50}ms` : "0ms",
+                      opacity: menuOpen ? 1 : 0,
+                      transform: menuOpen ? "translateY(0)" : "translateY(-8px)",
+                      transitionProperty: "opacity, transform, background-color",
+                      transitionDuration: "200ms",
+                    }}
+                  >
+                    <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary/10 text-primary shrink-0">
+                      <item.icon className="h-4.5 w-4.5" />
+                    </div>
+                    <div>
+                      <div className="text-sm font-semibold text-foreground">{item.label}</div>
+                      <div className="text-xs text-muted-foreground">{item.desc}</div>
+                    </div>
+                  </Link>
+                ))}
+              </nav>
+
+              {/* Bottom buttons */}
+              <div className="mt-3 flex gap-3 border-t border-border/40 pt-3">
+                <Link to="/about" onClick={() => setMenuOpen(false)} className="flex flex-1 items-center justify-center gap-2 rounded-xl border border-border py-2.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground">
+                  <Info className="h-4 w-4" /> About
                 </Link>
-              ))}
-            </nav>
-
-            {/* Bottom buttons */}
-            <div className="mt-4 flex gap-3 border-t border-border/40 pt-4">
-              <Link to="/about" onClick={() => setMenuOpen(false)} className="flex flex-1 items-center justify-center gap-2 rounded-xl border border-border py-2.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground">
-                <Info className="h-4 w-4" /> About
-              </Link>
-              <Link to="/contact" onClick={() => setMenuOpen(false)} className="flex flex-1 items-center justify-center gap-2 rounded-xl border border-border py-2.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground">
-                <Mail className="h-4 w-4" /> Contact
-              </Link>
+                <Link to="/contact" onClick={() => setMenuOpen(false)} className="flex flex-1 items-center justify-center gap-2 rounded-xl border border-border py-2.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground">
+                  <Mail className="h-4 w-4" /> Contact
+                </Link>
+              </div>
             </div>
           </div>
         </div>
+      </header>
 
-        {/* Backdrop */}
+      {/* Backdrop for mobile menu */}
+      {menuOpen && (
         <div
-          className="fixed inset-0 -z-10 bg-black/20 transition-opacity duration-300"
-          style={{ opacity: menuOpen ? 1 : 0 }}
+          className="fixed inset-0 z-40 bg-black/20 md:hidden"
           onClick={() => setMenuOpen(false)}
         />
-      </div>
+      )}
     </>
   );
 }
