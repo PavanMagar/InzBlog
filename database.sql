@@ -2,8 +2,8 @@
 -- INKWELL BLOG PLATFORM — COMPLETE DATABASE SETUP
 -- ============================================================
 -- This file creates ALL tables, enums, functions, triggers,
--- RLS policies, storage buckets, admin user, and demo data
--- required by the Inkwell blog platform.
+-- RLS policies, storage buckets, and demo data required by
+-- the Inkwell blog platform.
 --
 -- Run this in your Supabase SQL Editor (or via psql).
 --
@@ -15,7 +15,7 @@
 --   1. Open your Supabase Dashboard → SQL Editor
 --   2. Paste this entire file
 --   3. Click "Run"
---   4. Log in with admin@admin.com / admin1234
+--   4. Create admin user manually (see Admin Setup section below)
 --   5. Change your credentials from Admin → Settings → Account
 -- ============================================================
 
@@ -390,25 +390,7 @@ CREATE POLICY "Admins can delete thumbnails"
 
 
 -- ────────────────────────────────────────────────────────────
--- 7. ADMIN USER SETUP
--- ────────────────────────────────────────────────────────────
--- The admin user is created via the setup-admin Edge Function.
--- After running this SQL, invoke the Edge Function to create:
---
---   Email:    admin@admin.com
---   Password: admin1234
---
--- You can change these credentials from Admin → Settings → Account.
---
--- To invoke the Edge Function:
---   curl -X POST https://<your-project-ref>.supabase.co/functions/v1/setup-admin \
---     -H "Authorization: Bearer <your-anon-key>" \
---     -H "Content-Type: application/json"
--- ────────────────────────────────────────────────────────────
-
-
--- ────────────────────────────────────────────────────────────
--- 8. SEED DATA — Site Settings
+-- 7. SEED DATA — Site Settings
 -- ────────────────────────────────────────────────────────────
 
 INSERT INTO public.site_settings (site_title, site_description, site_tagline, meta_author)
@@ -417,7 +399,7 @@ ON CONFLICT DO NOTHING;
 
 
 -- ────────────────────────────────────────────────────────────
--- 9. SEED DATA — Demo Categories
+-- 8. SEED DATA — Demo Categories
 -- ────────────────────────────────────────────────────────────
 
 INSERT INTO public.categories (name, slug) VALUES
@@ -431,7 +413,7 @@ ON CONFLICT (slug) DO NOTHING;
 
 
 -- ────────────────────────────────────────────────────────────
--- 10. SEED DATA — Demo Posts
+-- 9. SEED DATA — Demo Posts
 -- ────────────────────────────────────────────────────────────
 
 INSERT INTO public.posts (title, slug, excerpt, content, status, is_project, published_at, view_count) VALUES
@@ -590,7 +572,7 @@ ON CONFLICT (slug) DO NOTHING;
 
 
 -- ────────────────────────────────────────────────────────────
--- 11. SEED DATA — Link Posts to Categories
+-- 10. SEED DATA — Link Posts to Categories
 -- ────────────────────────────────────────────────────────────
 
 INSERT INTO public.post_categories (post_id, category_id)
@@ -635,7 +617,7 @@ ON CONFLICT DO NOTHING;
 
 
 -- ────────────────────────────────────────────────────────────
--- 12. SEED DATA — Demo Comments
+-- 11. SEED DATA — Demo Comments
 -- ────────────────────────────────────────────────────────────
 
 INSERT INTO public.comments (post_id, author_name, author_email, content)
@@ -660,9 +642,34 @@ ON CONFLICT DO NOTHING;
 
 
 -- ============================================================
--- DONE! Next steps:
---   1. Deploy the setup-admin Edge Function (see README.md)
---   2. Invoke it to create admin@admin.com / admin1234
---   3. Log in and start writing posts!
---   4. Change your credentials: Admin → Settings → Account
+-- 12. ADMIN SETUP (Manual — No CLI Required)
+-- ============================================================
+-- After running this SQL, you need to create the admin user:
+--
+-- STEP 1: Create the user in Supabase Dashboard
+--   → Go to Authentication → Users → "Add user" → "Create new user"
+--   → Email: admin@admin.com
+--   → Password: admin1234
+--   → Check "Auto Confirm User" checkbox
+--   → Click "Create user"
+--
+-- STEP 2: Copy the user's UUID
+--   → After creating, the user appears in the list
+--   → Click on the user to see their details
+--   → Copy the "User UID" (a UUID like 12345678-abcd-efgh-ijkl-123456789012)
+--
+-- STEP 3: Run this SQL in SQL Editor (replace YOUR_USER_UUID):
+--
+--   INSERT INTO public.user_roles (user_id, role)
+--   VALUES ('YOUR_USER_UUID', 'admin');
+--
+-- STEP 4: Login at /admin/login with admin@admin.com / admin1234
+--
+-- STEP 5: Change your credentials from Admin → Settings → Account
+-- ============================================================
+
+
+-- ============================================================
+-- DONE! Follow the Admin Setup steps above to create your
+-- admin account, then log in and start writing posts!
 -- ============================================================
